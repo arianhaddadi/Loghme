@@ -1,0 +1,37 @@
+stages:
+    - build
+    - deploy
+    
+variables:
+    DOCKER_REPO: "aryanhaddadi/aryan_docker_hub"
+    TAGNAME: "Loghme_Front_End"
+
+docker-build:
+    image: docker:latest
+    stage: build
+    services:
+        - docker:dind
+    before_script:
+        - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    script:
+        - docker build --pull -t "$DOCKER_REPO":"$TAGNAME" .
+        - docker push "$DOCKER_REPO":"$TAGNAME"
+    only:
+        - master          
+
+docker-deploy:
+    stage: deploy
+    image: ubuntu
+    before_script:
+        - which curl || (apt-get update -y -qq && apt-get install -y -qq curl)
+        - curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+        - chmod +x ./kubectl
+        - mv ./kubectl /usr/local/bin/kubectl
+        - which openvpn || (apt-get update -y -qq && apt-get install -y -qq openvpn)
+        - echo -n "$OPEN_VPN" | base64 -d > ./client.ovpn
+        - openvpn --config client.ovpn --daemon
+        - echo -n "$KUBER_CONFIG_FILE" | base64 -d > kuberConfig
+    script:
+        - kubectl --kubeconfig=kuberConfig rollout restart deployment loghme-frontend-deployment
+    only:
+        - master

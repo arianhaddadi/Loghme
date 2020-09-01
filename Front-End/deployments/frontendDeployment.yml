@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loghme-frontend-service
+  labels:
+    app: loghme-app
+spec:
+  type: NodePort
+  selector:
+    app: loghme-app
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+    nodePort: 30734
+
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loghme-frontend-deployment
+  labels:
+    app: loghme-app
+spec:
+  replicas: 1
+  selector:                     
+    matchLabels:
+      app: loghme-app
+  template:
+    metadata:
+      labels:
+        app: loghme-app
+    spec:
+      containers:
+      - name: loghme-front-end
+        image: aryanhaddadi/aryan_docker_hub:Loghme_Front_End
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            containerPort: 3000
+        resources:
+          limits:
+            cpu: 0.1
+            memory: "100Mi"
+      imagePullSecrets:
+        - name: regcred

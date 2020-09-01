@@ -1,0 +1,29 @@
+version: '3.8'
+services: 
+    web:
+        build: .
+        container_name: loghme_back_end
+        depends_on: 
+            - db
+        networks:
+            - backend
+        ports:
+            - "8080:8080"
+    db:
+        image: mysql
+        restart: always
+        ports:
+            - "3100:3306"
+        container_name: docker-mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: A1m3i7r8
+        volumes:
+            - db-data:/var/lib/mysql
+        networks:
+            - backend
+
+volumes:
+    db-data:
+
+networks:
+    backend:

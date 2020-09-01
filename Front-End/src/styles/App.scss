@@ -1,0 +1,22 @@
+@import "./Normalize/Normalize.scss";
+@import "./NavigationBar/NavigationBar.scss";
+@import "./ProfilePage/ProfilePage.scss";
+@import "./RestaurantPage/RestaurantPage.scss";
+@import "./SignupPage/SignupPage.scss";
+@import "./Modal/Modal.scss";
+@import "./Cart/Cart.scss";
+@import "./Spinner/Spinner.scss";
+@import "./HomePage/HomePage.scss";
+@import "./Food/Food.scss";
+@import "./flaticon/flaticon.css";
+@import "./LoginPage/LoginPage.scss";
+
+body {
+    min-height: 100vh;
+    position: relative;
+    background-color: #f7fff7;
+}
+
+#root {
+    @extend body;
+}
