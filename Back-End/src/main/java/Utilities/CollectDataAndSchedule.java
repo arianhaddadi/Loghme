@@ -15,7 +15,6 @@ public class CollectDataAndSchedule implements ServletContextListener {
 
     private ScheduledExecutorService scheduler;
     private static final FoodPartyUpdater foodPartyUpdater = new FoodPartyUpdater(30);
-
     public static FoodPartyUpdater getFoodPartyUpdater() {
         return foodPartyUpdater;
     }
@@ -25,9 +24,8 @@ public class CollectDataAndSchedule implements ServletContextListener {
         GetRequest getRequest = new GetRequest(RestaurantsManager.RESTAURANTS_SERVER_URL);
         getRequest.send();
         RestaurantsManager.getInstance().setRestaurants(RestaurantsManager.getInstance().parseListOfJson(getRequest.getResponseString()));
-        RestaurantsManager.maxDistance = 170;
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(foodPartyUpdater, 0, 30, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(foodPartyUpdater::run, 0, 30, TimeUnit.MINUTES);
     }
 
     @Override

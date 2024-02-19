@@ -30,9 +30,8 @@ public class TokenProvider {
     public String getEmailFromGoogleToken(String idTokenString) {
         GetRequest getRequest = new GetRequest("https://oauth2.googleapis.com/tokeninfo?id_token=" + idTokenString);
         getRequest.send();
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            JsonNode response = mapper.readTree(getRequest.getResponseString());
+            JsonNode response = new ObjectMapper().readTree(getRequest.getResponseString());
             String email = response.get("email").asText();
             boolean emailVerified = response.get("email_verified").asBoolean();
             long exp = response.get("exp").asLong();
@@ -41,6 +40,7 @@ public class TokenProvider {
                 return email;
             }
         } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }

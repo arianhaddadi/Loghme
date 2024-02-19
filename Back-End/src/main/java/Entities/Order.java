@@ -81,7 +81,7 @@ public class Order implements Runnable {
     @Override
     public void run() {
         if (status == Status.SEARCHING_FOR_DELIVERY) {
-            GetRequest getRequest = new GetRequest(DeliveriesRepository.getApiUrl());
+            GetRequest getRequest = new GetRequest(DeliveriesRepository.DELIVERIES_URL);
             getRequest.send();
             try {
                 ArrayList<Delivery> deliveries = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(getRequest.getResponseString(), Delivery[].class)));

@@ -14,9 +14,7 @@ import java.util.Arrays;
 
 public class RestaurantsManager {
     public static String RESTAURANTS_SERVER_URL = "http://138.197.181.131:8080/restaurants";
-    public static int maxDistance;
     private static RestaurantsManager instance;
-
     private RestaurantMapper restaurantMapper;
     private FoodMapper foodMapper;
     private FoodPartyFoodMapper foodPartyFoodMapper;
