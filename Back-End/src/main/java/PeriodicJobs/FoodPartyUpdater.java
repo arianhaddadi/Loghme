@@ -12,9 +12,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class FoodPartyUpdater implements Runnable, Callable {
+public class FoodPartyUpdater implements Runnable, Callable<Void> {
     private final String FoodParty_URL = "http://138.197.181.131:8080/foodparty";
-    private int minutes, seconds, period;
+    private int minutes;
+    private int seconds;
+    private final int period;
     private ScheduledExecutorService scheduler;
 
     public FoodPartyUpdater(int period) {
@@ -66,7 +68,7 @@ public class FoodPartyUpdater implements Runnable, Callable {
     }
 
     @Override
-    public Void call() throws Exception {
+    public Void call() {
         if (seconds != 0 || minutes != 0) {
             if(seconds == 0) {
                 seconds = 59;

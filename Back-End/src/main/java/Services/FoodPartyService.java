@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 
 @RestController
-public class FoodPartyHandler {
+public class FoodPartyService {
 
     @RequestMapping(value = "/foodparties", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ArrayListResponse<Restaurant> getFoodPartyRestaurants() {

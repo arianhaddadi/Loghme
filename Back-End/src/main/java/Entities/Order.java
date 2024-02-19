@@ -12,7 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-public class Order implements Runnable{
+public class Order implements Runnable {
 
     public enum Status {
         SEARCHING_FOR_DELIVERY,
@@ -86,7 +86,7 @@ public class Order implements Runnable{
             try {
                 ArrayList<Delivery> deliveries = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(getRequest.getResponseString(), Delivery[].class)));
                 scheduler = Executors.newSingleThreadScheduledExecutor();
-                if((deliveries.size() == 0) || (allDeliveriesBusy(deliveries))) {
+                if((deliveries.isEmpty()) || (allDeliveriesBusy(deliveries))) {
                     scheduler.schedule(this, 30, TimeUnit.SECONDS);
                 }
                 else {
@@ -107,25 +107,6 @@ public class Order implements Runnable{
             OrdersManager.getInstance().updateOrderStatus(this);
             DeliveriesRepository.getInstance().getOnTheWayDeliveries().remove(assignedDelivery);
         }
-    }
-
-    private String calculateRemainingTime() {
-        long seconds = deliveryTime - (System.currentTimeMillis() / 1000L) + deliveryStartTime;
-        long hours = seconds / 3600L;
-        seconds = seconds - hours * 3600L;
-        long minutes = seconds / 60L;
-        seconds = seconds - minutes * 60L;
-        String time;
-        if((hours == 0) && (minutes == 0)) {
-            time = String.format("%ds", seconds);
-        }
-        else if(hours == 0) {
-            time = String.format("%dm %ds", minutes, seconds);
-        }
-        else {
-            time = String.format("%dh %dm %ds", hours, minutes, seconds);
-        }
-        return time;
     }
 
     public Status getStatus() {

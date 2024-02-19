@@ -3,7 +3,6 @@ package Utilities;
 import PeriodicJobs.FoodPartyUpdater;
 import Domain.Restaurant.RestaurantsManager;
 import Utilities.Request.GetRequest;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -15,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class CollectDataAndSchedule implements ServletContextListener {
 
     private ScheduledExecutorService scheduler;
-    private static FoodPartyUpdater foodPartyUpdater = new FoodPartyUpdater(30);
+    private static final FoodPartyUpdater foodPartyUpdater = new FoodPartyUpdater(30);
 
     public static FoodPartyUpdater getFoodPartyUpdater() {
         return foodPartyUpdater;
@@ -28,7 +27,7 @@ public class CollectDataAndSchedule implements ServletContextListener {
         RestaurantsManager.getInstance().setRestaurants(RestaurantsManager.getInstance().parseListOfJson(getRequest.getResponseString()));
         RestaurantsManager.maxDistance = 170;
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(foodPartyUpdater::run, 0, 30, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(foodPartyUpdater, 0, 30, TimeUnit.MINUTES);
     }
 
     @Override

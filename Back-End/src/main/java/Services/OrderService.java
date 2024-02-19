@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class OrderHandler {
+public class OrderService {
 
     @RequestMapping(value = "/orders", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ArrayListResponse<Order> getAllOrders(@RequestAttribute(value = "userEmail") String userEmail) {

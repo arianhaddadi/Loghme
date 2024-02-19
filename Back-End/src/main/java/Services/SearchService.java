@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class SearchHandler {
+public class SearchService {
 
     @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ArrayListResponse<Restaurant> searchRestaurants(@RequestParam(value = "foodName") String foodName,

@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class CreditHandler {
+public class CreditService {
 
     @RequestMapping(value = "/credits", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage addCredit(@RequestAttribute(value = "userEmail") String userEmail,

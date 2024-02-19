@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class RestaurantHandler {
+public class RestaurantService {
 
     @RequestMapping(value = "/restaurants", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ArrayListResponse<Restaurant> getAllRestaurants(

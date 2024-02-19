@@ -40,10 +40,6 @@ public class Request {
         }
     }
 
-    public int getResponseStatusCode() {
-        return responseStatusCode;
-    }
-
     public String getResponseString() {
         return responseString;
     }

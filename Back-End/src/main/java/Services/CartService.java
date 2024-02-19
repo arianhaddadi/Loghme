@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class CartHandler {
+public class CartService {
 
     @RequestMapping(value = "/carts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Cart getCart(@RequestAttribute(value = "userEmail") String userEmail) {
