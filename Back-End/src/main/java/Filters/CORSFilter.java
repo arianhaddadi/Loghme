@@ -13,12 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public class CORSFilter implements Filter {
 
-    public CORSFilter() {
-    }
+    public CORSFilter() {}
 
-
-    public void destroy() {
-    }
+    public void destroy() {}
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {

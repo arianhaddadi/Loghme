@@ -4,7 +4,6 @@ import Domain.Restaurant.RestaurantsManager;
 import Entities.Restaurant;
 import Utilities.Request.GetRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class FoodPartyUpdater implements Runnable, Callable {
-    private String FoodParty_URL = "http://138.197.181.131:8080/foodparty";
+    private final String FoodParty_URL = "http://138.197.181.131:8080/foodparty";
     private int minutes, seconds, period;
     private ScheduledExecutorService scheduler;
 

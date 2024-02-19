@@ -1,7 +1,6 @@
 package Filters;
 
 import Utilities.TokenProvider;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 

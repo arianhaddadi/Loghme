@@ -4,7 +4,6 @@ import Domain.Restaurant.RestaurantDAO;
 import Entities.Location;
 import Mappers.Mapper;
 import Utilities.ConnectionPool;
-
 import java.sql.*;
 import java.util.ArrayList;
 

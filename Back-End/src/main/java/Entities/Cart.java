@@ -3,7 +3,7 @@ package Entities;
 import java.util.ArrayList;
 
 public class Cart {
-    private ArrayList<CartItem> cartItems;
+    private final ArrayList<CartItem> cartItems;
     private Restaurant restaurant;
 
     public Cart() {
@@ -12,11 +12,11 @@ public class Cart {
 
 
     public Boolean isEmpty() {
-        return cartItems.size() == 0;
+        return cartItems.isEmpty();
     }
 
     public String getRestaurantId() {
-        if(cartItems.size() != 0)
+        if(!cartItems.isEmpty())
             return restaurant.getId();
         else
             return "";

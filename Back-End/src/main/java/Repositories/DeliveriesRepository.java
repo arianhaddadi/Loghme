@@ -1,7 +1,6 @@
 package Repositories;
 
 import Entities.Delivery;
-
 import java.util.ArrayList;
 
 public class DeliveriesRepository {

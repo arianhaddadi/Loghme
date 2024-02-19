@@ -26,7 +26,7 @@ public class CartsManager {
         Cart cart = new Cart();
         CartDAO cartDAO = CartMapper.getInstance().find(userEmail);
         Restaurant restaurant = null;
-        if(!cartDAO.getRestaurantId().equals("")) {
+        if(!cartDAO.getRestaurantId().isEmpty()) {
             restaurant = RestaurantMapper.getInstance().find(cartDAO.getRestaurantId()).getRestaurantForm();
         }
         cart.setRestaurant(restaurant);
@@ -127,7 +127,7 @@ public class CartsManager {
         if(cartItem.getQuantity() == 1) {
             CartItemMapper.getInstance().delete(itemId);
             ArrayList<CartItemDAO> cartItemDAOS = CartItemMapper.getInstance().findAll(userEmail, null, null);
-            if(cartItemDAOS.size() == 0) {
+            if(cartItemDAOS.isEmpty()) {
                 CartMapper.getInstance().update(new CartDAO(userEmail, ""));
             }
         }

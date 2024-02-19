@@ -3,7 +3,6 @@ package Mappers.FoodPartyFood;
 import Domain.Restaurant.FoodPartyFoodDAO;
 import Mappers.Mapper;
 import Utilities.ConnectionPool;
-
 import java.sql.*;
 
 public class FoodPartyFoodMapper extends Mapper<FoodPartyFoodDAO, String> implements IFoodPartyFoodMapper {

@@ -1,7 +1,5 @@
 package Utilities;
 
-import Domain.User.UsersManager;
-import Entities.User;
 import PeriodicJobs.FoodPartyUpdater;
 import Domain.Restaurant.RestaurantsManager;
 import Utilities.Request.GetRequest;

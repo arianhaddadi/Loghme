@@ -8,8 +8,6 @@ public class Restaurant {
     private ArrayList<Food> menu;
     private ArrayList<FoodPartyFood> foodPartyMenu;
 
-
-
     public Food getFoodByName(String name) {
         if(menu == null) return null;
         for(Food food : menu) {

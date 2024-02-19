@@ -3,7 +3,6 @@ package Entities;
 import Domain.Order.OrdersManager;
 import Repositories.DeliveriesRepository;
 import Utilities.Request.GetRequest;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,10 +20,10 @@ public class Order implements Runnable{
         DELIVERED
     }
 
-    private String id;
-    private String userId;
+    private final String id;
+    private final String userId;
     private Status status;
-    private Cart cart;
+    private final Cart cart;
     private ScheduledExecutorService scheduler;
     private Delivery assignedDelivery;
     private long deliveryTime;

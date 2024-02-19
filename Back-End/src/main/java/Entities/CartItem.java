@@ -1,7 +1,7 @@
 package Entities;
 
 public class CartItem {
-    private Food food;
+    private final Food food;
     private int quantity;
 
     public CartItem(Food food, int quantity) {

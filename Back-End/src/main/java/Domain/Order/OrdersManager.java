@@ -1,7 +1,6 @@
 package Domain.Order;
 
 import Domain.Restaurant.RestaurantsManager;
-import Domain.User.UsersManager;
 import Entities.*;
 import Mappers.Order.OrderMapper;
 import Mappers.OrderItem.OrderItemMapper;
