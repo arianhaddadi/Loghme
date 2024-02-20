@@ -22,11 +22,12 @@ public class CollectDataAndSchedule implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        String responseString = GetRequest.sendGetRequest(RestaurantsManager.RESTAURANTS_SERVER_URL);
-        ArrayList<Restaurant> restaurants = RestaurantsManager.getInstance().parseListOfJson(responseString);
+//        String responseString = GetRequest.sendGetRequest(RestaurantsManager.RESTAURANTS_SERVER_URL);
+//        ArrayList<Restaurant> restaurants = RestaurantsManager.getInstance().parseListOfJson(responseString);
+        ArrayList<Restaurant> restaurants = DataProvider.getRestaurants();
         RestaurantsManager.getInstance().setRestaurants(restaurants);
-        scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(foodPartyUpdater::run, 0, 30, TimeUnit.MINUTES);
+//        scheduler = Executors.newSingleThreadScheduledExecutor();
+//        scheduler.scheduleAtFixedRate(foodPartyUpdater::run, 0, 30, TimeUnit.MINUTES);
     }
 
     @Override

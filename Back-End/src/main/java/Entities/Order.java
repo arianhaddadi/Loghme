@@ -2,6 +2,7 @@ package Entities;
 
 import Domain.Order.OrdersManager;
 import Repositories.DeliveriesRepository;
+import Utilities.DataProvider;
 import Utilities.GetRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -81,24 +82,25 @@ public class Order implements Runnable {
     @Override
     public void run() {
         if (status == Status.SEARCHING_FOR_DELIVERY) {
-            try {
-                String responseString = GetRequest.sendGetRequest(DeliveriesRepository.DELIVERIES_URL);
-                ArrayList<Delivery> deliveries = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseString, Delivery[].class)));
-                scheduler = Executors.newSingleThreadScheduledExecutor();
-                if((deliveries.isEmpty()) || (allDeliveriesBusy(deliveries))) {
-                    scheduler.schedule(this, 30, TimeUnit.SECONDS);
-                }
-                else {
-                    status = Status.DELIVERY_ON_ITS_WAY;
-                    assignDelivery(deliveries);
-                    deliveryStartTime = System.currentTimeMillis() / 1000L;
-                    DeliveriesRepository.getInstance().getOnTheWayDeliveries().add(assignedDelivery);
-                    deliveryTime = calculateDeliveryTime(assignedDelivery);
-                    OrdersManager.getInstance().updateOrderStatus(this);
-                    scheduler.schedule(this, deliveryTime, TimeUnit.SECONDS);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+//            try {
+//                String responseString = GetRequest.sendGetRequest(DeliveriesRepository.DELIVERIES_URL);
+//                ArrayList<Delivery> deliveries = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseString, Delivery[].class)));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            ArrayList<Delivery> deliveries = DataProvider.getDeliveries();
+            scheduler = Executors.newSingleThreadScheduledExecutor();
+            if((deliveries.isEmpty()) || (allDeliveriesBusy(deliveries))) {
+                scheduler.schedule(this, 30, TimeUnit.SECONDS);
+            }
+            else {
+                status = Status.DELIVERY_ON_ITS_WAY;
+                assignDelivery(deliveries);
+                deliveryStartTime = System.currentTimeMillis() / 1000L;
+                DeliveriesRepository.getInstance().getOnTheWayDeliveries().add(assignedDelivery);
+                deliveryTime = calculateDeliveryTime(assignedDelivery);
+                OrdersManager.getInstance().updateOrderStatus(this);
+                scheduler.schedule(this, deliveryTime, TimeUnit.SECONDS);
             }
         }
         else {

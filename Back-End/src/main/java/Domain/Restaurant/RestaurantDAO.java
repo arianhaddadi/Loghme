@@ -19,12 +19,7 @@ public class RestaurantDAO {
     }
 
     public Restaurant getRestaurantForm() {
-        Restaurant restaurant = new Restaurant();
-        restaurant.setId(id);
-        restaurant.setName(name);
-        restaurant.setLocation(location);
-        restaurant.setLogo(logo);
-        return restaurant;
+        return new Restaurant(id, name, logo, location);
     }
 
     public String getId() {

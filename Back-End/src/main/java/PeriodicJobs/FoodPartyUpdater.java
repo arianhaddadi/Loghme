@@ -13,7 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class FoodPartyUpdater implements Runnable, Callable<Void> {
-    private final String FoodParty_URL = "http://138.197.181.131:8080/foodparty";
+    private final String FOODPARTY_URL = "http://138.197.181.131:8080/foodparty";
     private int minutes;
     private int seconds;
     private final int period;
@@ -21,6 +21,7 @@ public class FoodPartyUpdater implements Runnable, Callable<Void> {
 
     public FoodPartyUpdater(int period) {
         this.period = period;
+        this.resetTimer();
     }
 
     public int getMinutes() {
@@ -55,7 +56,7 @@ public class FoodPartyUpdater implements Runnable, Callable<Void> {
     public void run() {
         clearFoodParty();
         try {
-            String responseString = GetRequest.sendGetRequest(FoodParty_URL);
+            String responseString = GetRequest.sendGetRequest(FOODPARTY_URL);
             ArrayList<Restaurant> restaurants = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseString.replaceAll("menu", "foodPartyMenu"), Restaurant[].class)));
             addGivenRestaurants(restaurants);
             resetTimer();

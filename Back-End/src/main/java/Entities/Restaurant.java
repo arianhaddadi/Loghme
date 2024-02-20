@@ -18,6 +18,13 @@ public class Restaurant {
         this.foodPartyMenu = foodPartyMenu;
     }
 
+    public Restaurant(String id, String name, String logo, Location location) {
+        this.id = id;
+        this.name = name;
+        this.logo = logo;
+        this.location = location;
+    }
+
     public Food getFoodByName(String name) {
         if(menu == null) return null;
         for(Food food : menu) {

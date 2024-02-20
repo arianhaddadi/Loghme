@@ -25,13 +25,7 @@ public class FoodDAO {
     }
 
     public Food getFoodForm() {
-        Food food = new Food();
-        food.setName(name);
-        food.setDescription(description);
-        food.setImage(image);
-        food.setPrice(price);
-        food.setPopularity(popularity);
-        return food;
+        return new Food(name, description, image, price, popularity);
     }
 
     public String getName() {
