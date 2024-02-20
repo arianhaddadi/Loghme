@@ -54,10 +54,9 @@ public class FoodPartyUpdater implements Runnable, Callable<Void> {
     @Override
     public void run() {
         clearFoodParty();
-        GetRequest getRequest = new GetRequest(FoodParty_URL);
-        getRequest.send();
         try {
-            ArrayList<Restaurant> restaurants = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(getRequest.getResponseString().replaceAll("menu", "foodPartyMenu"), Restaurant[].class)));
+            String responseString = GetRequest.sendGetRequest(FoodParty_URL);
+            ArrayList<Restaurant> restaurants = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseString.replaceAll("menu", "foodPartyMenu"), Restaurant[].class)));
             addGivenRestaurants(restaurants);
             resetTimer();
             shutDownPreviousSchedulerAndCreateNewOne();

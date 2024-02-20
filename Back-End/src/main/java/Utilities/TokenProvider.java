@@ -27,10 +27,9 @@ public class TokenProvider {
     }
 
     public String getEmailFromGoogleToken(String idTokenString) {
-        GetRequest getRequest = new GetRequest("https://oauth2.googleapis.com/tokeninfo?id_token=" + idTokenString);
-        getRequest.send();
         try {
-            JsonNode response = new ObjectMapper().readTree(getRequest.getResponseString());
+            String responseString = GetRequest.sendGetRequest("https://oauth2.googleapis.com/tokeninfo?id_token=" + idTokenString);
+            JsonNode response = new ObjectMapper().readTree(responseString);
             String email = response.get("email").asText();
             boolean emailVerified = response.get("email_verified").asBoolean();
             long exp = response.get("exp").asLong();

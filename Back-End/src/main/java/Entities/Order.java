@@ -81,10 +81,9 @@ public class Order implements Runnable {
     @Override
     public void run() {
         if (status == Status.SEARCHING_FOR_DELIVERY) {
-            GetRequest getRequest = new GetRequest(DeliveriesRepository.DELIVERIES_URL);
-            getRequest.send();
             try {
-                ArrayList<Delivery> deliveries = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(getRequest.getResponseString(), Delivery[].class)));
+                String responseString = GetRequest.sendGetRequest(DeliveriesRepository.DELIVERIES_URL);
+                ArrayList<Delivery> deliveries = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseString, Delivery[].class)));
                 scheduler = Executors.newSingleThreadScheduledExecutor();
                 if((deliveries.isEmpty()) || (allDeliveriesBusy(deliveries))) {
                     scheduler.schedule(this, 30, TimeUnit.SECONDS);

@@ -1,10 +1,12 @@
 package Utilities;
 
+import Entities.Restaurant;
 import PeriodicJobs.FoodPartyUpdater;
 import Domain.Restaurant.RestaurantsManager;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,9 +22,9 @@ public class CollectDataAndSchedule implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        GetRequest getRequest = new GetRequest(RestaurantsManager.RESTAURANTS_SERVER_URL);
-        getRequest.send();
-        RestaurantsManager.getInstance().setRestaurants(RestaurantsManager.getInstance().parseListOfJson(getRequest.getResponseString()));
+        String responseString = GetRequest.sendGetRequest(RestaurantsManager.RESTAURANTS_SERVER_URL);
+        ArrayList<Restaurant> restaurants = RestaurantsManager.getInstance().parseListOfJson(responseString);
+        RestaurantsManager.getInstance().setRestaurants(restaurants);
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(foodPartyUpdater::run, 0, 30, TimeUnit.MINUTES);
     }

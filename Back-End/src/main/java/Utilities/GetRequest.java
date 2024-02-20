@@ -8,32 +8,11 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class GetRequest {
-    protected URL url;
-    protected String responseString;
-    protected int responseStatusCode;
-
-    public GetRequest(String urlString) {
+    public static String sendGetRequest(String url) {
         try {
-            url = new URL(urlString);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 
-    public void send() {
-        try {
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            checkStatusCodeAndSetResponse(connection);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void checkStatusCodeAndSetResponse(HttpURLConnection connection) {
-        try {
-            responseStatusCode = connection.getResponseCode();
-            if (responseStatusCode == HttpURLConnection.HTTP_OK) {
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
                 String inputLine;
                 StringBuilder response = new StringBuilder();
@@ -41,18 +20,16 @@ public class GetRequest {
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
                 }
+
                 in.close();
-                responseString = response.toString();
+
+                return response.toString();
             } else {
-                System.out.println("The response code of server: " + responseStatusCode);
+                return "The response code of server: " + connection.getResponseCode();
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return "Error";
         }
     }
-
-    public String getResponseString() {
-        return responseString;
-    }
-
 }
