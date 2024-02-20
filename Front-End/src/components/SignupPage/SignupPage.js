@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import {Link} from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
 import logo from "../../images/Logo.png";
+import configs from '../../configs';
+import {Link} from 'react-router-dom';
+import {ToastContainer, toast} from 'react-toastify';
 
 class SignupPage extends React.Component {
 
@@ -39,7 +40,7 @@ class SignupPage extends React.Component {
 
     signup = () => {
         const {firstName, lastName, email, phoneNumber, password} = this.state;
-        axios.post(`http://ie.etuts.ir:30735/signup?firstName=${firstName}&lastName=${lastName}&password=${password}&email=${email}&phoneNumber=${phoneNumber}`)
+        axios.post(`${configs.server_url}/signup?firstName=${firstName}&lastName=${lastName}&password=${password}&email=${email}&phoneNumber=${phoneNumber}`)
         .then(response => {
             if (response.data.successful) {
                 toast("Successfully Signed Up!");

@@ -9,10 +9,10 @@ import SignupPage from "./SignupPage/SignupPage";
 import LoginPage from "./LoginPage/LoginPage";
 import RestaurantPage from "./RestaurantPage/RestaurantPage";
 import ProfilePage from "./ProfilePage/ProfilePage";
-import Modal from './Modal/Modal';
+import Modal from './utils/Modal';
 import Cart from './Cart/Cart';
 import {fetchAndStoreUserInfo, fetchAndStoreCart, fetchAndStoreFoodPartyInformation, storeGoogleAuthenticationObject, storeHistoryObject} from "../actions";
-import history from '../browserHistory/history';
+import browserHistory from './utils/browserHistory';
 import CartFunctionsContext from '../contexts/CartFunctionsContext';
 
 
@@ -24,12 +24,12 @@ class App extends React.Component {
     }
 
     componentDidMount = () => {
-        history.listen(() => window.scroll({top:0}));
+        browserHistory.listen(() => window.scroll({top:0}));
     }
 
     componentWillMount() {
         if (localStorage.getItem("loghmeUserToken") === null) {
-            history.push("/login")
+            browserHistory.push("/login")
         }
     }
 
@@ -63,7 +63,7 @@ class App extends React.Component {
 
     storeHistoryObjectInReduxStore = () => {
         if (this.props.history === null) {
-            this.props.storeHistoryObject(history);
+            this.props.storeHistoryObject(browserHistory);
         }
     }
 
@@ -73,7 +73,7 @@ class App extends React.Component {
                 <CartFunctionsContext.Provider value={{getCartSize:this.getCartSize, openCart:this.openCartModal}}>
                     {this.storeHistoryObjectInReduxStore()}
                     {this.renderCart()}
-                    <Router history={history}>
+                    <Router history={browserHistory}>
                         <Route path="/" exact component={HomePage} />
                         <Route path="/signup" exact component={SignupPage} />
                         <Route path="/login" exact component={LoginPage} />

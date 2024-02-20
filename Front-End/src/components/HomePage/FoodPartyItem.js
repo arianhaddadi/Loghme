@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { convertEnglishNumbersToPersian } from "../../utilities";
 
 
 const FoodPartyItem = (props) => {
@@ -15,22 +14,22 @@ const FoodPartyItem = (props) => {
                     </div>
                     <i className="fas fa-star food-party-item-star">
                         <p className="food-party-item-popularity">
-                            {convertEnglishNumbersToPersian(item.popularity * 5)}       
+                            {item.popularity * 5}       
                         </p>
                     </i> 
                 </div>
             </div>
             <div className="food-party-item-prices">
                 <div className="food-party-item-old-price">
-                    {convertEnglishNumbersToPersian(item.oldPrice)} Dollars
+                    {item.oldPrice} Dollars
                 </div>
                 <div className="food-party-item-new-price">
-                    {convertEnglishNumbersToPersian(item.price)} Dollars
+                    {item.price} Dollars
                 </div>
             </div>
             <div className="food-party-item-buttons">
                 <div className="food-party-item-remaining">
-                    {item.count === 0 ? "Not Available" : `Number of Remaining Items: ${convertEnglishNumbersToPersian(item.count)}`}
+                    {item.count === 0 ? "Not Available" : `Number of Remaining Items: ${item.count}`}
                     </div>
                 <div onClick={() => props.orderFood(props.restaurant, item)} className="food-party-item-buy-button">Purchase</div>
             </div>

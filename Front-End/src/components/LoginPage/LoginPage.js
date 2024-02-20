@@ -1,10 +1,11 @@
 import React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
-import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import logo from "../../images/Logo.png";
 import GoogleOAuth from './GoogleOAuth';
+import configs from '../../configs';
+import {connect} from 'react-redux';
+import {ToastContainer, toast} from 'react-toastify';
 import {Link} from 'react-router-dom';
 import {storeGoogleAuthenticationObject} from '../../actions';
 
@@ -67,7 +68,7 @@ class LoginPage extends React.Component {
             const currentUser = this.props.googleAuthentication.currentUser.get(); 
             const email = currentUser.getBasicProfile().getEmail();
             const idToken = currentUser.getAuthResponse().id_token;
-            axios.post(`http://ie.etuts.ir:30735/login?email=${email}&password=''&isGoogleAuth=${true}&idToken=${idToken}`).then((response) => {
+            axios.post(`${configs.server_url}/login?email=${email}&password=''&isGoogleAuth=${true}&idToken=${idToken}`).then((response) => {
                 if (response.data.successful) {
                     this.setToken(response.data.message);
                     this.goToHomePage();
@@ -88,7 +89,7 @@ class LoginPage extends React.Component {
 
     login = () => {
         const {email, password} = this.state;
-        axios.post(`http://ie.etuts.ir:30735/login?email=${email}&password=${password}&isGoogleAuth=${false}&idToken=""`).then(
+        axios.post(`${configs.server_url}/login?email=${email}&password=${password}&isGoogleAuth=${false}&idToken=""`).then(
             response => {
                 if (response.data.successful) {
                     this.setToken(response.data.message);

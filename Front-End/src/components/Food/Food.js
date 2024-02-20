@@ -1,9 +1,10 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import {convertEnglishNumbersToPersian, preventBubbling} from '../../utilities';
 import Spinner from '../Spinner/Spinner';
+import configs from '../../configs';
+
+import {connect} from 'react-redux';
 import {fetchAndStoreCart, fetchAndStoreFoodPartyInformation} from '../../actions';
 
 class FoodModal extends React.Component {
@@ -16,7 +17,7 @@ class FoodModal extends React.Component {
         if(this.props.isFoodParty) {
             return (
                 <div className="food-modal-old-price">
-                    {convertEnglishNumbersToPersian(food.oldPrice)}
+                    {food.oldPrice}
                 </div>
             )
         }
@@ -26,7 +27,7 @@ class FoodModal extends React.Component {
         if(this.props.isFoodParty) {
             return (
                 <div className="food-modal-available-quantity">
-                    {this.state.numOfAvailableFood === 0 ? "Not Available" : `Number of Remaining Items: ${convertEnglishNumbersToPersian(this.state.numOfAvailableFood)}`}
+                    {this.state.numOfAvailableFood === 0 ? "Not Available" : `Number of Remaining Items: ${this.state.numOfAvailableFood}`}
                 </div>
             )
         }
@@ -53,7 +54,7 @@ class FoodModal extends React.Component {
     }
 
     addToCart = () => {
-        axios.put(`http://ie.etuts.ir:30735/carts?foodName=${this.props.item.food.name}&restaurantId=${this.props.item.restaurant.id}&quantity=${this.state.numOfFoodToOrder}&isFoodPartyFood=${this.props.isFoodParty}`, {},
+        axios.put(`${configs.server_url}/carts?foodName=${this.props.item.food.name}&restaurantId=${this.props.item.restaurant.id}&quantity=${this.state.numOfFoodToOrder}&isFoodPartyFood=${this.props.isFoodParty}`, {},
                  { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}})
         .then((response) => {
             if(response.data.successful) {
@@ -108,7 +109,7 @@ class FoodModal extends React.Component {
                             <div className="food-modal-star-popularity">
                                 <i className="fas fa-star food-modal-star"></i>
                                 <div className="food-modal-popularity">
-                                    {convertEnglishNumbersToPersian(food.popularity * 5)}       
+                                    {food.popularity * 5}       
                                 </div>    
                             </div>
                         </div>
@@ -118,7 +119,7 @@ class FoodModal extends React.Component {
                         <div className="food-modal-prices">
                             {this.renderOldPrice(food)}
                             <div className="food-modal-price">
-                                {convertEnglishNumbersToPersian(food.price)} Dollars
+                                {food.price} Dollars
                             </div>
                         </div>
                     </div>
@@ -128,7 +129,7 @@ class FoodModal extends React.Component {
                     <div className="food-modal-order">
                         <div className="food-modal-order-quantity">
                             <i onClick={this.increaseFoodQuantity} className="flaticon-plus plus-logo"></i>
-                            <div className="food-modal-order-quantity-num">{convertEnglishNumbersToPersian(this.state.numOfFoodToOrder)}</div>
+                            <div className="food-modal-order-quantity-num">{this.state.numOfFoodToOrder}</div>
                             <i onClick={this.decreaseFoodQuantity} className="flaticon-minus minus-logo"></i>
                         </div>
                         <button onClick={this.addToCart} type="button" className="btn btn-primary submit-button">Add To Cart</button>
@@ -151,7 +152,7 @@ class FoodModal extends React.Component {
 
     render() {  
         return (
-            <div onClick={(event) => preventBubbling(event)}  className="food-modal-container">
+            <div onClick={(event) => event.stopPropagation()}  className="food-modal-container">
                {this.renderContent()}
                {this.renderNotification()}
             </div>

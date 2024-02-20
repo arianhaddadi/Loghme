@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
 import logo from '../../images/Logo.png';
-import {convertEnglishNumbersToPersian} from '../../utilities';
-import {storeGoogleAuthenticationObject} from "../../actions";
 import CartFunctionsContext from '../../contexts/CartFunctionsContext';
+import {connect} from 'react-redux';
+import {storeGoogleAuthenticationObject} from "../../actions";
 
 class NavigationBar extends React.Component {
 
@@ -33,7 +32,7 @@ class NavigationBar extends React.Component {
                             </div>
                             <i onClick={value.openCart} className="flaticon-smart-cart cart-logo"></i>
                             <div onClick={value.openCart} className={`cart-quantity ${numOfCartItems > 0 ? "isNotEmpty" : ""}`}>
-                                {numOfCartItems > 0 ? convertEnglishNumbersToPersian(numOfCartItems) : ""}
+                                {numOfCartItems > 0 ? numOfCartItems : ""}
                             </div>
                             <img onClick={() => this.props.browserHistory.push("/")} src={logo} className={`loghme-logo ${this.props.hideLogo ? "hide" : ""}`} alt="" />
                         </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Cart from '../Cart/Cart';
-import Modal from '../Modal/Modal';
+import Modal from '../utils/Modal';
 import FoodModal from '../Food/Food';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import RestaurantMenuItem from '../RestaurantPage/RestaurantMenuItem';

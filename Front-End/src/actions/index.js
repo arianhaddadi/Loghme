@@ -1,8 +1,9 @@
 import axios from 'axios';
+import configs from '../configs';
 
 export const fetchAndStoreOrders = () => {
     return async (dispatch, getState) => {
-        axios.get("http://ie.etuts.ir:30735/orders", { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
+        axios.get(`${configs.server_url}/orders`, { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
             response => {
                 dispatch({
                     type:"ORDERS",
@@ -20,7 +21,7 @@ export const fetchAndStoreOrders = () => {
 
 export const fetchAndStoreCart = () => {
     return async (dispatch, getState) => {
-        axios.get("http://ie.etuts.ir:30735/carts", { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
+        axios.get(`${configs.server_url}/carts`, { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
             response => {
                 dispatch({
                     type:"CART",
@@ -38,7 +39,7 @@ export const fetchAndStoreCart = () => {
 
 export const fetchAndStoreFoodPartyInformation = () => {
     return async (dispatch, getState) => {
-        axios.get("http://ie.etuts.ir:30735/foodparties", { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
+        axios.get(`${configs.server_url}/foodparties`, { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
             response => {
                 dispatch({
                     type:"FOOD_PARTY",
@@ -56,7 +57,7 @@ export const fetchAndStoreFoodPartyInformation = () => {
 
 export const fetchAndStoreRestaurants = (pageSize, pageNum) => {
     return async (dispatch, getState) => {
-        axios.get(`http://ie.etuts.ir:30735/restaurants?pageSize=${pageSize}&pageNum=${pageNum}`, { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
+        axios.get(`${configs.server_url}/restaurants?pageSize=${pageSize}&pageNum=${pageNum}`, { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
             response => {
                 dispatch({
                     type:"RESTAURANTS",
@@ -74,7 +75,7 @@ export const fetchAndStoreRestaurants = (pageSize, pageNum) => {
 
 export const fetchAndStoreUserInfo = () => {
     return async (dispatch, getState) => {
-        axios.get("http://ie.etuts.ir:30735/profiles", { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
+        axios.get(`${configs.server_url}/profiles`, { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
             response => {
                 dispatch({
                     type:"USER",
@@ -92,7 +93,7 @@ export const fetchAndStoreUserInfo = () => {
 
 export const fetchAndStoreRestaurant = (restaurantId) => {
     return async (dispatch, getState) => {
-        axios.get(`http://ie.etuts.ir:30735/restaurants/${restaurantId}`, { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
+        axios.get(`${configs.server_url}/restaurants/${restaurantId}`, { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}).then(
             response => {
                 dispatch({
                     type:"RESTAURANT",

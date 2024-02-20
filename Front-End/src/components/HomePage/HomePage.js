@@ -1,17 +1,17 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {ToastContainer, toast} from 'react-toastify';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import logo from '../../images/Logo.png';
-import {convertEnglishNumbersToPersian, styleTime} from "../../utilities";
 import Spinner from "../Spinner/Spinner";
-import {fetchAndStoreFoodPartyInformation, fetchAndStoreRestaurants, clearRestaurants} from '../../actions';
-import Modal from '../Modal/Modal';
+import Modal from '../utils/Modal';
 import FoodModal from '../Food/Food';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import FoodPartyItem from './FoodPartyItem';
 import RestaurantItem from './RestaurantItem';
+import configs from '../../configs';
+import {connect} from 'react-redux';
+import {ToastContainer, toast} from 'react-toastify';
+import {fetchAndStoreFoodPartyInformation, fetchAndStoreRestaurants, clearRestaurants} from '../../actions';
 
 class HomePage extends React.Component {
 
@@ -217,11 +217,19 @@ class HomePage extends React.Component {
         )
     }
 
+    styleTime = (time) => {
+        time = time.toString();
+        if(time.length === 1) time = "0" + time;
+        return time;
+    }
+
     renderFoodPartyTimer = () => {
         if(this.props.foodPartyRestaurants !== null && this.foodPartyTimer !== null) {
+            const minutedRemaining = this.styleTime(this.state.timer.minutes);
+            const secondsRemaining = this.styleTime(this.state.timer.seconds);
             return (
                 <div className="food-party-home-timer">
-                    Remaining Time: {convertEnglishNumbersToPersian(styleTime(this.state.timer.minutes))}:{convertEnglishNumbersToPersian(styleTime(this.state.timer.seconds))}
+                    Remaining Time: {minutedRemaining}:{secondsRemaining}
                 </div>
             )
         }
@@ -262,7 +270,7 @@ class HomePage extends React.Component {
     }
 
     search = (pageSize, pageNum) => {
-        axios.get(`http://ie.etuts.ir:30735/search?foodName=${this.state.searchFoodName}&restaurantName=${this.state.searchRestaurantName}&pageSize=${pageSize}&pageNum=${pageNum}`,
+        axios.get(`${configs.server_url}/search?foodName=${this.state.searchFoodName}&restaurantName=${this.state.searchRestaurantName}&pageSize=${pageSize}&pageNum=${pageNum}`,
                  { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}})
             .then(response => {
                 this.setState({

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { convertEnglishNumbersToPersian } from '../../utilities';
 
 
 const RestaurantMenuItem = (props) => {
@@ -11,12 +10,12 @@ const RestaurantMenuItem = (props) => {
             <div className="menu-item-name">
                 <div className="menu-item-rating">
                     <i className="fas fa-star menu-item-star"></i> 
-                    <div>{convertEnglishNumbersToPersian(item.popularity * 5)}</div>
+                    <div>{item.popularity * 5}</div>
                 </div>
                 {item.name}
             </div>
             <div className="menu-item-price">
-                {convertEnglishNumbersToPersian(item.price)} Dollars
+                {item.price} Dollars
             </div>
             <button className="btn warning-btn add-to-cart-button">
                 Add To Cart

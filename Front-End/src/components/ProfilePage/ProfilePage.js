@@ -1,12 +1,12 @@
 import React from 'react';
 import axios from 'axios';
-import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {fetchAndStoreOrders, fetchAndStoreUserInfo} from "../../actions";
-import Modal from '../Modal/Modal';
+import Modal from '../utils/Modal';
 import Spinner from '../Spinner/Spinner';
-import {convertEnglishNumbersToPersian, calculateOrderPrice, preventBubbling} from "../../utilities";
 import NavigationBar from '../NavigationBar/NavigationBar';
+import configs from '../../configs';
+import {connect} from 'react-redux';
+import {fetchAndStoreOrders, fetchAndStoreUserInfo} from "../../actions";
 
 
 class ProfilePage extends React.Component {
@@ -66,7 +66,7 @@ class ProfilePage extends React.Component {
             })
         }
         else {
-            axios.put(`http://ie.etuts.ir:30735/credits?amount=${value}`, {}, { headers: { 'Authorization': `Bearer ${localStorage.getItem("loghmeUserToken")}`}})
+            axios.put(`${configs.server_url}/credits?amount=${value}`, {}, { headers: { 'Authorization': `Bearer ${localStorage.getItem("loghmeUserToken")}`}})
             .then(() => {
                 this.setState({
                     creditsLoading:false,
@@ -167,7 +167,7 @@ class ProfilePage extends React.Component {
             return orders.map((elem, index) => {
                 return (
                     <div key={index} onClick={() => this.viewOrder(elem)} className="order">
-                        <div className="order-index">{convertEnglishNumbersToPersian(index+1)}</div>
+                        <div className="order-index">{index+1}</div>
                         <div className="order-restaurant-name">
                             {elem.cart.restaurant.name}
                         </div>
@@ -185,25 +185,33 @@ class ProfilePage extends React.Component {
             return (
                 <div key={index} className="order-modal-item">
                     <div className="price">
-                        {convertEnglishNumbersToPersian(elem.food.price)}
+                        {elem.food.price}
                     </div>
                     <div className="quantity">
-                        {convertEnglishNumbersToPersian(elem.quantity)}
+                        {elem.quantity}
                     </div>
                     <div className="food-name">
                        {elem.food.name}
                     </div>
                     <div className="index">
-                        {convertEnglishNumbersToPersian(index + 1)}
+                        {index+1}
                     </div>
                 </div>
             );
         });
     }
 
+    calculateOrderPrice = (cartItems) => {
+        let price = 0;
+        for (let i = 0; i < cartItems.length; i++) {
+            price += cartItems[i].food.price * cartItems[i].quantity;
+        }
+        return price;
+    }
+
     renderOrderInfo = (order) => {
         return (
-            <div onClick={(event) => preventBubbling(event)} className="order-modal">
+            <div onClick={(event) => event.stopPropagation()} className="order-modal">
                 <div className="order-modal-restaurant-name">
                     {order.cart.restaurant.name}
                 </div>
@@ -226,7 +234,7 @@ class ProfilePage extends React.Component {
                     {this.renderOrderItems(order.cart.cartItems)}
                     <div className="order-modal-price">
                         <b>
-                        Total Price:{calculateOrderPrice(order.cart.cartItems)} Dollars
+                        Total Price:{this.calculateOrderPrice(order.cart.cartItems)} Dollars
                         </b>
                     </div>
                 </div>
@@ -279,9 +287,9 @@ class ProfilePage extends React.Component {
                         </b>
                     </div>
                     <div className="personal-info">
-                        {this.renderPersonalInfoItem(convertEnglishNumbersToPersian(user.phoneNumber), "flaticon-phone")}
+                        {this.renderPersonalInfoItem(user.phoneNumber, "flaticon-phone")}
                         {this.renderPersonalInfoItem(user.email, "flaticon-mail")}
-                        {this.renderPersonalInfoItem(`${convertEnglishNumbersToPersian(user.credit)} Dollars`, "flaticon-card")}
+                        {this.renderPersonalInfoItem(`${user.credit} Dollars`, "flaticon-card")}
                     </div>
                 </>
             )
