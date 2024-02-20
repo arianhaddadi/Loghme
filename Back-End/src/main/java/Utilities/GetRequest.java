@@ -1,17 +1,18 @@
-package Utilities.Request;
+package Utilities;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
-public class Request {
+public class GetRequest {
     protected URL url;
     protected String responseString;
     protected int responseStatusCode;
 
-    public Request(String urlString) {
+    public GetRequest(String urlString) {
         try {
             url = new URL(urlString);
         } catch (IOException e) {
@@ -19,11 +20,21 @@ public class Request {
         }
     }
 
-    protected void checkStatusCodeAndSetResponse(HttpURLConnection connection) {
+    public void send() {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            checkStatusCodeAndSetResponse(connection);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkStatusCodeAndSetResponse(HttpURLConnection connection) {
         try {
             responseStatusCode = connection.getResponseCode();
             if (responseStatusCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
                 String inputLine;
                 StringBuilder response = new StringBuilder();
 

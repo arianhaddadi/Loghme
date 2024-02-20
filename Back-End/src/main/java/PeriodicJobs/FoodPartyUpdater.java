@@ -2,7 +2,7 @@ package PeriodicJobs;
 
 import Domain.Restaurant.RestaurantsManager;
 import Entities.Restaurant;
-import Utilities.Request.GetRequest;
+import Utilities.GetRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;

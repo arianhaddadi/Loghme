@@ -2,7 +2,7 @@ package Entities;
 
 import Domain.Order.OrdersManager;
 import Repositories.DeliveriesRepository;
-import Utilities.Request.GetRequest;
+import Utilities.GetRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;

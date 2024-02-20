@@ -2,7 +2,6 @@ package Utilities;
 
 import PeriodicJobs.FoodPartyUpdater;
 import Domain.Restaurant.RestaurantsManager;
-import Utilities.Request.GetRequest;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;

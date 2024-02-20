@@ -1,6 +1,5 @@
 package Utilities;
 
-import Utilities.Request.GetRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
