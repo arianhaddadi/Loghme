@@ -1,8 +1,15 @@
 package Entities;
 
-public class FoodPartyFood extends Food{
+public class FoodPartyFood extends Food {
     private int count;
     private float oldPrice;
+
+    public FoodPartyFood(String name, String description, String image,
+                        float price, float popularity, int count, float oldPrice) {
+        super(name, description, image, price, popularity);
+        this.count = count;
+        this.oldPrice = oldPrice;
+    }
 
     public int getCount() {
         return count;

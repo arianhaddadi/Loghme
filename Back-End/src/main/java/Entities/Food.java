@@ -4,6 +4,15 @@ public class Food {
     protected String name, description, image;
     protected float price, popularity;
 
+    public Food(String name, String description, String image,
+                float price, float popularity) {
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.price = price;
+        this.popularity = popularity;
+    }
+
     public String getName() {
         return name;
     }

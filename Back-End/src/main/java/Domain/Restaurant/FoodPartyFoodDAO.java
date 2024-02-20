@@ -7,9 +7,7 @@ public class FoodPartyFoodDAO extends FoodDAO {
     private float oldPrice;
     private int count;
 
-    public FoodPartyFoodDAO() {
-        return;
-    }
+    public FoodPartyFoodDAO() {}
 
     public FoodPartyFoodDAO(FoodPartyFood foodPartyFood, Restaurant restaurant) {
         super(foodPartyFood, restaurant);
@@ -18,15 +16,7 @@ public class FoodPartyFoodDAO extends FoodDAO {
     }
 
     public FoodPartyFood getFoodPartyFoodForm() {
-        FoodPartyFood foodPartyFood = new FoodPartyFood();
-        foodPartyFood.setName(name);
-        foodPartyFood.setDescription(description);
-        foodPartyFood.setImage(image);
-        foodPartyFood.setPrice(price);
-        foodPartyFood.setOldPrice(oldPrice);
-        foodPartyFood.setPopularity(popularity);
-        foodPartyFood.setCount(count);
-        return foodPartyFood;
+        return new FoodPartyFood(name, description, image, price, popularity, count, oldPrice);
     }
 
     public float getOldPrice() {

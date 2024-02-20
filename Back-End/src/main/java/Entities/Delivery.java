@@ -7,6 +7,11 @@ public class Delivery {
     private long velocity;
     private Location location;
 
+    public Delivery(String id, long velocity, Location location) {
+        this.id = id;
+        this.velocity = velocity;
+        this.location = location;
+    }
 
     public String getId() {
         return id;

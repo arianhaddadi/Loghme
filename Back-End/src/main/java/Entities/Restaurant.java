@@ -8,6 +8,16 @@ public class Restaurant {
     private ArrayList<Food> menu;
     private ArrayList<FoodPartyFood> foodPartyMenu;
 
+    public Restaurant(String id, String name, String logo, Location location,
+                      ArrayList<Food> menu, ArrayList<FoodPartyFood> foodPartyMenu) {
+        this.id = id;
+        this.name = name;
+        this.logo = logo;
+        this.location = location;
+        this.menu = menu;
+        this.foodPartyMenu = foodPartyMenu;
+    }
+
     public Food getFoodByName(String name) {
         if(menu == null) return null;
         for(Food food : menu) {
