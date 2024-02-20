@@ -42,13 +42,13 @@ class SignupPage extends React.Component {
         axios.post(`http://ie.etuts.ir:30735/signup?firstName=${firstName}&lastName=${lastName}&password=${password}&email=${email}&phoneNumber=${phoneNumber}`)
         .then(response => {
             if (response.data.successful) {
-                toast("!ثبت نام موفقیت آمیز بود");
+                toast("Successfully Signed Up!");
                 setTimeout(() => {
                     this.props.history.push("/login");
                 }, this.state.toastifyLength);
             }
             else {
-                toast("!ثبت نام موفقیت آمیز نبود! ایمیل وارد شده قبلا در سیستم ثبت شده است");
+                toast("Signup failed. Email already in use!");
             }
         })
     }
@@ -56,7 +56,7 @@ class SignupPage extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
         if(this.hasError()) {
-            toast("!ابتدا خطا ها را رفع کنید");
+            toast("Fix the errors first!");
         }
         if(!this.hasError()) {
             this.signup();
@@ -71,7 +71,7 @@ class SignupPage extends React.Component {
             case 'firstName':
             case "lastName":
                 if(((value !== "") && (value.length < 2)) || ((value === "") && (isAfterSubmit))) {
-                    errors[name] = "نام و نام خانوادگی باید حداقل ۵ حرف داشته باشند!";
+                    errors[name] = "First and last names must have a minimum of 5 letters.";
                 }
                 else {
                     errors[name] = "";
@@ -79,7 +79,7 @@ class SignupPage extends React.Component {
                 break;
             case 'email': 
                 if(((value !== "") && (!validEmailRegex.test(value))) || ((value === "") && (isAfterSubmit))) {
-                    errors.email = "ایمیل معتبر نمی باشد!";
+                    errors.email = "Invalid email address!";
                 }
                 else {
                     errors.email = "";
@@ -87,10 +87,10 @@ class SignupPage extends React.Component {
                 break;
             case 'phoneNumber':
                 if((value !== "") && (!Number(value))) {
-                    errors.phoneNumber = "شماره تلفن باید عدد باشد!"
+                    errors.phoneNumber = "Invalid phone number!";
                 }
                 else if(((value !== "") && (value.length < 8)) || ((value === "") && (isAfterSubmit))) {
-                    errors.phoneNumber = "شماره تلفن باید حداقل ۸ رقم داشته باشد!"
+                    errors.phoneNumber = "Phone number must have at least 8 digits!";
                 }
                 else {
                     errors.phoneNumber = ""
@@ -98,16 +98,16 @@ class SignupPage extends React.Component {
                 break;
             case 'password': 
                 if(((value !== "") && (value.length < 8)) || ((value === "") && (isAfterSubmit))) {
-                    errors.password = "پسورد باید حداقل ۸ حرف داشته باشد!"
+                    errors.password = "Password must be at least 8 letters long!";
                 }
                 else {
                     errors.password = "";
                 }
                 if((this.state.passwordRepeat !== "") && (this.state.passwordRepeat !== value)) {
-                    errors.passwordRepeat = "تکرار پسورد مانند پسورد نیست!"
+                    errors.passwordRepeat = "Passwords do not match!"
                 }
                 else if((this.state.passwordRepeat === "") && (isAfterSubmit)) {
-                    errors.passwordRepeat = "این فیلد پر نشده است!"
+                    errors.passwordRepeat = "This field is required!"
                 }
                 else {
                     errors.passwordRepeat = "";
@@ -115,10 +115,10 @@ class SignupPage extends React.Component {
                 break;
             case 'passwordRepeat': 
                 if((value !== "") && (value !== this.state.password)) {
-                    errors.passwordRepeat = "تکرار پسورد مانند پسورد نیست!"
+                    errors.passwordRepeat = "Passwords do not match!"
                 }
                 else if((value === "") && (isAfterSubmit)) {
-                    errors.passwordRepeat = "این فیلد پر نشده است!"
+                    errors.passwordRepeat = "This field is required!"
                 }
                 else {
                     errors.passwordRepeat = "";
@@ -178,17 +178,17 @@ class SignupPage extends React.Component {
                     <div className="back-filter"></div>
                     <div className="signup-box">
                         <img className="signup-logo" src={logo} alt="" />
-                        <div className="signup-title">ثبت نام</div>
+                        <div className="signup-title">Signup</div>
                         <div className="signup-content">
                             <form onSubmit={this.handleSubmit} noValidate>
-                                {this.getFormInput("firstName", "نام", "text")}
-                                {this.getFormInput("lastName", "نام خانوادگی", "text")}
-                                {this.getFormInput("email", "ایمیل", "email")}
-                                {this.getFormInput("phoneNumber", "شماره تلفن", "tel")}
-                                {this.getFormInput("password", "رمز عبور", "password")}
-                                {this.getFormInput("passwordRepeat", "تکرار رمز عبور", "password")}
-                                <button type="submit" className="btn btn-primary c-button">ثبت نام</button>
-                                <Link className="goToLoginMessage" to='/login'>قبلاً ثبت نام کردید؟ وارد شوید</Link>
+                                {this.getFormInput("firstName", "First Name", "text")}
+                                {this.getFormInput("lastName", "Last Name", "text")}
+                                {this.getFormInput("email", "Email", "email")}
+                                {this.getFormInput("phoneNumber", "Phone Number", "tel")}
+                                {this.getFormInput("password", "Password", "password")}
+                                {this.getFormInput("passwordRepeat", "Repeat Password", "password")}
+                                <button type="submit" className="btn btn-primary c-button">Signup</button>
+                                <Link className="goToLoginMessage" to='/login'>Already signed up? Login</Link>
                             </form>
                         </div>
                     </div>

@@ -22,17 +22,17 @@ const FoodPartyItem = (props) => {
             </div>
             <div className="food-party-item-prices">
                 <div className="food-party-item-old-price">
-                    {convertEnglishNumbersToPersian(item.oldPrice)} تومان
+                    {convertEnglishNumbersToPersian(item.oldPrice)} Dollars
                 </div>
                 <div className="food-party-item-new-price">
-                    {convertEnglishNumbersToPersian(item.price)} تومان
+                    {convertEnglishNumbersToPersian(item.price)} Dollars
                 </div>
             </div>
             <div className="food-party-item-buttons">
                 <div className="food-party-item-remaining">
-                    {item.count === 0 ? "ناموجود" : `موجودی: ${convertEnglishNumbersToPersian(item.count)}`}
+                    {item.count === 0 ? "Not Available" : `Number of Remaining Items: ${convertEnglishNumbersToPersian(item.count)}`}
                     </div>
-                <div onClick={() => props.orderFood(props.restaurant, item)} className="food-party-item-buy-button">خرید</div>
+                <div onClick={() => props.orderFood(props.restaurant, item)} className="food-party-item-buy-button">Purchase</div>
             </div>
             <div className="food-party-restaurant-name">
                 {props.restaurant.name}

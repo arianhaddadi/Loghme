@@ -10,7 +10,7 @@ const RestaurantItem = (props) => {
             <div className="restaurant-item-name">
                 {item.name}
             </div>
-            <button onClick={() => {props.viewRestaurantPage(item.id)}} type="button" className="btn btn-warning restaurant-item-view-button">نمایش منو</button>
+            <button onClick={() => {props.viewRestaurantPage(item.id)}} type="button" className="btn btn-warning restaurant-item-view-button">View Menu</button>
         </div>
     )
 }

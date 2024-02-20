@@ -15,7 +15,7 @@ class Cart extends React.Component {
             isLoading:this.props.cart !== null ? false : true,
             notification:this.props.cart === null ? null : this.props.cart.empty ? {
                 status:"none",
-                message:"سبد خرید خالیست."
+                message:"Cart is empty."
             } : null};
     }
 
@@ -39,7 +39,7 @@ class Cart extends React.Component {
                 this.setState({
                     notification: {
                         status:"none",
-                        message:"سبد خرید خالیست"
+                        message:"Cart is empty."
                     }
                 })
             }
@@ -55,7 +55,7 @@ class Cart extends React.Component {
             this.setState({
                 notification: {
                     status:"none",
-                    message:"سبد خرید خالیست"
+                    message:"Cart is empty."
                 }
             })
         }
@@ -78,8 +78,7 @@ class Cart extends React.Component {
                     isLoading:false,
                     notification: {
                         status:"error",
-                        message:response.data.message === "Food doesn't exist!" ? 
-                        "مهلت سفارش جدید از این غذا در جشن غذا پایان یافته است." : "بیش از این تعداد از غذا موجود نیست."
+                        message:response.data.message
                     }
                 })
             }
@@ -112,7 +111,7 @@ class Cart extends React.Component {
                     finalized:true,
                     notification:{
                         status:"success",
-                        message:"خرید با موفقیت انجام شد."
+                        message:"Your order was successfully placed."
                     }
                 };
             }
@@ -121,7 +120,7 @@ class Cart extends React.Component {
                     isLoading:false,
                     notification:{
                         status:"error",
-                        message:"میزان اعتبار کافی نیست"
+                        message:"Your balance is not enough!"
                     }
                 })
             }
@@ -148,7 +147,7 @@ class Cart extends React.Component {
                             <i onClick={() => this.deleteItem(food.name, restaurantId, food.count === undefined ? false : true)} className="flaticon-minus minus-logo"></i>
                         </div>
                     </div>
-                    <div className="cart-item-price">{convertEnglishNumbersToPersian(food.price)} تومان</div>
+                    <div className="cart-item-price">{convertEnglishNumbersToPersian(food.price)} Dollars</div>
                     <hr />
                 </div>
             )
@@ -171,9 +170,9 @@ class Cart extends React.Component {
                         {this.renderCartItems()}
                     </div>
                     <div className="cart-total-price">
-                        جمع کل: <b> {calculateOrderPrice(cart.cartItems)} تومان</b>
+                        Total Sum: <b> {calculateOrderPrice(cart.cartItems)} Dollars</b>
                     </div>
-                    <button onClick={this.finalizeOrder} className="submit-button btn">تایید نهایی</button>
+                    <button onClick={this.finalizeOrder} className="submit-button btn">Finalize Order</button>
                 </>
             )
         }
@@ -202,7 +201,7 @@ class Cart extends React.Component {
             <div onClick={(event) => preventBubbling(event)} className={`cart-container ${this.props.type !== undefined ? `${this.props.type}` : ""}`}>
                 <div className="cart">
                     <div className="cart-title">
-                        سبد خرید
+                        Cart
                         <hr />
                     </div>
                     {this.renderCartContent()}

@@ -115,7 +115,7 @@ class HomePage extends React.Component {
             if(this.props.foodPartyRestaurants.length === 0) {
                 return (
                     <div className="no-food-party-restaurants-notification">
-                        رستورانی برای جشن غذا وجود ندارد.
+                        No restaurants are currently in food party.
                     </div>
                 );
             }
@@ -190,14 +190,14 @@ class HomePage extends React.Component {
 
             return (
                 <>
-                    <button onClick={this.loadMore} className="submit-button btn show-more-button">نمایش بیشتر</button>
+                    <button onClick={this.loadMore} className="submit-button btn show-more-button">Show More</button>
                     {this.renderLoadingMoreSpinner()}
                 </>
             )
         }
         else if (this.state.searchedRestaurants !== null && this.state.searchedRestaurants.length === 0) {
             return (
-                <p>!نتیجه ای یافت نشد</p>
+                <p>No results found.</p>
             )
         }
     }
@@ -206,7 +206,7 @@ class HomePage extends React.Component {
         return (
             <div className="restaurants-home">
                 <div className="home-title">
-                    رستوران ها
+                    Restaurants
                 </div>
                 <hr className="home-title-hr"/>
                 <div className="restaurants-home-items">
@@ -221,7 +221,7 @@ class HomePage extends React.Component {
         if(this.props.foodPartyRestaurants !== null && this.foodPartyTimer !== null) {
             return (
                 <div className="food-party-home-timer">
-                    زمان باقی مانده: {convertEnglishNumbersToPersian(styleTime(this.state.timer.minutes))}:{convertEnglishNumbersToPersian(styleTime(this.state.timer.seconds))}
+                    Remaining Time: {convertEnglishNumbersToPersian(styleTime(this.state.timer.minutes))}:{convertEnglishNumbersToPersian(styleTime(this.state.timer.seconds))}
                 </div>
             )
         }
@@ -231,7 +231,7 @@ class HomePage extends React.Component {
         return (
             <div className="food-party-home">
                 <div className="home-title">
-                     جشن غذا!
+                     Food Party
                 </div>
                 <hr className="home-title-hr"/>
                 {this.renderFoodPartyTimer()}
@@ -273,10 +273,10 @@ class HomePage extends React.Component {
                     newSearchResults:true
                 })
                 if(response.data.list.length === 0 && this.state.searchedRestaurants === null) {
-                    toast("!موردی یافت نشد");
+                    toast("No items found.");
                 }
                 else {
-                    toast("!جست و جو موفقیت آمیز بود");
+                    toast("Search was successfull.");
                 }
             }
         )
@@ -289,7 +289,7 @@ class HomePage extends React.Component {
     handleSearchSubmit = (event) => {
         event.preventDefault();
         if((this.state.searchRestaurantName === "") && (this.state.searchFoodName === "")) {
-            toast("!فیلد های جست و جو را تکمیل کنید")
+            toast("Please complete both fields!")
         }
         else {
             if (this.state.searchPageNum !== 1) {
@@ -317,16 +317,16 @@ class HomePage extends React.Component {
                     <div className="home-head-bar">
                         <img onClick={() => this.setState({searchedRestaurants:null})} src={logo} className="loghme-logo-home" alt="" />
                         <div className="restaurant-desription-home">
-                            اولین و بزرگ ترین وب سایت آنلاین سفارش غذا در دانشگاه تهران
+                            The best online food ordering website in the world!
                         </div>
                         <form className="search-bar-home" onSubmit={this.handleSearchSubmit} noValidate>
-                            <button type="submit" className="btn btn-warning">جست و جو</button>
+                            <button type="submit" className="btn btn-warning">Search</button>
                             <input name="searchRestaurantName" onChange={this.handleSearchChange} 
                                 noValidate type="text" className="btn search-bar-home-restaurant-name" 
-                                placeholder="نام رستوران" value={this.state.searchRestaurantName}/>
+                                placeholder="Restaurant Name" value={this.state.searchRestaurantName}/>
                             <input name="searchFoodName" onChange={this.handleSearchChange} 
                                 noValidate type="text" className="btn search-bar-home-food-name" 
-                                placeholder="نام غذا" value={this.state.searchFoodName}/>
+                                placeholder="Food Name" value={this.state.searchFoodName}/>
                         </form>
                         <div className="head-bar-cover"></div>
                     </div>

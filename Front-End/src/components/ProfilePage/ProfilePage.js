@@ -43,7 +43,7 @@ class ProfilePage extends React.Component {
                 creditsInputValue:"",
                 creditsNotification:{
                     status:"error",
-                    message:"ورودی نمیتواند خالی باشد.",
+                    message:"Input is empty!",
                 }
             });
         }
@@ -52,7 +52,7 @@ class ProfilePage extends React.Component {
                 creditsInputValue:"",
                 creditsNotification:{
                     status:"error",
-                    message:"ورودی باید عدد باشد.",
+                    message:"Input must be a number",
                 }
             });
         }
@@ -61,7 +61,7 @@ class ProfilePage extends React.Component {
                 creditsInputValue:"",
                 creditsNotification:{
                     status:"error",
-                    message:"امکان کاهش اعتبار وجود ندارد."
+                    message:"Reducing balance is not allowed!"
                 }
             })
         }
@@ -73,7 +73,7 @@ class ProfilePage extends React.Component {
                     creditsInputValue:"",
                     creditsNotification:{
                         status:"success",
-                        message:"افزایش اعتبار با موفقیت انجام شد.",
+                        message:"Your balance was increased successfully!"
                     }
                 })
                 this.props.fetchAndStoreUserInfo();
@@ -108,13 +108,13 @@ class ProfilePage extends React.Component {
             <div className="tab">
                 <input id="credit-tab" name="tabgroup" type="radio" />
                 <label htmlFor="credit-tab">
-                    افزایش اعتبار
+                    Add Balance
                 </label>
                 <div className="row credit-content">
                     <button onClick={this.addCredit} type="button" className="btn btn-primary add-credit-button col-3">
-                        افزایش
+                        Add
                     </button>
-                    <input className="credit-input btn col-8" value={this.state.creditsInputValue} onChange={(event) => this.setState({creditsInputValue:event.target.value})} placeholder="میزان افزایش اعتبار" />
+                    <input className="credit-input btn col-8" value={this.state.creditsInputValue} onChange={(event) => this.setState({creditsInputValue:event.target.value})} placeholder="Balance to add" />
                     {this.renderCreditsNotification()}
                     {this.renderCreditsSpinner()}
                 </div>
@@ -126,21 +126,21 @@ class ProfilePage extends React.Component {
         if (deliveryStatus === "DELIVERY_ON_ITS_WAY") {
             return (
                 <div className="btn-success on-the-way-button" >
-                    پیک در مسیر
+                    Delivery on its way
                 </div>
             )
         }
         else if (deliveryStatus === "SEARCHING_FOR_DELIVERY") {
             return (
                 <div className="btn-info">
-                    در جست و جوی پیک
+                    Searching for delivery
                 </div>
             )
         }
         else {
             return (
                 <div className="btn-warning">
-                    مشاهده فاکتور
+                    View Bill
                 </div>
             )
         }
@@ -160,7 +160,7 @@ class ProfilePage extends React.Component {
             if (orders.length === 0) {
                 return (
                     <div className="no-orders">
-                        سفارشی وجود ندارد.
+                        No orders to show
                     </div>
                 )
             }
@@ -211,22 +211,22 @@ class ProfilePage extends React.Component {
                 <div className="order-modal-items-table">
                     <div className="order-modal-items-table-head">
                         <div className="price">
-                            قیمت
+                            Price
                         </div>
                         <div className="quantity">
-                            تعداد
+                            Quantity
                         </div>
                         <div className="food-name">
-                            نام غذا
+                            Name
                         </div>
                         <div className="index">
-                            ردیف
+                            Index
                         </div>
                     </div>
                     {this.renderOrderItems(order.cart.cartItems)}
                     <div className="order-modal-price">
                         <b>
-                        جمع کل:{calculateOrderPrice(order.cart.cartItems)} تومان
+                        Total Price:{calculateOrderPrice(order.cart.cartItems)} Dollars
                         </b>
                     </div>
                 </div>
@@ -258,7 +258,7 @@ class ProfilePage extends React.Component {
             <div className="tab">
                 <input id="orders-tab" name="tabgroup" type="radio" defaultChecked/>
                 <label htmlFor="orders-tab" onClick={this.handleClickOnOrdersTab}>
-                    سفارش ها
+                    Orders
                 </label>
                 <div className="orders-content">
                     {this.renderOrdersRows(this.props.orders)}
@@ -281,7 +281,7 @@ class ProfilePage extends React.Component {
                     <div className="personal-info">
                         {this.renderPersonalInfoItem(convertEnglishNumbersToPersian(user.phoneNumber), "flaticon-phone")}
                         {this.renderPersonalInfoItem(user.email, "flaticon-mail")}
-                        {this.renderPersonalInfoItem(`${convertEnglishNumbersToPersian(user.credit)} تومان`, "flaticon-card")}
+                        {this.renderPersonalInfoItem(`${convertEnglishNumbersToPersian(user.credit)} Dollars`, "flaticon-card")}
                     </div>
                 </>
             )

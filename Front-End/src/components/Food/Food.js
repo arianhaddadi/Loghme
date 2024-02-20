@@ -26,7 +26,7 @@ class FoodModal extends React.Component {
         if(this.props.isFoodParty) {
             return (
                 <div className="food-modal-available-quantity">
-                    {this.state.numOfAvailableFood === 0 ? "ناموجود" : `موجودی:${convertEnglishNumbersToPersian(this.state.numOfAvailableFood)}`}
+                    {this.state.numOfAvailableFood === 0 ? "Not Available" : `Number of Remaining Items: ${convertEnglishNumbersToPersian(this.state.numOfAvailableFood)}`}
                 </div>
             )
         }
@@ -37,7 +37,7 @@ class FoodModal extends React.Component {
             this.setState({
                 notification:{
                     status:"error",
-                    message:"بیش از این تعداد از غذا موجود نیست."
+                    message:"Not available!"
                 }
             })
         }
@@ -64,7 +64,7 @@ class FoodModal extends React.Component {
                     numOfAvailableFood:this.state.numOfAvailableFood - this.state.numOfFoodToOrder,
                     notification:{
                         status:"success",
-                        message:"غذای مورد نظر به سبد خرید افزوده شد.",
+                        message:"Added To Cart!",
                     }
                 })
             }
@@ -73,9 +73,7 @@ class FoodModal extends React.Component {
                     isLoading:false,
                     notification:{
                         status:"error",
-                        message:response.data.message === "You have other food from other restaurants in your cart!" ?
-                                                         "شما در سبد خرید خود غذاهای دیگری از رستوران های دیگری دارید." :
-                                                         "موجودی این غذا کافی نیست."
+                        message:response.data.message
                     }
                 })
             }
@@ -120,7 +118,7 @@ class FoodModal extends React.Component {
                         <div className="food-modal-prices">
                             {this.renderOldPrice(food)}
                             <div className="food-modal-price">
-                                {convertEnglishNumbersToPersian(food.price)} تومان
+                                {convertEnglishNumbersToPersian(food.price)} Dollars
                             </div>
                         </div>
                     </div>
@@ -133,7 +131,7 @@ class FoodModal extends React.Component {
                             <div className="food-modal-order-quantity-num">{convertEnglishNumbersToPersian(this.state.numOfFoodToOrder)}</div>
                             <i onClick={this.decreaseFoodQuantity} className="flaticon-minus minus-logo"></i>
                         </div>
-                        <button onClick={this.addToCart} type="button" className="btn btn-primary submit-button">اضافه کردن به سبد خرید</button>
+                        <button onClick={this.addToCart} type="button" className="btn btn-primary submit-button">Add To Cart</button>
                     </div>
                 </div>
                 {this.renderSpinner()}

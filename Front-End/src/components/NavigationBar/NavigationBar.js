@@ -26,10 +26,10 @@ class NavigationBar extends React.Component {
                     return (
                         <div className="navigation-bar">
                             <div onClick={() => this.handleExit()} className={`exit ${this.props.hideExit ? "hide" : ""}`}>
-                                خروج
+                                Logout
                             </div>
                             <div onClick={() => this.props.browserHistory.push("/profile")} className={`profile ${this.props.hideProfile ? "hide" : ""}`}>
-                                حساب کاربری
+                                Profile
                             </div>
                             <i onClick={value.openCart} className="flaticon-smart-cart cart-logo"></i>
                             <div onClick={value.openCart} className={`cart-quantity ${numOfCartItems > 0 ? "isNotEmpty" : ""}`}>

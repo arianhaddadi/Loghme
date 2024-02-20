@@ -33,7 +33,7 @@ class RestaurantPage extends React.Component {
         if (menu === null || menu.length === 0) {
             return (
                 <div className="no-restaurant-items">
-                    غذایی برای نمایش وجود ندارد.
+                    Menu is Empty!
                 </div>
             )
         }
@@ -57,7 +57,7 @@ class RestaurantPage extends React.Component {
                 <div className="menu-title-container">
                     <div className="menu-title">
                         <b>
-                            منوی غذا
+                            Menu
                         </b>
                     </div>
                     <hr />

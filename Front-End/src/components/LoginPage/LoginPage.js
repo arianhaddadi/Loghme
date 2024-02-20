@@ -56,7 +56,7 @@ class LoginPage extends React.Component {
     }
 
     goToHomePage = () => {
-        toast("!ورود موفقیت آمیز بود");
+        toast("Successfully Logged In!");
         setTimeout(() => {
             this.props.history.push("/");                        
         }, this.state.toastifyLength);
@@ -76,7 +76,7 @@ class LoginPage extends React.Component {
                 this.props.googleAuthentication.signOut();
                 this.props.googleAuthentication.disconnect();
                 if (error.response.status === 403) {
-                    toast("ایمیل شما صحیح نمی باشد و نیاز به ثبت نام دارید");
+                    toast("No account was registered with this email address. You need to sign up first!");
                     setTimeout(() => {
                         this.props.history.push("/signup");
                     }, this.state.toastifyLength);
@@ -95,18 +95,18 @@ class LoginPage extends React.Component {
                     this.goToHomePage();
                 }
                 else {
-                    toast("اطلاعات وارد شده صحیح نمی باشند.");
+                    toast("Wrong Credentials!");
                 }
             }
         ).catch((error) => {
-            toast("اطلاعات وارد شده صحیح نمی باشند.");
-          });
+            toast("Wrong Credentials!");
+        });
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
         if(this.hasError()) {
-            toast("!ابتدا خطا ها را رفع کنید");
+            toast("Fix the errors first!");
         }
         else {
             this.login();
@@ -120,7 +120,7 @@ class LoginPage extends React.Component {
         switch (name) {
             case 'email':
                 if(((value !== "") && (!validEmailRegex.test(value))) || ((value === "") && (isAfterSubmit))) {
-                    errors.email = "ایمیل معتبر نمی باشد!";
+                    errors.email = "Email address is not valid!";
                 }
                 else {
                     errors.email = "";
@@ -186,10 +186,10 @@ class LoginPage extends React.Component {
                         <div className="signup-title">ورود</div>
                         <div className="signup-content">
                             <form onSubmit={this.handleSubmit} noValidate>
-                                {this.getFormInput("email", "ایمیل", "email")}
-                                {this.getFormInput("password", "رمز عبور", "password")}
-                                <button type="submit" className="btn btn-primary c-button">ورود</button>
-                                <Link className="goToLoginMessage" to = '/signup'>کاربر جدید هستید؟ ثبت نام کنید </Link>
+                                {this.getFormInput("email", "Email", "email")}
+                                {this.getFormInput("password", "Password", "password")}
+                                <button type="submit" className="btn btn-primary c-button">Login</button>
+                                <Link className="goToLoginMessage" to = '/signup'>Haven't signed up before? Sign up here.</Link>
                                 <GoogleOAuth history={this.props.history}/>
                             </form>
                         </div>

@@ -16,10 +16,10 @@ const RestaurantMenuItem = (props) => {
                 {item.name}
             </div>
             <div className="menu-item-price">
-                {convertEnglishNumbersToPersian(item.price)} تومان
+                {convertEnglishNumbersToPersian(item.price)} Dollars
             </div>
             <button className="btn warning-btn add-to-cart-button">
-                افزودن به سبد خرید
+                Add To Cart
             </button>
         </div>
     )
