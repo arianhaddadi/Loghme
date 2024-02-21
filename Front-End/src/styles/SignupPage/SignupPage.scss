@@ -55,7 +55,7 @@
 }
 
 .form-group {
-    direction: rtl;
+    direction: ltr;
 }
 
 .c-button {
@@ -75,14 +75,14 @@
 
 .c-label {
     font-size: 14px;
-    text-align: right;
+    text-align: left;
     width: 100%;
 }
 
 .errorMessage {
     color: red;
     font-size: 0.7em;
-    text-align: right;
+    text-align: left;
     padding-right: 2px;
     padding-top: 6px;
     margin-bottom: -15px;
@@ -97,11 +97,17 @@
 }
 
 .goToLoginMessage {
+    display: block;
     font-size: 0.8em;
-    margin-left: 73px;
+    text-align: center;
 }
 
 .Toastify__toast-container--top-right {
     top: 4em;
-    text-align: right;
+    text-align: left;
+}
+
+.signup-btn {
+    display: block;
+    margin: 10px auto;
 }

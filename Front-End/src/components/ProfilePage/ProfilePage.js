@@ -318,7 +318,6 @@ ProfilePage.propTypes = {
     user:PropTypes.object,
     history:PropTypes.object.isRequired,
     location:PropTypes.object.isRequired,
-    match:PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => {

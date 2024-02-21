@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {Router, Route} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 import Footer from './Footer/Footer';
@@ -73,13 +73,15 @@ class App extends React.Component {
                 <CartFunctionsContext.Provider value={{getCartSize:this.getCartSize, openCart:this.openCartModal}}>
                     {this.storeHistoryObjectInReduxStore()}
                     {this.renderCart()}
-                    <Router history={browserHistory}>
-                        <Route path="/" exact component={HomePage} />
-                        <Route path="/signup" exact component={SignupPage} />
-                        <Route path="/login" exact component={LoginPage} />
-                        <Route path="/restaurants/:id" exact component={RestaurantPage} />
-                        <Route path="/profile" exact component={ProfilePage} />
-                    </Router>
+                    <BrowserRouter history={browserHistory}>
+                        <Routes>
+                            <Route path="/" exact element={<HomePage />} />
+                            <Route path="/signup" exact element={<SignupPage />} />
+                            <Route path="/login" exact element={<LoginPage/>} />
+                            <Route path="/restaurants/:id" exact element={<RestaurantPage />} />
+                            <Route path="/profile" exact component={<ProfilePage />} />
+                        </Routes>
+                    </BrowserRouter>
                     <Footer />
                 </CartFunctionsContext.Provider>
             </>

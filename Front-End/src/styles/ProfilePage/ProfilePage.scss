@@ -9,7 +9,7 @@ html {
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 0 6vw;
-    direction: rtl;
+    direction: ltr;
     min-height: 90px;
     min-width: 500px;
     margin-top: 48px;
@@ -33,7 +33,7 @@ html {
 
 .personal-info {
     margin-top: 40px;
-    direction: rtl;
+    direction: ltr;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -112,7 +112,7 @@ html {
     align-items: center;
     border-radius: 5px;
     border: 1px solid black;
-    direction: rtl;
+    direction: ltr;
     width: 70vh;
     display: flex;
     margin-top: 3vh;
@@ -138,7 +138,7 @@ html {
 }
 
 .credits-notification {
-    direction: rtl;
+    direction: ltr;
     &.success {
         color: green;
     }
@@ -148,7 +148,7 @@ html {
 }
 
 .no-orders {
-    direction: rtl;
+    direction: ltr;
     text-align: center;
     margin-top: 5vh;
     width: 70vh;

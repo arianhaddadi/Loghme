@@ -60,7 +60,7 @@
 
 .home-title {
     font-size: 2em;
-    direction: rtl;
+    direction: ltr;
     color: #1a535c;
 }
 
@@ -78,7 +78,7 @@
     margin-top: 70px;
     .food-party-home-timer {
         background-color: rgb(218, 247, 252);
-        direction: rtl;
+        direction: ltr;
         border: 1px solid #1a535c;
         border-radius: 10px;
         padding: 5px;
@@ -95,7 +95,7 @@
         .food-party-item {
             background-color: white;
             padding: 12px 12px;
-            direction: rtl;
+            direction: ltr;
             border-radius: 7px;
             box-shadow: 0 2px 7px rgb(121, 120, 120);
             display: flex;
@@ -134,7 +134,7 @@
                         }
                     }
                     .food-party-item-name {
-                        text-align: right;
+                        text-align: left;
                     }
                 }
             }
@@ -189,7 +189,7 @@
         }
         .no-food-party-restaurants-notification {
             text-align: center;
-            direction: rtl;
+            direction: ltr;
         }
     }
 }
@@ -231,7 +231,7 @@
             .restaurant-item-name {
                 margin-top: 5px;
                 text-align: center;
-                direction: rtl;
+                direction: ltr;
             }
             .restaurant-item-view-button {
                 margin-top: 10px;

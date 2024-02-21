@@ -112,7 +112,6 @@ RestaurantPage.propTypes = {
     restaurant:PropTypes.object,
     history:PropTypes.object.isRequired,
     location:PropTypes.object.isRequired,
-    match:PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => {

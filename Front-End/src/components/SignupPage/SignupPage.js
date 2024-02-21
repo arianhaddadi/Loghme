@@ -163,7 +163,6 @@ class SignupPage extends React.Component {
         }
         return (
             <div className="form-group">
-                <label className="c-label">{labelText}</label>
                 <input value={this.state[name]} type={type} className="form-control" onChange={this.handleChange} 
                         noValidate name={name} placeholder={labelText} />
                 {errorElement}
@@ -188,7 +187,7 @@ class SignupPage extends React.Component {
                                 {this.getFormInput("phoneNumber", "Phone Number", "tel")}
                                 {this.getFormInput("password", "Password", "password")}
                                 {this.getFormInput("passwordRepeat", "Repeat Password", "password")}
-                                <button type="submit" className="btn btn-primary c-button">Signup</button>
+                                <button type="submit" className="btn btn-primary c-button signup-btn">Signup</button>
                                 <Link className="goToLoginMessage" to='/login'>Already signed up? Login</Link>
                             </form>
                         </div>
@@ -201,8 +200,6 @@ class SignupPage extends React.Component {
 
 SignupPage.propTypes = {
     history:PropTypes.object.isRequired,
-    location:PropTypes.object.isRequired,
-    match:PropTypes.object.isRequired
 }
 
 export default SignupPage;

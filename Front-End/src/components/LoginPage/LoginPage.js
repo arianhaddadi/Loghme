@@ -168,7 +168,6 @@ class LoginPage extends React.Component {
         }
         return (
             <div className="form-group">
-                <label className="c-label">{labelText}</label>
                 <input value={this.state[name]} type={type} className="form-control" onChange={this.handleChange} 
                         noValidate name={name} placeholder={labelText} />
                 {errorElement}
@@ -184,14 +183,14 @@ class LoginPage extends React.Component {
                     <div className="back-filter"></div>
                     <div className="signup-box">
                         <img className="signup-logo" src={logo} alt="" />
-                        <div className="signup-title">ورود</div>
+                        <div className="signup-title">Login</div>
                         <div className="signup-content">
                             <form onSubmit={this.handleSubmit} noValidate>
                                 {this.getFormInput("email", "Email", "email")}
                                 {this.getFormInput("password", "Password", "password")}
-                                <button type="submit" className="btn btn-primary c-button">Login</button>
-                                <Link className="goToLoginMessage" to = '/signup'>Haven't signed up before? Sign up here.</Link>
+                                <button type="submit" className="btn btn-primary c-button login-btn">Login</button>
                                 <GoogleOAuth history={this.props.history}/>
+                                <Link className="goToLoginMessage" to = '/signup'>Haven't signed up before? Sign up here.</Link>
                             </form>
                         </div>
                     </div>
@@ -205,7 +204,6 @@ class LoginPage extends React.Component {
 LoginPage.propTypes = {
     history:PropTypes.object.isRequired,
     location:PropTypes.object.isRequired,
-    match:PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => {
