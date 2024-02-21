@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
+import {BrowserRouter, Route, Routes, redirect} from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 import Footer from './Footer/Footer';
@@ -27,9 +27,8 @@ class App extends React.Component {
     // }
 
     componentWillMount() {
-        const navigator = useNavigate();
         if (localStorage.getItem("loghmeUserToken") === null) {
-            navigator("/login")
+            redirect("/login")
         }
     }
 

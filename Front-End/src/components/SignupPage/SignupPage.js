@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import logo from "../../images/Logo.png";
 import configs from '../../configs';
-import {Link} from 'react-router-dom';
+import {Link, redirect} from 'react-router-dom';
 import {ToastContainer, toast} from 'react-toastify';
 
 class SignupPage extends React.Component {
@@ -30,7 +30,7 @@ class SignupPage extends React.Component {
 
     componentDidMount = () => {
         if (localStorage.getItem("loghmeUserToken") !== null) {
-            this.props.history.push("/")
+            redirect("/")
         }
         else {
             document.title = "Signup";
@@ -44,8 +44,7 @@ class SignupPage extends React.Component {
             if (response.data.successful) {
                 toast("Successfully Signed Up!");
                 setTimeout(() => {
-                    console.log(this.props.history)
-                    this.props.history.push("/login");
+                    redirect("/login");
                 }, configs.notification_length);
             }
             else {

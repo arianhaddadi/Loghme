@@ -299,7 +299,7 @@ class ProfilePage extends React.Component {
     render() {
         return (
             <>  
-                <NavigationBar hideProfile browserHistory={this.props.history}/>
+                <NavigationBar hideProfile />
                 <div className="head-bar profile">
                     {this.renderProfileInfo()}
                 </div>

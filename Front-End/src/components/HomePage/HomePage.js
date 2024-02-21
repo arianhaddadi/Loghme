@@ -12,6 +12,7 @@ import configs from '../../configs';
 import {connect} from 'react-redux';
 import {ToastContainer, toast} from 'react-toastify';
 import {fetchAndStoreFoodPartyInformation, fetchAndStoreRestaurants, clearRestaurants} from '../../actions';
+import { redirect } from 'react-router-dom';
 
 class HomePage extends React.Component {
 
@@ -141,7 +142,7 @@ class HomePage extends React.Component {
     }
 
     viewRestaurantPage = (restaurantId) => {
-        this.props.history.push(`/restaurants/${restaurantId}`);
+        redirect(`/restaurants/${restaurantId}`);
     }
 
     renderRestaurants = () => {
@@ -319,7 +320,7 @@ class HomePage extends React.Component {
     render() {
         return (
             <>  
-                <NavigationBar hideLogo browserHistory={this.props.history}/>
+                <NavigationBar hideLogo />
                 <ToastContainer autoClose={5000} />
                 <div className="home-container">
                     <div className="home-head-bar">

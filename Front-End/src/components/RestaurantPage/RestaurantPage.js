@@ -97,7 +97,7 @@ class RestaurantPage extends React.Component {
     render() {
         return (
             <>
-                <NavigationBar browserHistory={this.props.history}/>
+                <NavigationBar />
                 <div className="restaurant-container">
                     <div className="head-bar"></div>
                     {this.renderContent()}

@@ -4,43 +4,42 @@ import logo from '../../images/Logo.png';
 import CartFunctionsContext from '../../contexts/CartFunctionsContext';
 import {connect} from 'react-redux';
 import {storeGoogleAuthenticationObject} from "../../actions";
+import { redirect } from 'react-router-dom';
 
-class NavigationBar extends React.Component {
 
-    handleExit = () => {
-        const googleAuthentication = this.props.googleAuthentication;
+function NavigationBar(props) {
+    const handleExit = () => {
+        const googleAuthentication = props.googleAuthentication;
         if (googleAuthentication !== null && googleAuthentication.isSignedIn.get()) {
             googleAuthentication.signOut();
             googleAuthentication.disconnect();
         }
         localStorage.removeItem("loghmeUserToken");
-        this.props.browserHistory.push("/login");
-    }
+        redirect("/login");
+    };
 
-    render() {
-        return (
-            <CartFunctionsContext.Consumer>
-                {(value) => {
-                    const numOfCartItems = value.getCartSize();
-                    return (
-                        <div className="navigation-bar">
-                            <div onClick={() => this.handleExit()} className={`exit ${this.props.hideExit ? "hide" : ""}`}>
-                                Logout
-                            </div>
-                            <div onClick={() => this.props.browserHistory.push("/profile")} className={`profile ${this.props.hideProfile ? "hide" : ""}`}>
-                                Profile
-                            </div>
-                            <i onClick={value.openCart} className="flaticon-smart-cart cart-logo"></i>
-                            <div onClick={value.openCart} className={`cart-quantity ${numOfCartItems > 0 ? "isNotEmpty" : ""}`}>
-                                {numOfCartItems > 0 ? numOfCartItems : ""}
-                            </div>
-                            <img onClick={() => this.props.browserHistory.push("/")} src={logo} className={`loghme-logo ${this.props.hideLogo ? "hide" : ""}`} alt="" />
+    return (
+        <CartFunctionsContext.Consumer>
+            {(value) => {
+                const numOfCartItems = value.getCartSize();
+                return (
+                    <div className="navigation-bar">
+                        <div onClick={() => handleExit()} className={`exit ${props.hideExit ? "hide" : ""}`}>
+                            Logout
                         </div>
-                    )
-                }}
-            </CartFunctionsContext.Consumer>  
-        )
-    }
+                        <div onClick={() => redirect("/profile")} className={`profile ${props.hideProfile ? "hide" : ""}`}>
+                            Profile
+                        </div>
+                        <i onClick={value.openCart} className="flaticon-smart-cart cart-logo"></i>
+                        <div onClick={value.openCart} className={`cart-quantity ${numOfCartItems > 0 ? "isNotEmpty" : ""}`}>
+                            {numOfCartItems > 0 ? numOfCartItems : ""}
+                        </div>
+                        <img onClick={() => redirect("/")} src={logo} className={`loghme-logo ${props.hideLogo ? "hide" : ""}`} alt="" />
+                    </div>
+                )
+            }}
+        </CartFunctionsContext.Consumer>  
+    );
 }
 
 const mapStateToProps = (state) => {

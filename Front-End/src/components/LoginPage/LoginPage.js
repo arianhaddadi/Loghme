@@ -6,7 +6,7 @@ import GoogleOAuth from './GoogleOAuth';
 import configs from '../../configs';
 import {connect} from 'react-redux';
 import {ToastContainer, toast} from 'react-toastify';
-import {Link} from 'react-router-dom';
+import {Link, redirect} from 'react-router-dom';
 import {storeGoogleAuthenticationObject} from '../../actions';
 
 class LoginPage extends React.Component {
@@ -24,7 +24,7 @@ class LoginPage extends React.Component {
 
     componentDidMount = () => {
         if (localStorage.getItem("loghmeUserToken") !== null) {
-            this.props.history.push("/")
+            redirect("/")
         }
         else {
             document.title = "Login";
@@ -58,7 +58,7 @@ class LoginPage extends React.Component {
     goToHomePage = () => {
         toast("Successfully Logged In!");
         setTimeout(() => {
-            this.props.history.push("/");                        
+            redirect("/");                        
         }, configs.notification_length);
     }
 
@@ -78,7 +78,7 @@ class LoginPage extends React.Component {
                 if (error.response.status === 403) {
                     toast("No account was registered with this email address. You need to sign up first!");
                     setTimeout(() => {
-                        this.props.history.push("/signup");
+                        redirect("/signup");
                     }, configs.notification_length);
                 }
             })
@@ -188,7 +188,7 @@ class LoginPage extends React.Component {
                                 {this.getFormInput("email", "Email", "email")}
                                 {this.getFormInput("password", "Password", "password")}
                                 <button type="submit" className="btn btn-primary c-button login-btn">Login</button>
-                                <GoogleOAuth history={this.props.history}/>
+                                <GoogleOAuth />
                                 <Link className="goToLoginMessage" to = '/signup'>Haven't signed up before? Sign up here.</Link>
                             </form>
                         </div>
