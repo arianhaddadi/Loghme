@@ -1,84 +1,77 @@
-import React from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
-import logo from "../../images/Logo.png";
+import logo from "../../styles/images/Logo.png";
 import GoogleOAuth from './GoogleOAuth';
 import configs from '../../configs';
 import {connect} from 'react-redux';
 import {ToastContainer, toast} from 'react-toastify';
-import {Link, redirect} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {storeGoogleAuthenticationObject} from '../../actions';
 
-class LoginPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: "",
-            password: "",
-            errors: {
-                email: "",
-                password: "",
-            }
-        };
-    }
+const LoginPage = (props) => {
+    const [inputValues, setInputValues] = useState({
+        "email": "",
+        "password": ""
+    })
+    const navigate = useNavigate()
 
-    componentDidMount = () => {
-        if (localStorage.getItem("loghmeUserToken") !== null) {
-            redirect("/")
+    const componentDidMount = () => {
+        if (localStorage.getItem(configs.jwt_token_name) !== null) {
+            navigate("/")
         }
         else {
             document.title = "Login";
-            this.handleGoogleAuth();
+            handleGoogleAuth();
         }
     }
 
-    handleGoogleAuth = () => {
+    const handleGoogleAuth = () => {
         if (!window.gapi || !window.gapi.auth2) {
             window.gapi.load("client:auth2", () => {
                 window.gapi.client.init({
-                    clientId:"467864659090-qdhdvpgingk25pvq8m81gusn9tmflcgt.apps.googleusercontent.com",
-                    scope:"email"
+                    clientId: "467864659090-qdhdvpgingk25pvq8m81gusn9tmflcgt.apps.googleusercontent.com",
+                    scope: "email"
                 }).then(() => {
                     const authentication = window.gapi.auth2.getAuthInstance();
-                    authentication.isSignedIn.listen(this.handleGoogleSignIn);
-                    this.props.storeGoogleAuthenticationObject(authentication);
+                    authentication.isSignedIn.listen(handleGoogleSignIn);
+                    props.storeGoogleAuthenticationObject(authentication);
                 })
             })
         }
         else {
-            this.props.googleAuthentication.signOut();
-            this.props.googleAuthentication.disconnect();
+            props.googleAuthentication.signOut();
+            props.googleAuthentication.disconnect();
         }
     }
 
-    setToken = (token) => {
-        localStorage.setItem("loghmeUserToken", token);
+    const setToken = (token) => {
+        localStorage.setItem(configs.jwt_token_name, token);
     }
 
-    goToHomePage = () => {
+    const goToHomePage = () => {
         toast("Successfully Logged In!");
         setTimeout(() => {
-            redirect("/");                        
+            navigate("/");                        
         }, configs.notification_length);
     }
 
-    handleGoogleSignIn = (isSignedIn) => {
+    const handleGoogleSignIn = (isSignedIn) => {
         if (isSignedIn) {
-            const currentUser = this.props.googleAuthentication.currentUser.get(); 
+            const currentUser = props.googleAuthentication.currentUser.get(); 
             const email = currentUser.getBasicProfile().getEmail();
             const idToken = currentUser.getAuthResponse().id_token;
             axios.post(`${configs.server_url}/login?email=${email}&password=''&isGoogleAuth=${true}&idToken=${idToken}`).then((response) => {
                 if (response.data.successful) {
-                    this.setToken(response.data.message);
-                    this.goToHomePage();
+                    setToken(response.data.message);
+                    goToHomePage();
                 }
             }).catch((error) => {
-                this.props.googleAuthentication.signOut();
-                this.props.googleAuthentication.disconnect();
+                props.googleAuthentication.signOut();
+                props.googleAuthentication.disconnect();
                 if (error.response.status === 403) {
                     toast("No account was registered with this email address. You need to sign up first!");
                     setTimeout(() => {
-                        redirect("/signup");
+                        navigate("/signup");
                     }, configs.notification_length);
                 }
             })
@@ -86,13 +79,13 @@ class LoginPage extends React.Component {
         }
     }
 
-    login = () => {
-        const {email, password} = this.state;
+    const login = () => {
+        const {email, password} = inputValues;
         axios.post(`${configs.server_url}/login?email=${email}&password=${password}&isGoogleAuth=${false}&idToken=""`).then(
             response => {
                 if (response.data.successful) {
-                    this.setToken(response.data.message);
-                    this.goToHomePage();
+                    setToken(response.data.message);
+                    goToHomePage();
                 }
                 else {
                     toast("Wrong Credentials!");
@@ -103,100 +96,50 @@ class LoginPage extends React.Component {
         });
     }
 
-    handleSubmit = (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
-        if(this.hasError()) {
-            toast("Fix the errors first!");
-        }
-        else {
-            this.login();
-        }
+        login();
     }
 
-    validateValues = (name, value, isAfterSubmit) => {
-        let errors = this.state.errors;
-        const validEmailRegex = RegExp(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/);
-
-        switch (name) {
-            case 'email':
-                if(((value !== "") && (!validEmailRegex.test(value))) || ((value === "") && (isAfterSubmit))) {
-                    errors.email = "Email address is not valid!";
-                }
-                else {
-                    errors.email = "";
-                }
-                break;
-            default:
-                break;
-        }
-
-        this.setState({errors, [name]: value});
-    }
-
-    handleChange = (event) => {
+    const handleChange = (event) => {
         event.preventDefault();
         const { name, value } = event.target;
-        this.validateValues(name, value, false);
-        this.setState({
-            [name]:value
+        setInputValues({
+            ...inputValues,
+            [name]: value
         })
     }
 
-    hasError = () => {
-        for(let key in this.state) {
-            if(key !== "errors") {
-                this.validateValues(key, this.state[key], true);
-            }
-        }
-
-        for(let value in this.state.errors) {
-            if(this.state.errors[value] !== "") {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    getFormInput = (name, labelText, type) => {
-        let errorElement = "";
-        if(this.state.errors[name].length > 0) {
-            errorElement = (<div className='errorMessage'>{this.state.errors[name]}</div>);
-        }
-        else {
-            errorElement = (<div className='errorMessageEmpty'>_</div>);
-        }
+    const getFormInput = (name, labelText, type) => {
         return (
             <div className="form-group">
-                <input value={this.state[name]} type={type} className="form-control" onChange={this.handleChange} 
+                <input value={inputValues[name]} type={type} className="form-control" onChange={handleChange} 
                         noValidate name={name} placeholder={labelText} />
-                {errorElement}
             </div>
         )
     }
     
-    render() {
-        return (
-            <>
-                <ToastContainer autoClose={configs.notification_length} />
-                <div className="main-container">
-                    <div className="back-filter"></div>
-                    <div className="signup-box">
-                        <img className="signup-logo" src={logo} alt="" />
-                        <div className="signup-title">Login</div>
-                        <div className="signup-content">
-                            <form onSubmit={this.handleSubmit} noValidate>
-                                {this.getFormInput("email", "Email", "email")}
-                                {this.getFormInput("password", "Password", "password")}
-                                <button type="submit" className="btn btn-primary c-button login-btn">Login</button>
-                                <GoogleOAuth />
-                                <Link className="goToLoginMessage" to = '/signup'>Haven't signed up before? Sign up here.</Link>
-                            </form>
-                        </div>
+    return (
+        <>
+            <ToastContainer autoClose={configs.notification_length} />
+            <div className="main-container">
+                <div className="back-filter"></div>
+                <div className="signup-box">
+                    <img className="signup-logo" src={logo} alt="" />
+                    <div className="signup-title">Login</div>
+                    <div className="signup-content">
+                        <form onSubmit={handleSubmit} noValidate>
+                            {getFormInput("email", "Email", "email")}
+                            {getFormInput("password", "Password", "password")}
+                            <button type="submit" className="btn btn-primary c-button login-btn">Login</button>
+                            <GoogleOAuth />
+                            <Link className="goToLoginMessage" to = '/signup'>Haven't signed up before? Sign up here.</Link>
+                        </form>
                     </div>
                 </div>
-            </>
-        )
-    }
+            </div>
+        </>
+    );
 }
 
 const mapStateToProps = (state) => {

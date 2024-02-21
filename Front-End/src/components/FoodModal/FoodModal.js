@@ -55,7 +55,7 @@ class FoodModal extends React.Component {
 
     addToCart = () => {
         axios.put(`${configs.server_url}/carts?foodName=${this.props.item.food.name}&restaurantId=${this.props.item.restaurant.id}&quantity=${this.state.numOfFoodToOrder}&isFoodPartyFood=${this.props.isFoodParty}`, {},
-                 { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}})
+                 { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
         .then((response) => {
             if(response.data.successful) {
                 this.props.fetchAndStoreCart();

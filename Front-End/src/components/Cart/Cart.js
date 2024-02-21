@@ -65,7 +65,7 @@ class Cart extends React.Component {
     
     addItem = (foodName, restaurantId, isFoodPartyFood) => {
         axios.put(`${configs.server_url}/carts?foodName=${foodName}&restaurantId=${restaurantId}&quantity=${1}&isFoodPartyFood=${isFoodPartyFood}`, {},
-                 { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}})
+                 { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
         .then(response => {
             if(response.data.successful) {
                 this.props.fetchAndStoreCart();
@@ -89,7 +89,7 @@ class Cart extends React.Component {
 
     deleteItem = (foodName, restaurantId, isFoodPartyFood) => {
         axios.delete(`${configs.server_url}/carts?foodName=${foodName}&restaurantId=${restaurantId}&isFoodPartyFood=${isFoodPartyFood}`,
-                     { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}}, {})
+                     { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}}, {})
         .then(() => {
             this.props.fetchAndStoreCart();
             this.nextState = {
@@ -101,7 +101,7 @@ class Cart extends React.Component {
     }
 
     finalizeOrder = () => {
-        axios.post(`${configs.server_url}/carts`, {}, { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}})
+        axios.post(`${configs.server_url}/carts`, {}, { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
         .then((response) => {
             if(response.data.successful) {
                 this.props.fetchAndStoreCart();

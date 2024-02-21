@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import logo from '../../images/Logo.png';
+import logo from '../../styles/images/Logo.png';
 import Spinner from "../Spinner/Spinner";
 import Modal from '../utils/Modal';
 import FoodModal from '../Food/Food';
@@ -272,7 +272,7 @@ class HomePage extends React.Component {
 
     search = (pageSize, pageNum) => {
         axios.get(`${configs.server_url}/search?foodName=${this.state.searchFoodName}&restaurantName=${this.state.searchRestaurantName}&pageSize=${pageSize}&pageNum=${pageNum}`,
-                 { headers: { Authorization: `Bearer ${localStorage.getItem("loghmeUserToken")}`}})
+                 { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
             .then(response => {
                 this.setState({
                     searchedRestaurants:(this.state.searchedRestaurants === null || pageNum === 1) ? response.data.list : this.state.searchedRestaurants.concat(response.data.list),

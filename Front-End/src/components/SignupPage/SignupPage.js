@@ -1,50 +1,46 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
 import axios from 'axios';
-import logo from "../../images/Logo.png";
+import logo from "../../styles/images/Logo.png";
 import configs from '../../configs';
-import {Link, redirect} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {ToastContainer, toast} from 'react-toastify';
 
-class SignupPage extends React.Component {
+const SignupPage = (props) => {
+    const [inputValues, setInputValues] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phoneNumber: "",
+        password: "",
+        passwordRepeat: "",
+    })
+    const [errorMessages, setErrorMessages] = useState({
+        firstName: "",
+        lastName:"",
+        email: "",
+        phoneNumber: "",
+        password: "",
+        passwordRepeat: ""
+    })
+    const navigate = useNavigate()
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            firstName: "",
-            lastName: "",
-            email: "",
-            phoneNumber: "",
-            password: "",
-            passwordRepeat: "",
-            errors: {
-                firstName: "",
-                lastName:"",
-                email: "",
-                phoneNumber: "",
-                password: "",
-                passwordRepeat: ""
-            }
-        };
-    }
-
-    componentDidMount = () => {
-        if (localStorage.getItem("loghmeUserToken") !== null) {
-            redirect("/")
+    const componentDidMount = () => {
+        if (localStorage.getItem(configs.jwt_token_name) !== null) {
+            navigate("/")
         }
         else {
             document.title = "Signup";
         }
     }
 
-    signup = () => {
-        const {firstName, lastName, email, phoneNumber, password} = this.state;
+    const signup = () => {
+        const {firstName, lastName, email, phoneNumber, password} = inputValues;
         axios.post(`${configs.server_url}/signup?firstName=${firstName}&lastName=${lastName}&password=${password}&email=${email}&phoneNumber=${phoneNumber}`)
         .then(response => {
             if (response.data.successful) {
                 toast("Successfully Signed Up!");
                 setTimeout(() => {
-                    redirect("/login");
+                    window.location.href = "/login";
                 }, configs.notification_length);
             }
             else {
@@ -55,18 +51,18 @@ class SignupPage extends React.Component {
         })
     }
 
-    handleSubmit = (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
-        if(this.hasError()) {
+        if(hasError()) {
             toast("Fix the errors first!");
         }
-        if(!this.hasError()) {
-            this.signup();
+        else {
+            signup();
         }
     }
 
-    validateValues = (name, value, isAfterSubmit) => {
-        let errors = this.state.errors;
+    const validateValues = (name, value, isAfterSubmit) => {
+        let errors = errorMessages;
         const validEmailRegex = RegExp(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/);
     
         switch (name) {
@@ -105,10 +101,10 @@ class SignupPage extends React.Component {
                 else {
                     errors.password = "";
                 }
-                if((this.state.passwordRepeat !== "") && (this.state.passwordRepeat !== value)) {
+                if((inputValues.passwordRepeat !== "") && (inputValues.passwordRepeat !== value)) {
                     errors.passwordRepeat = "Passwords do not match!"
                 }
-                else if((this.state.passwordRepeat === "") && (isAfterSubmit)) {
+                else if((inputValues.passwordRepeat === "") && (isAfterSubmit)) {
                     errors.passwordRepeat = "This field is required!"
                 }
                 else {
@@ -116,7 +112,7 @@ class SignupPage extends React.Component {
                 }
                 break;
             case 'passwordRepeat': 
-                if((value !== "") && (value !== this.state.password)) {
+                if((value !== "") && (value !== inputValues.password)) {
                     errors.passwordRepeat = "Passwords do not match!"
                 }
                 else if((value === "") && (isAfterSubmit)) {
@@ -129,74 +125,75 @@ class SignupPage extends React.Component {
             default:
                 break;
         }
-    
-        this.setState({errors, [name]: value});
+        
+        setErrorMessages(errors)
+        setInputValues ({
+            ...inputValues,
+            [name]: value
+        })
     }
 
-    handleChange = (event) => {
+    const handleChange = (event) => {
         event.preventDefault();
         const { name, value } = event.target;
-        this.validateValues(name, value, false);
+        validateValues(name, value, false);
     }
 
-    hasError = () => {
-        for(var key in this.state) {
-            if(key !== "errors") {
-                this.validateValues(key, this.state[key], true);
-            }
+    const hasError = () => {
+        for(var key in inputValues) {
+            validateValues(key, inputValues[key], true);
         }
 
-        for(var value in this.state.errors) {
-            if(this.state.errors[value] !== "") {
+        for(var value in errorMessages) {
+            if(errorMessages[value] !== "") {
                 return true;
             }
         }
         return false;
     }
 
-    getFormInput = (name, labelText, type) => {
+    const getFormInput = (name, labelText, type) => {
         var errorElement = "";
-        if(this.state.errors[name].length > 0) {
-            errorElement = (<div className='errorMessage'>{this.state.errors[name]}</div>);
+        if(errorMessages[name].length > 0) {
+            errorElement = (<div className='errorMessage'>{errorMessages[name]}</div>);
         }
         else {
             errorElement = (<div className='errorMessageEmpty'>_</div>);
         }
         return (
             <div className="form-group">
-                <input value={this.state[name]} type={type} className="form-control" onChange={this.handleChange} 
+                <input value={inputValues[name]} type={type} className="form-control" onChange={handleChange} 
                         noValidate name={name} placeholder={labelText} />
                 {errorElement}
             </div>
         )
     }
     
-    render() {
-        return (
-            <>
-                <ToastContainer autoClose={configs.notification_length} />
-                <div className="main-container">
-                    <div className="back-filter"></div>
-                    <div className="signup-box">
-                        <img className="signup-logo" src={logo} alt="" />
-                        <div className="signup-title">Signup</div>
-                        <div className="signup-content">
-                            <form onSubmit={this.handleSubmit} noValidate>
-                                {this.getFormInput("firstName", "First Name", "text")}
-                                {this.getFormInput("lastName", "Last Name", "text")}
-                                {this.getFormInput("email", "Email", "email")}
-                                {this.getFormInput("phoneNumber", "Phone Number", "tel")}
-                                {this.getFormInput("password", "Password", "password")}
-                                {this.getFormInput("passwordRepeat", "Repeat Password", "password")}
-                                <button type="submit" className="btn btn-primary c-button signup-btn">Signup</button>
-                                <Link className="goToLoginMessage" to='/login'>Already signed up? Login</Link>
-                            </form>
-                        </div>
+
+    return (
+        <>
+            <ToastContainer autoClose={configs.notification_length} />
+            <div className="main-container">
+                <div className="back-filter"></div>
+                <div className="signup-box">
+                    <img className="signup-logo" src={logo} alt="" />
+                    <div className="signup-title">Signup</div>
+                    <div className="signup-content">
+                        <form onSubmit={handleSubmit} noValidate>
+                            {getFormInput("firstName", "First Name", "text")}
+                            {getFormInput("lastName", "Last Name", "text")}
+                            {getFormInput("email", "Email", "email")}
+                            {getFormInput("phoneNumber", "Phone Number", "tel")}
+                            {getFormInput("password", "Password", "password")}
+                            {getFormInput("passwordRepeat", "Repeat Password", "password")}
+                            <button type="submit" className="btn btn-primary c-button signup-btn">Signup</button>
+                            <Link className="goToLoginMessage" to='/login'>Already signed up? Login</Link>
+                        </form>
                     </div>
                 </div>
-            </>
-        )
-    }
+            </div>
+        </>
+    );
 }
 
 export default SignupPage;

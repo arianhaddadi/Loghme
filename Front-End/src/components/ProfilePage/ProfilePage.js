@@ -66,7 +66,7 @@ class ProfilePage extends React.Component {
             })
         }
         else {
-            axios.put(`${configs.server_url}/credits?amount=${value}`, {}, { headers: { 'Authorization': `Bearer ${localStorage.getItem("loghmeUserToken")}`}})
+            axios.put(`${configs.server_url}/credits?amount=${value}`, {}, { headers: { 'Authorization': `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
             .then(() => {
                 this.setState({
                     creditsLoading:false,

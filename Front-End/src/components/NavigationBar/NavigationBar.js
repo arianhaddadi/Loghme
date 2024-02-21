@@ -1,21 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import logo from '../../images/Logo.png';
+import logo from '../../styles/images/Logo.png';
 import CartFunctionsContext from '../../contexts/CartFunctionsContext';
 import {connect} from 'react-redux';
 import {storeGoogleAuthenticationObject} from "../../actions";
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import configs from '../../configs';
 
 
-function NavigationBar(props) {
+const NavigationBar = (props) => {
+    const navigate = useNavigate()
+
     const handleExit = () => {
         const googleAuthentication = props.googleAuthentication;
         if (googleAuthentication !== null && googleAuthentication.isSignedIn.get()) {
             googleAuthentication.signOut();
             googleAuthentication.disconnect();
         }
-        localStorage.removeItem("loghmeUserToken");
-        redirect("/login");
+        localStorage.removeItem(configs.jwt_token_name);
+        navigate("/login");
     };
 
     return (
@@ -27,14 +30,14 @@ function NavigationBar(props) {
                         <div onClick={() => handleExit()} className={`exit ${props.hideExit ? "hide" : ""}`}>
                             Logout
                         </div>
-                        <div onClick={() => redirect("/profile")} className={`profile ${props.hideProfile ? "hide" : ""}`}>
+                        <div onClick={() => navigate("/profile")} className={`profile ${props.hideProfile ? "hide" : ""}`}>
                             Profile
                         </div>
                         <i onClick={value.openCart} className="flaticon-smart-cart cart-logo"></i>
                         <div onClick={value.openCart} className={`cart-quantity ${numOfCartItems > 0 ? "isNotEmpty" : ""}`}>
                             {numOfCartItems > 0 ? numOfCartItems : ""}
                         </div>
-                        <img onClick={() => redirect("/")} src={logo} className={`loghme-logo ${props.hideLogo ? "hide" : ""}`} alt="" />
+                        <img onClick={() => navigate("/")} src={logo} className={`loghme-logo ${props.hideLogo ? "hide" : ""}`} alt="" />
                     </div>
                 )
             }}

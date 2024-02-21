@@ -1,35 +1,31 @@
-import React from 'react';
+import {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Cart from '../Cart/Cart';
 import Modal from '../utils/Modal';
-import FoodModal from '../Food/Food';
+import FoodModal from '../FoodModal/FoodModal';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import RestaurantMenuItem from '../RestaurantPage/RestaurantMenuItem';
 import {fetchAndStoreCart, fetchAndStoreRestaurant} from '../../actions';
 
-class RestaurantPage extends React.Component {
+const RestaurantPage = (props) => {
+    const [foodToShow, setFoodToShow] = useState(null)
 
-    constructor(props) {
-        super(props);
-        this.state = {foodModalIsOpen:false};
-    }
 
-    componentDidMount = () => {
+    const componentDidMount = () => {
         document.title = "Restaurant";
-        this.props.fetchAndStoreRestaurant(this.props.match.params.id);
+        props.fetchAndStoreRestaurant(props.match.params.id);
     }
 
-    orderFood = (food, restaurant) => {
-        this.foodToShow = {
+    const orderFood = (food, restaurant) => {
+        setFoodToShow({
             food:food,
             restaurant:restaurant
-        }
-        this.setState({foodModalIsOpen:true});
+        })
     }
 
-    renderMenuItems = () => {
-        const menu = this.props.restaurant.menu;
+    const renderMenuItems = () => {
+        const menu = props.restaurant.menu;
         if (menu === null || menu.length === 0) {
             return (
                 <div className="no-restaurant-items">
@@ -40,19 +36,19 @@ class RestaurantPage extends React.Component {
         else {
             return menu.map((elem, index) => {
                 return (
-                    <RestaurantMenuItem key={index} item={elem} orderFood={this.orderFood} restaurant={this.props.restaurant} />
+                    <RestaurantMenuItem key={index} item={elem} orderFood={orderFood} restaurant={props.restaurant} />
                 )
             })
         }
     }
 
-    renderContent = () => {
-        if(this.props.restaurant === null || this.props.restaurant.id !== this.props.match.params.id) return;
+    const renderContent = () => {
+        if(props.restaurant === null || props.restaurant.id !== props.match.params.id) return;
         return (
             <>
                 <div className="rest-title-logo">
-                    <img src={this.props.restaurant.logo} className="rest-logo" alt="" />
-                    <div className="rest-title"> <b>{this.props.restaurant.name}</b> </div>
+                    <img src={props.restaurant.logo} className="rest-logo" alt="" />
+                    <div className="rest-title"> <b>{props.restaurant.name}</b> </div>
                 </div>
                 <div className="menu-title-container">
                     <div className="menu-title">
@@ -64,7 +60,7 @@ class RestaurantPage extends React.Component {
                 </div>
                 <div className="menu-cart">
                     <div className="menu-list">
-                        {this.renderMenuItems()}
+                        {renderMenuItems()}
                     </div>
                     <div className="dashed-border">
                         <div></div>
@@ -75,37 +71,36 @@ class RestaurantPage extends React.Component {
         );
     }
 
-    closeFoodModal = () => {
-        this.props.fetchAndStoreCart();
-        this.setState({foodModalIsOpen:false});
+    const closeFoodModal = () => {
+        props.fetchAndStoreCart();
+        setFoodToShow(null);
     }
 
-    openFoodModal = () => {
+    const showFoodModal = () => {
         return (
-            <FoodModal isFoodParty={false} item={this.foodToShow} />
+            <FoodModal isFoodParty={false} item={foodToShow} />
         );
     }
 
-    renderFoodModal = () => {
-        if(this.state.foodModalIsOpen) {
+    const renderFoodModal = () => {
+        if(foodToShow) {
             return (
-                    <Modal close={this.closeFoodModal} render={this.openFoodModal} />
+                <Modal close={closeFoodModal} render={showFoodModal} />
             );
         }
     }
 
-    render() {
-        return (
-            <>
-                <NavigationBar />
-                <div className="restaurant-container">
-                    <div className="head-bar"></div>
-                    {this.renderContent()}
-                </div>
-                {this.renderFoodModal()}
-            </>
-        )
-    }
+    return (
+        <>
+            <NavigationBar />
+            <div className="restaurant-container">
+                <div className="head-bar"></div>
+                {renderContent()}
+            </div>
+            {renderFoodModal()}
+        </>
+    )
+    
 }
 
 RestaurantPage.propTypes = {
