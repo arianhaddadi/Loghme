@@ -13,7 +13,6 @@ class LoginPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            toastifyLength:2000,
             email: "",
             password: "",
             errors: {
@@ -60,7 +59,7 @@ class LoginPage extends React.Component {
         toast("Successfully Logged In!");
         setTimeout(() => {
             this.props.history.push("/");                        
-        }, this.state.toastifyLength);
+        }, configs.notification_length);
     }
 
     handleGoogleSignIn = (isSignedIn) => {
@@ -80,7 +79,7 @@ class LoginPage extends React.Component {
                     toast("No account was registered with this email address. You need to sign up first!");
                     setTimeout(() => {
                         this.props.history.push("/signup");
-                    }, this.state.toastifyLength);
+                    }, configs.notification_length);
                 }
             })
                 
@@ -178,7 +177,7 @@ class LoginPage extends React.Component {
     render() {
         return (
             <>
-                <ToastContainer autoClose={this.state.toastifyLength} />
+                <ToastContainer autoClose={configs.notification_length} />
                 <div className="main-container">
                     <div className="back-filter"></div>
                     <div className="signup-box">
@@ -198,12 +197,6 @@ class LoginPage extends React.Component {
             </>
         )
     }
-}
-
-
-LoginPage.propTypes = {
-    history:PropTypes.object.isRequired,
-    location:PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => {

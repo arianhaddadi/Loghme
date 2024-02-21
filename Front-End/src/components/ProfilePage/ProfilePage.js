@@ -316,7 +316,6 @@ class ProfilePage extends React.Component {
 ProfilePage.propTypes = {
     orders:PropTypes.array,
     user:PropTypes.object,
-    history:PropTypes.object.isRequired,
     location:PropTypes.object.isRequired,
 }
 

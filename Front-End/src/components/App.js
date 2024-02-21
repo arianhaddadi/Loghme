@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 import Footer from './Footer/Footer';
@@ -12,7 +12,6 @@ import ProfilePage from "./ProfilePage/ProfilePage";
 import Modal from './utils/Modal';
 import Cart from './Cart/Cart';
 import {fetchAndStoreUserInfo, fetchAndStoreCart, fetchAndStoreFoodPartyInformation, storeGoogleAuthenticationObject, storeHistoryObject} from "../actions";
-import browserHistory from './utils/browserHistory';
 import CartFunctionsContext from '../contexts/CartFunctionsContext';
 
 
@@ -23,13 +22,14 @@ class App extends React.Component {
         this.state = {cartIsOpen:false};
     }
 
-    componentDidMount = () => {
-        browserHistory.listen(() => window.scroll({top:0}));
-    }
+    // componentDidMount = () => {
+    //     browserHistory.listen(() => window.scroll({top:0}));
+    // }
 
     componentWillMount() {
+        const navigator = useNavigate();
         if (localStorage.getItem("loghmeUserToken") === null) {
-            browserHistory.push("/login")
+            navigator("/login")
         }
     }
 
@@ -61,25 +61,18 @@ class App extends React.Component {
         }
     }
 
-    storeHistoryObjectInReduxStore = () => {
-        if (this.props.history === null) {
-            this.props.storeHistoryObject(browserHistory);
-        }
-    }
-
     render() {
         return (
             <>
                 <CartFunctionsContext.Provider value={{getCartSize:this.getCartSize, openCart:this.openCartModal}}>
-                    {this.storeHistoryObjectInReduxStore()}
                     {this.renderCart()}
-                    <BrowserRouter history={browserHistory}>
+                    <BrowserRouter>
                         <Routes>
-                            <Route path="/" exact element={<HomePage />} />
-                            <Route path="/signup" exact element={<SignupPage />} />
+                            <Route path="/" exact element={<HomePage/>} />
+                            <Route path="/signup" exact element={<SignupPage/>} />
                             <Route path="/login" exact element={<LoginPage/>} />
-                            <Route path="/restaurants/:id" exact element={<RestaurantPage />} />
-                            <Route path="/profile" exact component={<ProfilePage />} />
+                            <Route path="/restaurants/:id" exact element={<RestaurantPage/>} />
+                            <Route path="/profile" exact component={<ProfilePage/>} />
                         </Routes>
                     </BrowserRouter>
                     <Footer />
@@ -97,8 +90,7 @@ const mapStateToProps = (state) => {
     return {
         cart:state.cart,
         googleAuthentication:state.googleAuthentication,
-        history:state.history
     }
 }
 
-export default connect(mapStateToProps, {fetchAndStoreUserInfo, fetchAndStoreCart, fetchAndStoreFoodPartyInformation, storeGoogleAuthenticationObject, storeHistoryObject})(App);
+export default connect(mapStateToProps, {fetchAndStoreUserInfo, fetchAndStoreCart, fetchAndStoreFoodPartyInformation, storeGoogleAuthenticationObject})(App);

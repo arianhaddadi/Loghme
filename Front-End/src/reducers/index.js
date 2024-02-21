@@ -7,7 +7,6 @@ import RestaurantsReducer from './Restaurants/RestaurantsReducer';
 import RestaurantReducer from "./Restaurants/RestaurantReducer";
 import UserReducer from './User/UserReducer';
 import googleAuthenticationReducer from './googleAuthenticationReducer/googleAuthenticationReducer';
-import HistoryReducer from "./History/HistoryReducer";
 
 
 export default combineReducers({orders:OrdersReducer, 
@@ -17,5 +16,4 @@ export default combineReducers({orders:OrdersReducer,
                                 foodPartyTimer:FoodPartyTimerReducer,
                                 user:UserReducer,
                                 restaurant:RestaurantReducer,
-                                googleAuthentication:googleAuthenticationReducer,
-                                history:HistoryReducer});
+                                googleAuthentication:googleAuthenticationReducer});

@@ -11,7 +11,6 @@ class SignupPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            toastifyLength:2000,
             firstName: "",
             lastName: "",
             email: "",
@@ -45,12 +44,15 @@ class SignupPage extends React.Component {
             if (response.data.successful) {
                 toast("Successfully Signed Up!");
                 setTimeout(() => {
+                    console.log(this.props.history)
                     this.props.history.push("/login");
-                }, this.state.toastifyLength);
+                }, configs.notification_length);
             }
             else {
                 toast("Signup failed. Email already in use!");
             }
+        }).catch(error => {
+            console.log(error)
         })
     }
 
@@ -173,7 +175,7 @@ class SignupPage extends React.Component {
     render() {
         return (
             <>
-                <ToastContainer autoClose={this.state.toastifyLength} />
+                <ToastContainer autoClose={configs.notification_length} />
                 <div className="main-container">
                     <div className="back-filter"></div>
                     <div className="signup-box">
@@ -196,10 +198,6 @@ class SignupPage extends React.Component {
             </>
         )
     }
-}
-
-SignupPage.propTypes = {
-    history:PropTypes.object.isRequired,
 }
 
 export default SignupPage;

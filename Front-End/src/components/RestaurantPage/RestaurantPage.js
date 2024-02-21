@@ -110,7 +110,6 @@ class RestaurantPage extends React.Component {
 
 RestaurantPage.propTypes = {
     restaurant:PropTypes.object,
-    history:PropTypes.object.isRequired,
     location:PropTypes.object.isRequired,
 }
 

@@ -53,7 +53,6 @@ NavigationBar.propTypes = {
     hideExit:PropTypes.bool,
     hideLogo:PropTypes.bool,
     hideProfile:PropTypes.bool,
-    browserHistory:PropTypes.object.isRequired
 }
 
 export default connect(mapStateToProps, {storeGoogleAuthenticationObject})(NavigationBar);

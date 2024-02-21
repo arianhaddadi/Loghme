@@ -351,7 +351,6 @@ HomePage.propTypes = {
     foodPartyTimer:PropTypes.object,
     foodPartyRestaurants:PropTypes.array,
     restaurants:PropTypes.array,
-    history:PropTypes.object.isRequired,
     location:PropTypes.object.isRequired,
 }
 
