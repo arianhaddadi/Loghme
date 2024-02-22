@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import logo from "../../styles/images/Logo.png";
 import configs from '../../configs';
@@ -22,16 +22,13 @@ const SignupPage = (props) => {
         password: "",
         passwordRepeat: ""
     })
+
     const navigate = useNavigate()
 
-    const componentDidMount = () => {
-        if (localStorage.getItem(configs.jwt_token_name)) {
-            navigate("/")
-        }
-        else {
-            document.title = "Signup";
-        }
-    }
+    useEffect(() => {
+        if (localStorage.getItem(configs.jwt_token_name)) navigate("/") 
+        else document.title = "Signup";
+    }, [])
 
     const signup = () => {
         const {firstName, lastName, email, phoneNumber, password} = inputValues;

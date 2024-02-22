@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Modal from '../utils/Modal';
 import Spinner from '../Spinner/Spinner';
@@ -13,17 +13,18 @@ const ProfilePage = (props) => {
     const [creditsNotification, setCreditsNotification] = useState(null)
     const [creditsLoading, setCreditsLoading] = useState(false)
     const [creditsInputValue, setCreditsInputValue] = useState("")
-    const ordersUpdater = setInterval(props.fetchAndStoreOrders, 30 * 1000);
+    const ordersUpdater = useRef(setInterval(props.fetchAndStoreOrders, 30 * 1000))
+    
 
-    const componentDidMount = () => {
+    useEffect(() => {
         document.title = "Profile";
         props.fetchAndStoreOrders();
         props.fetchAndStoreUserInfo();
-    }
 
-    const componentWillUnmount = () => {
-        clearInterval(ordersUpdater);
-    }
+        return () => {
+            clearInterval(ordersUpdater.current)
+        }
+    }, [])
 
     const renderPersonalInfoItem = (info, iconClass) => {
         return (

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import logo from '../../styles/images/Logo.png';
 import Spinner from "../Spinner/Spinner";
@@ -23,14 +23,20 @@ const HomePage = (props) => {
     const [foodPartyTimer, setFoodPartyTimer] = useState({minutes: 0, seconds: 0})
     const [numOfPages, setNumOfPages] = useState(1)
     const [numOfPagesSearchResults, setNumOfPagesSearchResults] = useState(1)
+    
+    const foodPartyTimeUpdater = useRef(null)
 
     const navigate = useNavigate()
 
-    const componentDidMount = () => {
+    useEffect(() => {
         document.title = "Home";
         fetchFoodPartyInformation();
         fetchRestaurants(1);
-    }
+
+        return () => {
+            clearInterval(foodPartyTimeUpdater.current)
+        }
+    }, [])
 
     const fetchRestaurants = (pageNum) => {
         axios.get(`${configs.server_url}/restaurants?pageSize=${configs.home_page_size}&pageNum=${pageNum}`, 
@@ -45,10 +51,6 @@ const HomePage = (props) => {
         
     }
 
-    const componentWillUnmount = () => {
-        clearInterval(this.foodPartyTimeUpdater);
-    }
-
     const fetchFoodPartyInformation = () => {
         axios.get(`${configs.server_url}/foodparties`, { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
         .then(response => {
@@ -57,7 +59,8 @@ const HomePage = (props) => {
                 minutes: response.data.responseMessage.minutes,
                 seconds: response.data.responseMessage.seconds
             })
-            this.foodPartyTimeUpdater = setInterval(downCountTimer, 1000);
+            foodPartyTimeUpdater.current = setInterval(downCountTimer, 1000);
+            foodp
         })
         .catch(error => {
             console.log("Fetching Food Party Information Failed", error);
@@ -80,7 +83,7 @@ const HomePage = (props) => {
             })
         }
         else {
-            clearInterval(this.foodPartyTimeUpdater);
+            clearInterval(foodPartyTimeUpdater.current);
             fetchFoodPartyInformation();
         }
     }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import logo from "../../styles/images/Logo.png";
 import GoogleOAuth from './GoogleOAuth';
@@ -9,13 +9,14 @@ import {Link, useNavigate} from 'react-router-dom';
 import {storeGoogleAuthenticationObject} from '../../actions';
 
 const LoginPage = (props) => {
+
     const [inputValues, setInputValues] = useState({
         "email": "",
         "password": ""
     })
-    const navigate = useNavigate()
 
-    const componentDidMount = () => {
+    const navigate = useNavigate()
+    useEffect(() => {
         if (localStorage.getItem(configs.jwt_token_name)) {
             navigate("/")
         }
@@ -23,7 +24,7 @@ const LoginPage = (props) => {
             document.title = "Login";
             handleGoogleAuth();
         }
-    }
+    }, [])
 
     const handleGoogleAuth = () => {
         if (!window.gapi || !window.gapi.auth2) {

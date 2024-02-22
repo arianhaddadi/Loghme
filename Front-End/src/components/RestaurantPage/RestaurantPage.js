@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import Cart from '../Cart/Cart';
 import Modal from '../utils/Modal';
@@ -11,6 +11,11 @@ const RestaurantPage = (props) => {
     const [foodToShow, setFoodToShow] = useState(null)
     const [restaurant, setRestaurant] = useState(null)
 
+    useEffect(() => {
+        document.title = "Restaurant";
+        fetchAndStoreRestaurant(props.match.params.id);
+    }, [])
+
     const fetchAndStoreRestaurant = (restaurantId) => {
         axios.get(`${configs.server_url}/restaurants/${restaurantId}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
@@ -20,12 +25,6 @@ const RestaurantPage = (props) => {
         .catch(error => {
             console.error('Error fetching restaurant:', error);
         });
-    }
-
-
-    const componentDidMount = () => {
-        document.title = "Restaurant";
-        fetchAndStoreRestaurant(props.match.params.id);
     }
 
     const orderFood = (food, restaurant) => {

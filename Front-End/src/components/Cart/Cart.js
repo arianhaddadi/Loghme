@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 import configs from '../../configs';
@@ -19,18 +19,18 @@ const Cart = (props) => {
         };
     });
 
-    const componentDidMount = () => {
-        if(props.cart === null) {
-            props.fetchAndStoreCart();
-        }
-    }
+    useEffect(() => {
+        if(props.cart === null) props.fetchAndStoreCart();
+    }, [])
 
-    const componentDidUpdate = () => {
-        if (props.cart.empty) setNotification({
-            status: "none",
-            message: "Cart is empty.",
-        })
-    } 
+    useEffect(() => {
+        if (props.cart && props.cart.empty) {
+            setNotification({
+                status: "none",
+                message: "Cart is empty.",
+            })
+        }
+    })
 
     const addItem = (foodName, restaurantId, isFoodPartyFood) => {
         axios.put(`${configs.server_url}/carts?foodName=${foodName}&restaurantId=${restaurantId}&quantity=${1}&isFoodPartyFood=${isFoodPartyFood}`, {},

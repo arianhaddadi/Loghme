@@ -19,10 +19,6 @@ const App = (props) => {
 
     const [showCart, setShowCart] = useState(false);
 
-    // componentDidMount = () => {
-    //     browserHistory.listen(() => window.scroll({top:0}));
-    // }
-
     if (localStorage.getItem(configs.jwt_token_name) === null && window.location.pathname !== '/login') {
         window.location.href = "/login";
     }
