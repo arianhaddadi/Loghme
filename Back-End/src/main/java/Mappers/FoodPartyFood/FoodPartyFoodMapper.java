@@ -45,9 +45,9 @@ public class FoodPartyFoodMapper extends Mapper<FoodPartyFoodDAO, String> implem
     @Override
     protected PreparedStatement getFindStatement(String id, Connection connection) throws SQLException{
         String[] idSegments = id.split(",");
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM FoodPartyFoods fd " +
-                                                                             "WHERE fd.name = ? " +
-                                                                             "AND fd.restaurantId = ?;");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM FoodPartyFoods " +
+                                                                             "WHERE name = ? " +
+                                                                             "AND restaurantId = ?;");
 
         preparedStatement.setString(1, idSegments[0]);
         preparedStatement.setString(2, idSegments[1]);
@@ -72,10 +72,10 @@ public class FoodPartyFoodMapper extends Mapper<FoodPartyFoodDAO, String> implem
 
     @Override
     protected PreparedStatement getUpdateStatement(FoodPartyFoodDAO foodPartyFoodDAO, Connection connection) throws SQLException {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE FoodPartyFoods fd " +
-                                                                                 "SET fd.count = ? " +
-                                                                                 "WHERE fd.name = ? AND " +
-                                                                                 "fd.restaurantId = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE FoodPartyFoods " +
+                                                                                 "SET count = ? " +
+                                                                                 "WHERE name = ? AND " +
+                                                                                 "restaurantId = ?;");
             preparedStatement.setInt(1, foodPartyFoodDAO.getCount());
             preparedStatement.setString(2, foodPartyFoodDAO.getName());
             preparedStatement.setString(3, foodPartyFoodDAO.getRestaurantId());
@@ -86,9 +86,9 @@ public class FoodPartyFoodMapper extends Mapper<FoodPartyFoodDAO, String> implem
     protected PreparedStatement getFindAllStatement(String id, Connection connection,
                                                     Integer limitStart, Integer limitSize) throws SQLException {
 
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM FoodPartyFoods fd " +
-                                                                             "WHERE fd.restaurantId = ? " +
-                                                                             "AND fd.valid = TRUE;");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM FoodPartyFoods " +
+                                                                             "WHERE restaurantId = ? " +
+                                                                             "AND valid = TRUE;");
         preparedStatement.setString(1, id);
         return preparedStatement;
     }
@@ -113,8 +113,8 @@ public class FoodPartyFoodMapper extends Mapper<FoodPartyFoodDAO, String> implem
     }
 
     private PreparedStatement getDeleteAllStatement(Connection connection) throws SQLException {
-        return connection.prepareStatement("UPDATE FoodPartyFoods fd " +
-                                              "SET fd.valid = FALSE;");
+        return connection.prepareStatement("UPDATE FoodPartyFoods " +
+                                              "SET valid = FALSE;");
     }
 
     public void deleteAll() {

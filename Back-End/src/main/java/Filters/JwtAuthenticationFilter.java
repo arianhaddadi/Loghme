@@ -21,7 +21,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         String path = httpServletRequest.getRequestURI();
-        if ("/Loghme_War/login".equals(path) || "/Loghme_war/signup".equals(path)) {
+//        System.out.println(path);
+        if ("/Loghme_war/login".equals(path) || "/Loghme_war/signup".equals(path)) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }

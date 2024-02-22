@@ -41,7 +41,7 @@ public class UserMapper extends Mapper<UserDAO, String> implements IUserMapper {
 
     @Override
     protected PreparedStatement getFindStatement(String id, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users u WHERE u.email = ?;");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE email = ?;");
         preparedStatement.setString(1, id);
         return preparedStatement;
     }
@@ -95,7 +95,7 @@ public class UserMapper extends Mapper<UserDAO, String> implements IUserMapper {
     public UserDAO findUserByEmailAndPassword(String email, String password) {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users u WHERE u.email = ? AND u.password = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE email = ? AND password = ?;");
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();

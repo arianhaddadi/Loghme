@@ -38,7 +38,7 @@ public class CartMapper extends Mapper<CartDAO, String> implements ICartMapper {
 
     @Override
     protected PreparedStatement getFindStatement(String id, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Carts c WHERE c.userId = ?;");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Carts WHERE userId = ?;");
         preparedStatement.setString(1, id);
         return preparedStatement;
     }
@@ -60,9 +60,9 @@ public class CartMapper extends Mapper<CartDAO, String> implements ICartMapper {
 
     @Override
     protected PreparedStatement getUpdateStatement(CartDAO cartDAO, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Carts " +
-                "SET restaurantId = ? " +
-                "WHERE userId = ?;");
+        PreparedStatement preparedStatement = connection.prepareStatement(  "UPDATE Carts " +
+                                                                                "SET restaurantId = ? " +
+                                                                                "WHERE userId = ?;");
         preparedStatement.setString(1, cartDAO.getRestaurantId());
         preparedStatement.setString(2, cartDAO.getUserId());
         return preparedStatement;

@@ -13,13 +13,15 @@ const ProfilePage = (props) => {
     const [creditsNotification, setCreditsNotification] = useState(null)
     const [creditsLoading, setCreditsLoading] = useState(false)
     const [creditsInputValue, setCreditsInputValue] = useState("")
-    const ordersUpdater = useRef(setInterval(props.fetchAndStoreOrders, 30 * 1000))
+    
+    const ordersUpdater = useRef(null)
     
 
     useEffect(() => {
         document.title = "Profile";
         props.fetchAndStoreOrders();
         props.fetchAndStoreUserInfo();
+        ordersUpdater.current = setInterval(props.fetchAndStoreOrders, 30 * 1000)
 
         return () => {
             clearInterval(ordersUpdater.current)

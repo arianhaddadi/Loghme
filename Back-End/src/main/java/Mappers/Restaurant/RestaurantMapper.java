@@ -42,13 +42,13 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements I
     private PreparedStatement getFindByNameAndMenuStatement(String foodName, String restaurantName,
                                                             Connection connection, Integer limitStart, Integer limitSize) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
-                             "SELECT r.* \n" +
-                                "FROM Restaurants r, Foods fd " +
-                                "WHERE r.id = fd.restaurantId " +
-                                "AND ((r.locationX * r.locationX) + (r.locationY * r.locationY)) <= 170 * 170 " +
-                                "AND r.name LIKE ? AND fd.name LIKE ? " +
-                                "GROUP BY r.id " +
-                                "LIMIT ?,?;");
+                            "SELECT id, name, logo, locationX, locationY " +
+                                "`FROM Restaurants, Foods " +
+                                "WHERE id = restaurantId " +
+                                "AND ((locationX * locationX) + (locationY * locationY)) <= 170 * 170 " +
+                                "AND name LIKE ? AND foodName LIKE ? " +
+                                "GROUP BY id " +
+                                "L`IMIT ?,?;");
 
 
         preparedStatement.setString(1, "%" + restaurantName + "%");
@@ -81,14 +81,15 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements I
 
     @Override
     protected PreparedStatement getFindStatement(String id, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Restaurants r WHERE r.id = ?;");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Restaurants WHERE id = ?;");
         preparedStatement.setString(1, id);
         return preparedStatement;
     }
 
     @Override
     protected PreparedStatement getInsertStatement(RestaurantDAO restaurant, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT IGNORE INTO Restaurants VALUES (?, ?, ?, ?, ?);");
+        PreparedStatement preparedStatement = connection.prepareStatement(  "INSERT IGNORE INTO Restaurants " +
+                                                                                "VALUES (?, ?, ?, ?, ?);");
         preparedStatement.setString(1, restaurant.getId());
         preparedStatement.setString(2, restaurant.getName());
         preparedStatement.setString(3, restaurant.getLogo());
@@ -122,8 +123,8 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements I
                                                     Integer limitStart, Integer limitSize) throws SQLException {
         if (limitStart != null && limitSize != null) {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                             "SELECT * FROM Restaurants r " +
-                                "WHERE ((r.locationX * r.locationX) + (r.locationY * r.locationY)) <= 170 * 170 " +
+                            "SELECT * FROM Restaurants " +
+                                "WHERE ((locationX * locationX) + (locationY * locationY)) <= 170 * 170 " +
                                 "LIMIT ?,?;");
             preparedStatement.setInt(1, limitStart);
             preparedStatement.setInt(2, limitSize);
@@ -131,8 +132,8 @@ public class RestaurantMapper extends Mapper<RestaurantDAO, String> implements I
         }
         else {
             return connection.prepareStatement(
-                    "SELECT * FROM Restaurants r " +
-                       "WHERE ((r.locationX * r.locationX) + (r.locationY * r.locationY)) <= 170 * 170;");
+                "SELECT * FROM Restaurants " +
+                    "WHERE ((locationX * locationX) + (locationY * locationY)) <= 170 * 170;");
         }
     }
 

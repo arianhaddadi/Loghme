@@ -22,14 +22,14 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
             PreparedStatement preparedStatement = connection.prepareStatement(
                 "CREATE TABLE IF NOT EXISTS Foods" +
                 "(" +
-                    "name VARCHAR(300), " +
+                    "foodName VARCHAR(300), " +
                     "description VARCHAR(300)," +
                     "image VARCHAR(300)," +
                     "price FLOAT," +
                     "popularity FLOAT," +
                     "restaurantId VARCHAR(300), " +
                     "FOREIGN KEY (restaurantId) REFERENCES Restaurants(id) ON UPDATE CASCADE ON DELETE CASCADE, " +
-                    "PRIMARY KEY (name, restaurantId)" +
+                    "PRIMARY KEY (foodName, restaurantId)" +
                 ");"
             );
             preparedStatement.executeUpdate();
@@ -43,9 +43,9 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
     @Override
     protected PreparedStatement getFindStatement(String id, Connection connection) throws SQLException {
         String[] idSegments = id.split(",");
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Foods fd " +
-                                                                             "WHERE fd.name = ? " +
-                                                                             "AND fd.restaurantId = ?;");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Foods " +
+                                                                             "WHERE foodName = ? " +
+                                                                             "AND restaurantId = ?;");
 
         preparedStatement.setString(1, idSegments[0]);
         preparedStatement.setString(2, idSegments[1]);
@@ -78,8 +78,8 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
     protected PreparedStatement getFindAllStatement(String id, Connection connection,
                                                     Integer limitStart, Integer limitSize) throws SQLException {
 
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Foods fd " +
-                                                                             "WHERE fd.restaurantId = ?;");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Foods " +
+                                                                             "WHERE restaurantId = ?;");
         preparedStatement.setString(1, id);
         return preparedStatement;
     }
@@ -87,7 +87,7 @@ public class FoodMapper extends Mapper<FoodDAO, String> implements IFoodMapper {
     @Override
     protected FoodDAO convertResultSetToObject(ResultSet resultSet) throws SQLException {
         FoodDAO foodDAO = new FoodDAO();
-        foodDAO.setName(resultSet.getString("name"));
+        foodDAO.setName(resultSet.getString("foodName"));
         foodDAO.setDescription(resultSet.getString("description"));
         foodDAO.setImage(resultSet.getString("image"));
         foodDAO.setPopularity(resultSet.getFloat("popularity"));

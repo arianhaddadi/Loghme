@@ -60,7 +60,7 @@ const App = (props) => {
                         <Route path="/signup" exact element={<SignupPage/>} />
                         <Route path="/login" exact element={<LoginPage/>} />
                         <Route path="/restaurants/:id" exact element={<RestaurantPage/>} />
-                        <Route path="/profile" exact component={<ProfilePage/>} />
+                        <Route path="/profile" exact element={<ProfilePage/>} />
                     </Routes>
                 </BrowserRouter>
                 <Footer />

@@ -146,10 +146,10 @@ public class RestaurantsManager {
     }
 
     public Food getFoodById(String id) {
-        FoodDAO foodDAO = FoodMapper.getInstance().find(id);
+        FoodDAO foodDAO = foodMapper.find(id);
         Food food;
         if(foodDAO == null) {
-            FoodPartyFoodDAO foodPartyFoodDAO = FoodPartyFoodMapper.getInstance().find(id);
+            FoodPartyFoodDAO foodPartyFoodDAO = foodPartyFoodMapper.find(id);
             food = foodPartyFoodDAO.getFoodPartyFoodForm();
         }
         else {

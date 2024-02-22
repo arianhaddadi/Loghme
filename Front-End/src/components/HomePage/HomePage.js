@@ -60,7 +60,6 @@ const HomePage = (props) => {
                 seconds: response.data.responseMessage.seconds
             })
             foodPartyTimeUpdater.current = setInterval(downCountTimer, 1000);
-            foodp
         })
         .catch(error => {
             console.log("Fetching Food Party Information Failed", error);

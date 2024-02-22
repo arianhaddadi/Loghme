@@ -37,7 +37,7 @@ const SignupPage = (props) => {
             if (response.data.successful) {
                 toast("Successfully Signed Up!");
                 setTimeout(() => {
-                    window.location.href = "/login";
+                    navigate("/login")
                 }, configs.notification_length);
             }
             else {

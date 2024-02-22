@@ -41,7 +41,7 @@ public class OrderMapper extends Mapper<OrderDAO, String> implements IOrderMappe
 
     @Override
     protected PreparedStatement getFindStatement(String id, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Orders u WHERE u.id = ?;");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Orders WHERE id = ?;");
         preparedStatement.setString(1, id);
         return preparedStatement;
     }
@@ -64,11 +64,11 @@ public class OrderMapper extends Mapper<OrderDAO, String> implements IOrderMappe
 
     @Override
     protected PreparedStatement getUpdateStatement(OrderDAO orderDAO, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Orders " +
-                                                                             "SET status = ?, " +
-                                                                             "deliveryStartTime = ?, " +
-                                                                             "deliveryTime = ? " +
-                                                                             "WHERE id = ?;");
+PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Orders " +
+                                                                     "SET status = ?, " +
+                                                                     "deliveryStartTime = ?, " +
+                                                                     "deliveryTime = ? " +
+                                                                     "WHERE id = ?;");
         preparedStatement.setString(1, orderDAO.getStatus());
         preparedStatement.setLong(2, orderDAO.getDeliveryStartTime());
         preparedStatement.setLong(3, orderDAO.getDeliveryTime());

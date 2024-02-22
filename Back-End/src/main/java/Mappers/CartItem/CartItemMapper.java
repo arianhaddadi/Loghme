@@ -41,10 +41,10 @@ public class CartItemMapper extends Mapper<CartItemDAO, String> implements ICart
     @Override
     protected PreparedStatement getFindStatement(String id, Connection connection) throws SQLException {
         String[] idSegments = id.split(",");
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM CartItems i " +
-                                                                             "WHERE i.cartId = ? " +
-                                                                             "AND i.foodName = ? " +
-                                                                             "AND i.restaurantId = ?;");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM CartItems " +
+                                                                             "WHERE cartId = ? " +
+                                                                             "AND foodName = ? " +
+                                                                             "AND restaurantId = ?;");
         preparedStatement.setString(1, idSegments[0]);
         preparedStatement.setString(2, idSegments[1]);
         preparedStatement.setString(3, idSegments[2]);

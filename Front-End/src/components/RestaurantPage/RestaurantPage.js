@@ -5,6 +5,8 @@ import Modal from '../utils/Modal';
 import FoodModal from '../FoodModal/FoodModal';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import RestaurantMenuItem from '../RestaurantPage/RestaurantMenuItem';
+import axios from 'axios';
+import configs from '../../configs';
 import {fetchAndStoreCart} from '../../actions';
 
 const RestaurantPage = (props) => {
@@ -114,4 +116,4 @@ const RestaurantPage = (props) => {
 }
 
 
-export default connect(mapStateToProps, {fetchAndStoreCart})(RestaurantPage);
+export default connect(undefined, {fetchAndStoreCart})(RestaurantPage);

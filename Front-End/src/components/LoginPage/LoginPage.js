@@ -93,7 +93,7 @@ const LoginPage = (props) => {
                 }
             }
         ).catch((error) => {
-            toast("Wrong Credentials!");
+            toast("Request Failed", error);
         });
     }
 

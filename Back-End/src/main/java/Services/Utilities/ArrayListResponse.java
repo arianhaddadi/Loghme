@@ -14,4 +14,12 @@ public class ArrayListResponse<T> {
         this.list = list;
         this.responseMessage = responseMessage;
     }
+
+    public ArrayList<T> getList() {
+        return this.list;
+    }
+
+    public ResponseMessage getResponseMessage() {
+        return responseMessage;
+    }
 }
