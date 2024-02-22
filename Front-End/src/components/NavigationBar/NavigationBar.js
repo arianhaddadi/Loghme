@@ -1,9 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import logo from '../../styles/images/Logo.png';
 import CartFunctionsContext from '../../contexts/CartFunctionsContext';
 import {connect} from 'react-redux';
-import {storeGoogleAuthenticationObject} from "../../actions";
 import { useNavigate } from 'react-router-dom';
 import configs from '../../configs';
 
@@ -13,7 +10,7 @@ const NavigationBar = (props) => {
 
     const handleExit = () => {
         const googleAuthentication = props.googleAuthentication;
-        if (googleAuthentication !== null && googleAuthentication.isSignedIn.get()) {
+        if (googleAuthentication && googleAuthentication.isSignedIn.get()) {
             googleAuthentication.signOut();
             googleAuthentication.disconnect();
         }
@@ -51,10 +48,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-NavigationBar.propTypes = {
-    hideExit:PropTypes.bool,
-    hideLogo:PropTypes.bool,
-    hideProfile:PropTypes.bool,
-}
-
-export default connect(mapStateToProps, {storeGoogleAuthenticationObject})(NavigationBar);
+export default connect(mapStateToProps)(NavigationBar);

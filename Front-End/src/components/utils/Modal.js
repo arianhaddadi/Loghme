@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 const Modal = (props) => {
 
     const componentDidMount = () => {
@@ -17,11 +15,6 @@ const Modal = (props) => {
             {props.render()}
         </div>
     )
-}
-
-Modal.propTypes = {
-    render:PropTypes.func.isRequired,
-    close:PropTypes.func.isRequired
 }
 
 export default Modal; 

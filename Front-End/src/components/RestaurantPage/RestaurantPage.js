@@ -1,31 +1,42 @@
 import {useState} from 'react';
 import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
 import Cart from '../Cart/Cart';
 import Modal from '../utils/Modal';
 import FoodModal from '../FoodModal/FoodModal';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import RestaurantMenuItem from '../RestaurantPage/RestaurantMenuItem';
-import {fetchAndStoreCart, fetchAndStoreRestaurant} from '../../actions';
+import {fetchAndStoreCart} from '../../actions';
 
 const RestaurantPage = (props) => {
     const [foodToShow, setFoodToShow] = useState(null)
+    const [restaurant, setRestaurant] = useState(null)
+
+    const fetchAndStoreRestaurant = (restaurantId) => {
+        axios.get(`${configs.server_url}/restaurants/${restaurantId}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
+        .then(response => {
+            setRestaurant(response.data);
+        })
+        .catch(error => {
+            console.error('Error fetching restaurant:', error);
+        });
+    }
 
 
     const componentDidMount = () => {
         document.title = "Restaurant";
-        props.fetchAndStoreRestaurant(props.match.params.id);
+        fetchAndStoreRestaurant(props.match.params.id);
     }
 
     const orderFood = (food, restaurant) => {
         setFoodToShow({
-            food:food,
-            restaurant:restaurant
+            food: food,
+            restaurant: restaurant
         })
     }
 
     const renderMenuItems = () => {
-        const menu = props.restaurant.menu;
+        const menu = restaurant.menu;
         if (menu === null || menu.length === 0) {
             return (
                 <div className="no-restaurant-items">
@@ -36,19 +47,19 @@ const RestaurantPage = (props) => {
         else {
             return menu.map((elem, index) => {
                 return (
-                    <RestaurantMenuItem key={index} item={elem} orderFood={orderFood} restaurant={props.restaurant} />
+                    <RestaurantMenuItem key={index} item={elem} orderFood={orderFood} restaurant={restaurant} />
                 )
             })
         }
     }
 
     const renderContent = () => {
-        if(props.restaurant === null || props.restaurant.id !== props.match.params.id) return;
+        if(restaurant === null || restaurant.id !== props.match.params.id) return;
         return (
             <>
                 <div className="rest-title-logo">
-                    <img src={props.restaurant.logo} className="rest-logo" alt="" />
-                    <div className="rest-title"> <b>{props.restaurant.name}</b> </div>
+                    <img src={restaurant.logo} className="rest-logo" alt="" />
+                    <div className="rest-title"> <b>{restaurant.name}</b> </div>
                 </div>
                 <div className="menu-title-container">
                     <div className="menu-title">
@@ -103,16 +114,5 @@ const RestaurantPage = (props) => {
     
 }
 
-RestaurantPage.propTypes = {
-    restaurant:PropTypes.object,
-    location:PropTypes.object.isRequired,
-}
 
-const mapStateToProps = (state) => {
-    return {
-        restaurant:state.restaurant,
-    }
-}
-
-
-export default connect(mapStateToProps, {fetchAndStoreCart, fetchAndStoreRestaurant})(RestaurantPage);
+export default connect(mapStateToProps, {fetchAndStoreCart})(RestaurantPage);

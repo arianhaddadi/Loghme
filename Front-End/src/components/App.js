@@ -10,7 +10,6 @@ import RestaurantPage from "./RestaurantPage/RestaurantPage";
 import ProfilePage from "./ProfilePage/ProfilePage";
 import Modal from './utils/Modal';
 import Cart from './Cart/Cart';
-import {fetchAndStoreUserInfo, fetchAndStoreCart, fetchAndStoreFoodPartyInformation, storeGoogleAuthenticationObject} from "../actions";
 import CartFunctionsContext from '../contexts/CartFunctionsContext';
 import configs from '../configs';
 
@@ -18,7 +17,7 @@ import configs from '../configs';
 
 const App = (props) => {
 
-    const [cartIsOpen, setCart] = useState(false);
+    const [showCart, setShowCart] = useState(false);
 
     // componentDidMount = () => {
     //     browserHistory.listen(() => window.scroll({top:0}));
@@ -29,14 +28,14 @@ const App = (props) => {
     }
 
     const getCartSize = () => {
-        if(props.cart !== null) {
+        if(props.cart) {
             return props.cart.cartItems.length;
         }
     }
 
 
     const openCartModal = () => {
-        setCart(true);
+        setShowCart(true);
     }
 
     const renderCartContent = () => {
@@ -46,12 +45,11 @@ const App = (props) => {
     }
 
     const closeCartModal = () => {
-        props.fetchAndStoreFoodPartyInformation();
-        setCart(false);
+        setShowCart(false);
     }
 
     const renderCart = () => {
-        if(cartIsOpen) {
+        if(showCart) {
             return <Modal close={closeCartModal} render={() => renderCartContent()} />;
         }
     }
@@ -79,8 +77,7 @@ const App = (props) => {
 const mapStateToProps = (state) => {
     return {
         cart:state.cart,
-        googleAuthentication:state.googleAuthentication,
     }
 }
 
-export default connect(mapStateToProps, {fetchAndStoreUserInfo, fetchAndStoreCart, fetchAndStoreFoodPartyInformation, storeGoogleAuthenticationObject})(App);
+export default connect(mapStateToProps)(App);

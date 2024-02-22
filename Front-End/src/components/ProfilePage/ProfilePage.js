@@ -1,6 +1,5 @@
-import React from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import Modal from '../utils/Modal';
 import Spinner from '../Spinner/Spinner';
 import NavigationBar from '../NavigationBar/NavigationBar';
@@ -9,25 +8,24 @@ import {connect} from 'react-redux';
 import {fetchAndStoreOrders, fetchAndStoreUserInfo} from "../../actions";
 
 
-class ProfilePage extends React.Component {
+const ProfilePage = (props) => {
+    const [visibleOrder, setVisibleOrder] = useState(null)
+    const [creditsNotification, setCreditsNotification] = useState(null)
+    const [creditsLoading, setCreditsLoading] = useState(false)
+    const [creditsInputValue, setCreditsInputValue] = useState("")
+    const ordersUpdater = setInterval(props.fetchAndStoreOrders, 30 * 1000);
 
-    constructor(props) {
-        super(props);
-        this.state = {visibleOrder:null, creditsNotification:null, creditsLoading:false, creditsInputValue:""};
-    }
-
-    componentDidMount() {
+    const componentDidMount = () => {
         document.title = "Profile";
-        this.props.fetchAndStoreOrders();
-        this.props.fetchAndStoreUserInfo();
-        this.ordersUpdater = setInterval(this.props.fetchAndStoreOrders, 30 * 1000);
+        props.fetchAndStoreOrders();
+        props.fetchAndStoreUserInfo();
     }
 
-    componentWillUnmount = () => {
-        clearInterval(this.ordersUpdater);
+    const componentWillUnmount = () => {
+        clearInterval(ordersUpdater);
     }
 
-    renderPersonalInfoItem = (info, iconClass) => {
+    const renderPersonalInfoItem = (info, iconClass) => {
         return (
             <div className="personal-info-item">
                 <div>{info}</div>
@@ -36,74 +34,62 @@ class ProfilePage extends React.Component {
         );
     }
 
-    addCredit = () => {
-        const value = this.state.creditsInputValue;
-        if (value === "") {
-            this.setState({
-                creditsInputValue:"",
-                creditsNotification:{
-                    status:"error",
-                    message:"Input is empty!",
-                }
-            });
+    const addCredit = () => {
+        if (creditsInputValue === "") {
+            setCreditsNotification({
+                status: "error",
+                message: "Input is empty!",
+            })
         }
-        else if(isNaN(value)) {
-            this.setState({
-                creditsInputValue:"",
-                creditsNotification:{
-                    status:"error",
-                    message:"Input must be a number",
-                }
-            });
+        else if(isNaN(creditsInputValue)) {
+            setCreditsInputValue("")
+            setCreditsNotification({
+                status: "error",
+                message:"Input must be a number",
+            })
         }
-        else if(parseFloat(value) < 0) {
-            this.setState({
-                creditsInputValue:"",
-                creditsNotification:{
-                    status:"error",
-                    message:"Reducing balance is not allowed!"
-                }
+        else if(parseFloat(creditsInputValue) < 0) {
+            setCreditsInputValue("")
+            setCreditsNotification({
+                status: "error",
+                message:"Reducing balance is not allowed!"
             })
         }
         else {
-            axios.put(`${configs.server_url}/credits?amount=${value}`, {}, { headers: { 'Authorization': `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
+            axios.put(`${configs.server_url}/credits?amount=${creditsInputValue}`, {}, { headers: { 'Authorization': `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
             .then(() => {
-                this.setState({
-                    creditsLoading:false,
-                    creditsInputValue:"",
-                    creditsNotification:{
-                        status:"success",
-                        message:"Your balance was increased successfully!"
-                    }
+                setCreditsLoading(false)
+                setCreditsInputValue("")
+                setCreditsNotification({
+                    status:"success",
+                    message:"Your balance was increased successfully!"
                 })
-                this.props.fetchAndStoreUserInfo();
+                props.fetchAndStoreUserInfo();
             });
-            this.setState({
-                creditsNotification:null,
-                creditsLoading:true
-            })
+            setCreditsLoading(true)
+            setCreditsNotification(null)
         }
     }
 
-    renderCreditsNotification = () => {
-        if(this.state.creditsNotification !== null) {
+    const renderCreditsNotification = () => {
+        if(creditsNotification) {
             return (
-                <div className={`credits-notification ${this.state.creditsNotification.status}`}>
-                    {this.state.creditsNotification.message}
+                <div className={`credits-notification ${creditsNotification.status}`}>
+                    {creditsNotification.message}
                 </div>
             )
         }
     }
 
-    renderCreditsSpinner = () => {
-        if(this.state.creditsLoading) {
+    const renderCreditsSpinner = () => {
+        if(creditsLoading) {
             return (
                 <Spinner additionalClassName="credits-spinner col-12" />
             )
         }
     }
 
-    renderCreditsTab = () => {
+    const renderCreditsTab = () => {
         return (
             <div className="tab">
                 <input id="credit-tab" name="tabgroup" type="radio" />
@@ -111,18 +97,18 @@ class ProfilePage extends React.Component {
                     Add Balance
                 </label>
                 <div className="row credit-content">
-                    <button onClick={this.addCredit} type="button" className="btn btn-primary add-credit-button col-3">
+                    <button onClick={addCredit} type="button" className="btn btn-primary add-credit-button col-3">
                         Add
                     </button>
-                    <input className="credit-input btn col-8" value={this.state.creditsInputValue} onChange={(event) => this.setState({creditsInputValue:event.target.value})} placeholder="Balance to add" />
-                    {this.renderCreditsNotification()}
-                    {this.renderCreditsSpinner()}
+                    <input className="credit-input btn col-8" value={creditsInputValue} onChange={(event) => setCreditsInputValue(event.target.value)} placeholder="Balance to add" />
+                    {renderCreditsNotification()}
+                    {renderCreditsSpinner()}
                 </div>
             </div>
         )
     } 
 
-    renderOrderStatusButton = (deliveryStatus) => {
+    const renderOrderStatusButton = (deliveryStatus) => {
         if (deliveryStatus === "DELIVERY_ON_ITS_WAY") {
             return (
                 <div className="btn-success on-the-way-button" >
@@ -146,12 +132,12 @@ class ProfilePage extends React.Component {
         }
     }
 
-    viewOrder = (order) => {
-        this.setState({visibleOrder:order});
+    const viewOrder = (order) => {
+        setVisibleOrder(order)
     }
 
-    renderOrdersRows = (orders) => {
-        if (this.props.orders === null) {
+    const renderOrdersRows = (orders) => {
+        if (props.orders === null) {
             return (
                 <Spinner additionalClassName="orders-spinner"/>
             );
@@ -166,13 +152,13 @@ class ProfilePage extends React.Component {
             }
             return orders.map((elem, index) => {
                 return (
-                    <div key={index} onClick={() => this.viewOrder(elem)} className="order">
+                    <div key={index} onClick={() => viewOrder(elem)} className="order">
                         <div className="order-index">{index+1}</div>
                         <div className="order-restaurant-name">
                             {elem.cart.restaurant.name}
                         </div>
                         <div className="order-status">
-                            {this.renderOrderStatusButton(elem.status)}
+                            {renderOrderStatusButton(elem.status)}
                         </div>
                     </div>
                 )
@@ -180,7 +166,7 @@ class ProfilePage extends React.Component {
         }
     }
 
-    renderOrderItems = (cartItems) => {
+    const renderOrderItems = (cartItems) => {
         return cartItems.map((elem, index) => {
             return (
                 <div key={index} className="order-modal-item">
@@ -201,7 +187,7 @@ class ProfilePage extends React.Component {
         });
     }
 
-    calculateOrderPrice = (cartItems) => {
+    const calculateOrderPrice = (cartItems) => {
         let price = 0;
         for (let i = 0; i < cartItems.length; i++) {
             price += cartItems[i].food.price * cartItems[i].quantity;
@@ -209,7 +195,7 @@ class ProfilePage extends React.Component {
         return price;
     }
 
-    renderOrderInfo = (order) => {
+    const renderOrderInfo = (order) => {
         return (
             <div onClick={(event) => event.stopPropagation()} className="order-modal">
                 <div className="order-modal-restaurant-name">
@@ -231,10 +217,10 @@ class ProfilePage extends React.Component {
                             Index
                         </div>
                     </div>
-                    {this.renderOrderItems(order.cart.cartItems)}
+                    {renderOrderItems(order.cart.cartItems)}
                     <div className="order-modal-price">
                         <b>
-                        Total Price:{this.calculateOrderPrice(order.cart.cartItems)} Dollars
+                        Total Price:{calculateOrderPrice(order.cart.cartItems)} Dollars
                         </b>
                     </div>
                 </div>
@@ -242,42 +228,40 @@ class ProfilePage extends React.Component {
         )
     }
 
-    closeOrderModal = () => {
-        this.setState({visibleOrder:null});
+    const closeOrderModal = () => {
+        setVisibleOrder(null)
     } 
 
-    renderOrderModal = () => {
-        if(this.state.visibleOrder !== null) {
+    const renderOrderModal = () => {
+        if(visibleOrder) {
             return (
-                <Modal close={this.closeOrderModal} render={() => this.renderOrderInfo(this.state.visibleOrder)} />  
+                <Modal close={closeOrderModal} render={() => renderOrderInfo(visibleOrder)} />  
             )
         }
     }
 
-    handleClickOnOrdersTab = () => {
-        this.props.fetchAndStoreOrders();
-        this.setState({
-            creditsNotification:null
-        })
+    const handleClickOnOrdersTab = () => {
+        props.fetchAndStoreOrders();
+        setCreditsNotification(null);
     }
 
-    renderOrdersTab = () => {
+    const renderOrdersTab = () => {
         return (
             <div className="tab">
                 <input id="orders-tab" name="tabgroup" type="radio" defaultChecked/>
-                <label htmlFor="orders-tab" onClick={this.handleClickOnOrdersTab}>
+                <label htmlFor="orders-tab" onClick={handleClickOnOrdersTab}>
                     Orders
                 </label>
                 <div className="orders-content">
-                    {this.renderOrdersRows(this.props.orders)}
+                    {renderOrdersRows(props.orders)}
                 </div>
             </div>
         );
     }
 
-    renderProfileInfo = () => {
-        if(this.props.user !== null) {
-            const user = this.props.user;
+    const renderProfileInfo = () => {
+        if(props.user) {
+            const user = props.user;
             return (
                 <>
                     <div className="username">
@@ -287,36 +271,28 @@ class ProfilePage extends React.Component {
                         </b>
                     </div>
                     <div className="personal-info">
-                        {this.renderPersonalInfoItem(user.phoneNumber, "flaticon-phone")}
-                        {this.renderPersonalInfoItem(user.email, "flaticon-mail")}
-                        {this.renderPersonalInfoItem(`${user.credit} Dollars`, "flaticon-card")}
+                        {renderPersonalInfoItem(user.phoneNumber, "flaticon-phone")}
+                        {renderPersonalInfoItem(user.email, "flaticon-mail")}
+                        {renderPersonalInfoItem(`${user.credit} Dollars`, "flaticon-card")}
                     </div>
                 </>
             )
         }
     }
 
-    render() {
-        return (
-            <>  
-                <NavigationBar hideProfile />
-                <div className="head-bar profile">
-                    {this.renderProfileInfo()}
-                </div>
-                <div className="tabs">
-                    {this.renderCreditsTab()}
-                    {this.renderOrdersTab()}
-                </div>
-                {this.renderOrderModal()}
-            </>
-        );
-    }
-}
-
-ProfilePage.propTypes = {
-    orders:PropTypes.array,
-    user:PropTypes.object,
-    location:PropTypes.object.isRequired,
+    return (
+        <>  
+            <NavigationBar hideProfile />
+            <div className="head-bar profile">
+                {renderProfileInfo()}
+            </div>
+            <div className="tabs">
+                {renderCreditsTab()}
+                {renderOrdersTab()}
+            </div>
+            {renderOrderModal()}
+        </>
+    );
 }
 
 const mapStateToProps = (state) => {

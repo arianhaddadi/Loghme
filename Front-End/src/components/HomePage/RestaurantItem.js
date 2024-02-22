@@ -1,7 +1,3 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-
 const RestaurantItem = (props) => {
     const item = props.item;
     return (
@@ -13,11 +9,6 @@ const RestaurantItem = (props) => {
             <button onClick={() => {props.viewRestaurantPage(item.id)}} type="button" className="btn btn-warning restaurant-item-view-button">View Menu</button>
         </div>
     )
-}
-
-RestaurantItem.propTypes = {
-    item:PropTypes.object.isRequired,
-    viewRestaurantPage:PropTypes.func.isRequired
 }
 
 export default RestaurantItem;

@@ -16,7 +16,7 @@ const LoginPage = (props) => {
     const navigate = useNavigate()
 
     const componentDidMount = () => {
-        if (localStorage.getItem(configs.jwt_token_name) !== null) {
+        if (localStorage.getItem(configs.jwt_token_name)) {
             navigate("/")
         }
         else {

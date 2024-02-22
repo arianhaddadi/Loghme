@@ -1,55 +1,71 @@
-import React from 'react';
+import {useState} from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import logo from '../../styles/images/Logo.png';
 import Spinner from "../Spinner/Spinner";
 import Modal from '../utils/Modal';
-import FoodModal from '../Food/Food';
+import FoodModal from '../FoodModal/FoodModal';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import FoodPartyItem from './FoodPartyItem';
 import RestaurantItem from './RestaurantItem';
 import configs from '../../configs';
-import {connect} from 'react-redux';
 import {ToastContainer, toast} from 'react-toastify';
-import {fetchAndStoreFoodPartyInformation, fetchAndStoreRestaurants, clearRestaurants} from '../../actions';
-import { redirect } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
-class HomePage extends React.Component {
+const HomePage = (props) => {
+    const [visibleFoodItem, setVisibleFoodItem] = useState(null)
+    const [searchRestaurantNameValue, setSearchRestaurantName] = useState("")
+    const [searchFoodNameValue, setSearchFoodName] = useState("")
+    const [searchedRestaurants, setSearchedRestaurants] = useState(null)
+    const [isSearching, setIsSearching] = useState(false)
+    const [isLoadingMore, setIsLoadingMore] = useState(false)
+    const [restaurants, setRestaurants] = useState([])
+    const [foodPartyRestaurants, setFoodPartyRestaurants] = useState(null)
+    const [foodPartyTimer, setFoodPartyTimer] = useState({minutes: 0, seconds: 0})
+    const [numOfPages, setNumOfPages] = useState(1)
+    const [numOfPagesSearchResults, setNumOfPagesSearchResults] = useState(1)
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            showFoodModal: false,
-            searchRestaurantName: "",
-            searchFoodName: "",
-            searchedRestaurants:null,
-            pageNum:1,
-            searchPageNum:1,
-            pageSize:12,
-            visible:10,
-            isLoadingMore:false,
-            numOfRestaurants:0,
-            restaurantsFullyLoaded:false,
-            searchedRestaurantsFullyLoaded:false,
-            isSearching:false
-        };
-        this.foodPartyTimer = null;
-        this.nextState = null;
-    }
+    const navigate = useNavigate()
 
-    componentDidMount = () => {
+    const componentDidMount = () => {
         document.title = "Home";
-        this.props.fetchAndStoreFoodPartyInformation();
-        this.props.fetchAndStoreRestaurants(this.state.pageSize, this.state.pageNum);
+        fetchFoodPartyInformation();
+        fetchRestaurants(1);
     }
 
-    componentWillUnmount = () => {
-        clearInterval(this.foodPartyTimer);
-        this.props.clearRestaurants();
+    const fetchRestaurants = (pageNum) => {
+        axios.get(`${configs.server_url}/restaurants?pageSize=${configs.home_page_size}&pageNum=${pageNum}`, 
+            { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
+        .then(response => {
+            setRestaurants(restaurants.concat(response.data.list))
+            setIsLoadingMore(false)
+        })
+        .catch(error => {
+            console.log("Fetching Restaurants Failed", error);
+        });
+        
     }
 
-    downCountTimer = () => {
-        let {minutes, seconds} = this.state.timer;
+    const componentWillUnmount = () => {
+        clearInterval(this.foodPartyTimeUpdater);
+    }
+
+    const fetchFoodPartyInformation = () => {
+        axios.get(`${configs.server_url}/foodparties`, { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
+        .then(response => {
+            setFoodPartyRestaurants(response.data.list)
+            setFoodPartyTimer({
+                minutes: response.data.responseMessage.minutes,
+                seconds: response.data.responseMessage.seconds
+            })
+            this.foodPartyTimeUpdater = setInterval(downCountTimer, 1000);
+        })
+        .catch(error => {
+            console.log("Fetching Food Party Information Failed", error);
+        });
+    }
+
+    const downCountTimer = () => {
+        let {minutes, seconds} = foodPartyTimer;
         if(minutes !== 0 || seconds !== 0) {
             if(seconds === 0) {
                 seconds = 59;
@@ -58,62 +74,27 @@ class HomePage extends React.Component {
             else {
                 seconds -= 1;
             }
-            this.setState({
-                timer:{
-                    minutes:minutes,
-                    seconds:seconds
-                }
-            });
+            setFoodPartyTimer({
+                minutes:minutes,
+                seconds:seconds
+            })
         }
         else {
-            clearInterval(this.foodPartyTimer);
-            this.foodPartyTimer = null;
-            this.props.fetchAndStoreFoodPartyInformation();
+            clearInterval(this.foodPartyTimeUpdater);
+            fetchFoodPartyInformation();
         }
     }
 
-    componentDidUpdate = () => {
-        if(this.foodPartyTimer === null && this.props.foodPartyRestaurants !== null) {
-            this.setState({
-                timer:{
-                    minutes:this.props.foodPartyTimer.minutes,
-                    seconds:this.props.foodPartyTimer.seconds
-                }
-            })
-            this.foodPartyTimer = setInterval(this.downCountTimer, 1000);
-        }
-        if (this.state.numOfRestaurants !== this.props.restaurants.length) {
-            if (this.nextState !== null) {
-                this.setState(this.nextState);
-                this.nextState = null;
-            }
-            this.setState({
-                numOfRestaurants:this.props.restaurants.length,
-                restaurantsFullyLoaded:this.props.restaurants.length - this.state.numOfRestaurants < this.state.pageSize ? true : false
-            })
-        }
-        else if(this.state.newSearchResults) {
-            if (this.nextState !== null) {
-                this.setState(this.nextState);
-                this.nextState = null;
-            }
-            this.setState({
-                newSearchResults:false
-            })
-        }
-    }
-
-    orderFoodPartyFood = (restaurant, food) => {
-        this.foodPartyItemToShow = {
-            restaurant:restaurant,
-            food:food
-        };
-        this.setState({showFoodModal:true});
+    const orderFoodPartyFood = (restaurant, food) => {
+        setVisibleFoodItem({
+            restaurant: restaurant,
+            food: food
+        });
     }
     
-    renderFoodPartyItems = () => {
-        if(this.props.foodPartyRestaurants !== null) {
-            if(this.props.foodPartyRestaurants.length === 0) {
+    const renderFoodPartyItems = () => {
+        if(foodPartyRestaurants) {
+            if(foodPartyRestaurants.length === 0) {
                 return (
                     <div className="no-food-party-restaurants-notification">
                         No restaurants are currently in food party.
@@ -122,12 +103,11 @@ class HomePage extends React.Component {
             }
             else {
                 let foodpartyItems = [];
-                const foodPartyRestaurants = this.props.foodPartyRestaurants;
                 for (let i = 0; i < foodPartyRestaurants.length; i++) {
                     foodpartyItems = foodpartyItems.concat(foodPartyRestaurants[i].foodPartyMenu.map(
                     (elem, index) => {
                         return (
-                            <FoodPartyItem key={`${i}` + index} orderFood={this.orderFoodPartyFood} restaurant={foodPartyRestaurants[i]} item={elem} />
+                            <FoodPartyItem key={`${i}` + index} orderFood={orderFoodPartyFood} restaurant={foodPartyRestaurants[i]} item={elem} />
                         )
                     }))
                 }
@@ -141,93 +121,88 @@ class HomePage extends React.Component {
         }
     }
 
-    viewRestaurantPage = (restaurantId) => {
-        redirect(`/restaurants/${restaurantId}`);
+    const viewRestaurantPage = (restaurantId) => {
+        navigate(`/restaurants/${restaurantId}`);
     }
 
-    renderRestaurants = () => {
-        if(this.props.restaurants.length !== 0 && (this.state.isSearching === false || (this.state.searchedRestaurants !== null))) {
-            let restaurantsToShow = this.state.searchedRestaurants === null ? this.props.restaurants : this.state.searchedRestaurants;
-            return restaurantsToShow.map((elem, index) => {
-                return (
-                    <RestaurantItem key={index} item={elem} viewRestaurantPage={this.viewRestaurantPage} />
-                )
-            });
-        }
-        else if (this.props.restaurants.length === 0) {
-            return (
-                <Spinner additionalClassName=" " />
-            )
-        }
-    }
-
-    loadMore = () => {
-        if (this.state.searchedRestaurants === null) {
-            this.props.fetchAndStoreRestaurants(this.state.pageSize, this.state.pageNum + 1);
-            this.setState({pageNum:this.state.pageNum + 1, isLoadingMore:true});
+    const loadMore = () => {
+        if (searchedRestaurants === null) {
+            fetchRestaurants(numOfPages + 1);
+            setNumOfPages(numOfPages + 1);
         }
         else {
-            this.search(this.state.pageSize, this.state.searchPageNum + 1)
-            this.setState({
-                searchPageNum: this.state.searchPageNum + 1, isLoadingMore:true
-            })
+            search(numOfPagesSearchResults + 1)
+            setNumOfPagesSearchResults(numOfPagesSearchResults + 1);
         }
+        setIsLoadingMore(true)
     }
 
-    renderLoadingMoreSpinner = () => {
-        if (this.state.isLoadingMore) {
-            this.nextState = {
-                isLoadingMore:false
-            }
+    const renderLoadingMoreSpinner = () => {
+        if (isLoadingMore || isSearching) {
             return (
                 <Spinner additionalClassName="loading-more-spinner" />
             )
         }
     }
 
-    renderShowMoreButton = () => {
-        if ((this.props.restaurants.length !== 0 && this.state.restaurantsFullyLoaded === false && this.state.searchedRestaurants === null) 
-            || (this.state.searchedRestaurants !== null && this.state.searchedRestaurantsFullyLoaded === false)) {
+    const renderShowMoreButton = () => {
+        return (
+            <>
+                <button onClick={loadMore} className="submit-button btn show-more-button">Show More</button>
+                {renderLoadingMoreSpinner()}
+            </>
+        )
+    }
 
+    const renderRestaurantItems = () => {
+        const restaurantsToRender = searchedRestaurants === null ? restaurants : searchedRestaurants;
+        return restaurantsToRender.map((elem, index) => {
             return (
-                <>
-                    <button onClick={this.loadMore} className="submit-button btn show-more-button">Show More</button>
-                    {this.renderLoadingMoreSpinner()}
-                </>
+                <RestaurantItem key={index} item={elem} viewRestaurantPage={viewRestaurantPage} />
+            )}
+        )
+    }
+
+    const renderRestaurants = () => {
+        if (restaurants.length === 0 || (isSearching && searchedRestaurants === null)) {
+            return (
+                <Spinner additionalClassName="" />
             )
         }
-        else if (this.state.searchedRestaurants !== null && this.state.searchedRestaurants.length === 0) {
+        else {
             return (
-                <p>No results found.</p>
+                <>
+                    <div className="restaurants-home-items">
+                        {renderRestaurantItems()}
+                    </div>
+                    {renderShowMoreButton()}
+                </>
             )
         }
     }
     
-    renderRestaurantsSection = () => {
+    const renderRestaurantsSection = () => {
         return (
             <div className="restaurants-home">
                 <div className="home-title">
                     Restaurants
                 </div>
                 <hr className="home-title-hr"/>
-                <div className="restaurants-home-items">
-                    {this.renderRestaurants()}
-                </div>
-                {this.renderShowMoreButton()}
+                {renderRestaurants()}
             </div>
         )
     }
 
-    styleTime = (time) => {
+    const styleTime = (time) => {
         time = time.toString();
         if(time.length === 1) time = "0" + time;
         return time;
     }
 
-    renderFoodPartyTimer = () => {
-        if(this.props.foodPartyRestaurants !== null && this.foodPartyTimer !== null) {
-            const minutedRemaining = this.styleTime(this.state.timer.minutes);
-            const secondsRemaining = this.styleTime(this.state.timer.seconds);
+    const renderFoodPartyTimer = () => {
+        if(foodPartyRestaurants) {
+            const minutedRemaining = styleTime(foodPartyTimer.minutes);
+            const secondsRemaining = styleTime(foodPartyTimer.seconds);
             return (
                 <div className="food-party-home-timer">
                     Remaining Time: {minutedRemaining}:{secondsRemaining}
@@ -236,132 +211,109 @@ class HomePage extends React.Component {
         }
     }
 
-    renderFoodPartySection = () => {
+    const renderFoodPartySection = () => {
         return (
             <div className="food-party-home">
                 <div className="home-title">
                      Food Party
                 </div>
                 <hr className="home-title-hr"/>
-                {this.renderFoodPartyTimer()}
+                {renderFoodPartyTimer()}
                 <div className="food-party-home-items">
-                    {this.renderFoodPartyItems()}
+                    {renderFoodPartyItems()}
                 </div>
             </div>
         )
     }
 
-    closeFoodPartyModal = () => {
-        this.props.fetchAndStoreFoodPartyInformation();
-        this.setState({showFoodModal:false});
+    const closeFoodPartyModal = () => {
+        fetchFoodPartyInformation();
+        setVisibleFoodItem(null)
     }
 
-    showFoodPartyModal = () => {
+    const showFoodPartyModal = () => {
         return (
-            <FoodModal isFoodParty item={this.foodPartyItemToShow} />
+            <FoodModal isFoodParty item={visibleFoodItem} />
         )
     }
 
-    renderFoodPartyModal = () => {
-        if(this.state.showFoodModal) {
+    const renderFoodPartyModal = () => {
+        if(visibleFoodItem) {
             return (
-                <Modal close={this.closeFoodPartyModal} render={this.showFoodPartyModal} />
+                <Modal close={closeFoodPartyModal} render={showFoodPartyModal} />
             )
         }
     }
 
-    search = (pageSize, pageNum) => {
-        axios.get(`${configs.server_url}/search?foodName=${this.state.searchFoodName}&restaurantName=${this.state.searchRestaurantName}&pageSize=${pageSize}&pageNum=${pageNum}`,
+    const search = (pageNum) => {
+        axios.get(`${configs.server_url}/search?foodName=${searchFoodNameValue}&restaurantName=${searchRestaurantNameValue}&pageSize=${configs.home_page_size}&pageNum=${pageNum}`,
                  { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
             .then(response => {
-                this.setState({
-                    searchedRestaurants:(this.state.searchedRestaurants === null || pageNum === 1) ? response.data.list : this.state.searchedRestaurants.concat(response.data.list),
-                    isSearching:false,
-                    isLoadingMore:false,
-                    searchedRestaurantsFullyLoaded:response.data.list.length < this.state.pageSize || response.data.list.length === 0,
-                    newSearchResults:true
-                })
-                if(response.data.list.length === 0 && this.state.searchedRestaurants === null) {
-                    toast("No items found.");
+                if (searchedRestaurants === null) {
+                    setSearchedRestaurants(response.data.list)
+                } else {
+                    setSearchedRestaurants(searchedRestaurants.concat(response.data.list))
+                }
+                setIsSearching(false)
+                setIsLoadingMore(false)
+                if(response.data.list.length === 0) {
+                    toast("No more items found.");
                 }
                 else {
                     toast("Search was successfull.");
                 }
             }
         )
-        this.setState({
-            isSearching:true,
-            isLoadingMore:this.state.searchedRestaurants !== null
-        })
+        setIsSearching(true)
     }
 
-    handleSearchSubmit = (event) => {
+    const handleSearchSubmit = (event) => {
         event.preventDefault();
-        if((this.state.searchRestaurantName === "") && (this.state.searchFoodName === "")) {
-            toast("Please complete both fields!")
+        if((searchRestaurantNameValue === "") && (searchFoodNameValue === "")) {
+            toast("Please complete at least one of the fields!")
         }
         else {
-            if (this.state.searchPageNum !== 1) {
-                this.setState({
-                    searchPageNum:1,
-                    searchedRestaurants:null
-                })
-            }
-            this.search(this.state.pageSize, 1);
+            setNumOfPagesSearchResults(1)
+            setSearchedRestaurants(null)
+            search(1);
         }
     }
 
-    handleSearchChange = (event) => {
+    const handleSearchChange = (event) => {
         event.preventDefault();
         const {name, value} = event.target;
-        this.setState({[name]: value});
+        if (name === "searchFoodName") setSearchFoodName(value);
+        else setSearchRestaurantName(value);
     }
 
-    render() {
-        return (
-            <>  
-                <NavigationBar hideLogo />
-                <ToastContainer autoClose={5000} />
-                <div className="home-container">
-                    <div className="home-head-bar">
-                        <img onClick={() => this.setState({searchedRestaurants:null})} src={logo} className="loghme-logo-home" alt="" />
-                        <div className="restaurant-desription-home">
-                            The best online food ordering website in the world!
-                        </div>
-                        <form className="search-bar-home" onSubmit={this.handleSearchSubmit} noValidate>
-                            <button type="submit" className="btn btn-warning">Search</button>
-                            <input name="searchRestaurantName" onChange={this.handleSearchChange} 
-                                noValidate type="text" className="btn search-bar-home-restaurant-name" 
-                                placeholder="Restaurant Name" value={this.state.searchRestaurantName}/>
-                            <input name="searchFoodName" onChange={this.handleSearchChange} 
-                                noValidate type="text" className="btn search-bar-home-food-name" 
-                                placeholder="Food Name" value={this.state.searchFoodName}/>
-                        </form>
-                        <div className="head-bar-cover"></div>
+
+    return (
+        <>  
+            <NavigationBar hideLogo />
+            <ToastContainer autoClose={configs.notification_length} />
+            <div className="home-container">
+                <div className="home-head-bar">
+                    <img onClick={() => setSearchedRestaurants(null)} src={logo} className="loghme-logo-home" alt="" />
+                    <div className="restaurant-desription-home">
+                        The best online food ordering website in the world!
                     </div>
-                    {this.renderFoodPartySection()}
-                    {this.renderRestaurantsSection()}
+                    <form className="search-bar-home" onSubmit={handleSearchSubmit} noValidate>
+                        <button type="submit" className="btn btn-warning">Search</button>
+                        <input name="searchRestaurantName" onChange={handleSearchChange} 
+                            noValidate type="text" className="btn search-bar-home-restaurant-name" 
+                            placeholder="Restaurant Name" value={searchRestaurantNameValue}/>
+                        <input name="searchFoodName" onChange={handleSearchChange} 
+                            noValidate type="text" className="btn search-bar-home-food-name" 
+                            placeholder="Food Name" value={searchFoodNameValue}/>
+                    </form>
+                    <div className="head-bar-cover"></div>
                 </div>
-                {this.renderFoodPartyModal()}
-            </>
-        )
-    }
+                {renderFoodPartySection()}
+                {renderRestaurantsSection()}
+            </div>
+            {renderFoodPartyModal()}
+        </>
+    )
 }
 
-HomePage.propTypes = {
-    foodPartyTimer:PropTypes.object,
-    foodPartyRestaurants:PropTypes.array,
-    restaurants:PropTypes.array,
-    location:PropTypes.object.isRequired,
-}
-
-const mapStateToProps = (state) => {
-    return {
-        foodPartyTimer:state.foodPartyTimer,
-        foodPartyRestaurants:state.foodPartyRestaurants,
-        restaurants:state.restaurants,
-    }
-}
-
-
-export default connect(mapStateToProps, {fetchAndStoreFoodPartyInformation, fetchAndStoreRestaurants, clearRestaurants})(HomePage);
+export default HomePage;

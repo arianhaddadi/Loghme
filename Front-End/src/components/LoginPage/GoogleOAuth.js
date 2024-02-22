@@ -2,7 +2,7 @@ import {connect} from "react-redux";
 
 const GoogleOAuth = (props) => {
     const signIn = () => {
-        if (props.googleAuthentication !== null) {
+        if (props.googleAuthentication) {
             props.googleAuthentication.signIn();
         }
     }

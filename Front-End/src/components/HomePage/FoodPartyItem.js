@@ -1,7 +1,3 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-
 const FoodPartyItem = (props) => {
     const item = props.item;
     return (
@@ -38,12 +34,6 @@ const FoodPartyItem = (props) => {
             </div>
         </div>
     )
-}
-
-FoodPartyItem.propTypes = {
-    restaurant:PropTypes.object.isRequired,
-    item:PropTypes.object.isRequired,
-    orderFood:PropTypes.func.isRequired
 }
 
 export default FoodPartyItem;
