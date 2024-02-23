@@ -25,7 +25,7 @@ const FoodPartyItem = (props) => {
             </div>
             <div className="food-party-item-buttons">
                 <div className="food-party-item-remaining">
-                    {item.count === 0 ? "Not Available" : `Number of Remaining Items: ${item.count}`}
+                    {item.count === 0 ? "Not Available" : `Only ${item.count} Available`}
                     </div>
                 <div onClick={() => props.orderFood(props.restaurant, item)} className="food-party-item-buy-button">Purchase</div>
             </div>

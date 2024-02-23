@@ -1,11 +1,12 @@
 import {useEffect, useState} from 'react';
+import { useParams } from 'react-router-dom';
 import {connect} from 'react-redux';
+import axios from 'axios';
 import Cart from '../Cart/Cart';
 import Modal from '../utils/Modal';
 import FoodModal from '../FoodModal/FoodModal';
 import NavigationBar from '../NavigationBar/NavigationBar';
 import RestaurantMenuItem from '../RestaurantPage/RestaurantMenuItem';
-import axios from 'axios';
 import configs from '../../configs';
 import {fetchAndStoreCart} from '../../actions';
 
@@ -13,9 +14,11 @@ const RestaurantPage = (props) => {
     const [foodToShow, setFoodToShow] = useState(null)
     const [restaurant, setRestaurant] = useState(null)
 
+    const {id} = useParams()
+
     useEffect(() => {
         document.title = "Restaurant";
-        fetchAndStoreRestaurant(props.match.params.id);
+        fetchAndStoreRestaurant(id);
     }, [])
 
     const fetchAndStoreRestaurant = (restaurantId) => {
@@ -55,7 +58,7 @@ const RestaurantPage = (props) => {
     }
 
     const renderContent = () => {
-        if(restaurant === null || restaurant.id !== props.match.params.id) return;
+        if(restaurant === null || restaurant.id !== id) return;
         return (
             <>
                 <div className="rest-title-logo">

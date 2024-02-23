@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import logo from '../../styles/images/Logo.png';
 import Spinner from "../Spinner/Spinner";
@@ -20,23 +20,23 @@ const HomePage = (props) => {
     const [isLoadingMore, setIsLoadingMore] = useState(false)
     const [restaurants, setRestaurants] = useState([])
     const [foodPartyRestaurants, setFoodPartyRestaurants] = useState(null)
-    const [foodPartyTimer, setFoodPartyTimer] = useState({minutes: 0, seconds: 0})
+    const [foodPartyMinutesRemaining, setFoodPartyMinutesRemaining] = useState(0)
+    const [foodPartySecondsRemaining, setFoodPartySecondsRemaining] = useState(0)
     const [numOfPages, setNumOfPages] = useState(1)
     const [numOfPagesSearchResults, setNumOfPagesSearchResults] = useState(1)
     
-    const foodPartyTimeUpdater = useRef(null)
-
     const navigate = useNavigate()
 
     useEffect(() => {
         document.title = "Home";
         fetchFoodPartyInformation();
         fetchRestaurants(1);
-
-        return () => {
-            clearInterval(foodPartyTimeUpdater.current)
-        }
     }, [])
+
+    useEffect(() => {
+        if (foodPartyMinutesRemaining === 0 && foodPartySecondsRemaining === 0) return;
+        setTimeout(downCountTimer, 1000)
+    }, [foodPartySecondsRemaining, foodPartyMinutesRemaining])
 
     const fetchRestaurants = (pageNum) => {
         axios.get(`${configs.server_url}/restaurants?pageSize=${configs.home_page_size}&pageNum=${pageNum}`, 
@@ -54,12 +54,9 @@ const HomePage = (props) => {
     const fetchFoodPartyInformation = () => {
         axios.get(`${configs.server_url}/foodparties`, { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
         .then(response => {
-            setFoodPartyRestaurants(response.data.list)
-            setFoodPartyTimer({
-                minutes: response.data.responseMessage.minutes,
-                seconds: response.data.responseMessage.seconds
-            })
-            foodPartyTimeUpdater.current = setInterval(downCountTimer, 1000);
+            setFoodPartyRestaurants(response.data.list);
+            setFoodPartyMinutesRemaining(response.data.responseMessage.minutes)
+            setFoodPartySecondsRemaining(response.data.responseMessage.seconds)
         })
         .catch(error => {
             console.log("Fetching Food Party Information Failed", error);
@@ -67,22 +64,16 @@ const HomePage = (props) => {
     }
 
     const downCountTimer = () => {
-        let {minutes, seconds} = foodPartyTimer;
-        if(minutes !== 0 || seconds !== 0) {
-            if(seconds === 0) {
-                seconds = 59;
-                minutes -= 1;
+        if(foodPartyMinutesRemaining !== 0 || foodPartySecondsRemaining !== 0) {
+            if(foodPartySecondsRemaining === 0) {
+                setFoodPartySecondsRemaining(59)
+                setFoodPartyMinutesRemaining(foodPartyMinutesRemaining - 1)
             }
             else {
-                seconds -= 1;
+                setFoodPartySecondsRemaining(foodPartySecondsRemaining - 1)
             }
-            setFoodPartyTimer({
-                minutes:minutes,
-                seconds:seconds
-            })
         }
         else {
-            clearInterval(foodPartyTimeUpdater.current);
             fetchFoodPartyInformation();
         }
     }
@@ -203,11 +194,13 @@ const HomePage = (props) => {
 
     const renderFoodPartyTimer = () => {
         if(foodPartyRestaurants) {
-            const minutedRemaining = styleTime(foodPartyTimer.minutes);
-            const secondsRemaining = styleTime(foodPartyTimer.seconds);
+            const minutesRemainingStyled = styleTime(foodPartyMinutesRemaining);
+            const secondsRemainingStyled = styleTime(foodPartySecondsRemaining);
             return (
                 <div className="food-party-home-timer">
-                    Remaining Time: {minutedRemaining}:{secondsRemaining}
+                    {/* Remaining Time: {minutesRemaining}:{secondsRemaining} */}
+                    Remaining Time: {minutesRemainingStyled}:{secondsRemainingStyled}
+
                 </div>
             )
         }

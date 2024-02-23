@@ -30,7 +30,8 @@ const Cart = (props) => {
                 message: "Cart is empty.",
             })
         }
-    })
+        setIsProcessing(false)
+    }, [props.cart])
 
     const addItem = (foodName, restaurantId, isFoodPartyFood) => {
         axios.put(`${configs.server_url}/carts?foodName=${foodName}&restaurantId=${restaurantId}&quantity=${1}&isFoodPartyFood=${isFoodPartyFood}`, {},
@@ -115,12 +116,9 @@ const Cart = (props) => {
     }
 
     const renderCartContent = () => {
-        if(props.cart === null) {
-            return;
-        }
-
         const cart = props.cart;
-        if(cart.empty) {
+
+        if(cart === null || cart.empty) {
             return;
         }
         else {

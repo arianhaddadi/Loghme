@@ -1,5 +1,4 @@
 .no-cartItems {
-    direction: ltr;
     &.success {
         color: green;
     }
@@ -17,7 +16,6 @@
     }
     .cart-notification {
         text-align: center;
-        direction: ltr;
         &.none {
             color: black;
         }
@@ -87,7 +85,6 @@
     justify-content: flex-start;
     align-items: center;
     padding: 0 10%;
-    direction: ltr;
 }
 
 .cart-item-name {
@@ -103,7 +100,6 @@
 }
 
 .cart-item-price {
-    direction: ltr;
     align-self: flex-start;
     padding-left: 12%;
     font-size: 0.9rem;

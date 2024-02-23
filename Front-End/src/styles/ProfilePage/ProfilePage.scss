@@ -9,7 +9,7 @@ html {
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 0 6vw;
-    direction: ltr;
+    
     min-height: 90px;
     min-width: 500px;
     margin-top: 48px;
@@ -24,6 +24,9 @@ html {
     align-items: center;
     font-size: 2.5vw;
     margin-top: 40px;
+    * {
+        margin-left: 20px;
+    }
 }
 
 .name-logo::before {
@@ -33,7 +36,7 @@ html {
 
 .personal-info {
     margin-top: 40px;
-    direction: ltr;
+    
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -45,7 +48,7 @@ html {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    direction: ltr;
+    
 }
 
 .flaticon-phone::before,
@@ -112,13 +115,12 @@ html {
     align-items: center;
     border-radius: 5px;
     border: 1px solid black;
-    direction: ltr;
-    width: 70vh;
     display: flex;
     margin-top: 3vh;
     background-color: #F7FFF7;
+
     .order-restaurant-name,
-    .order-status {
+    .order-index {
         border-right: 1px solid black;
     }
     .order-index {
@@ -138,7 +140,7 @@ html {
 }
 
 .credits-notification {
-    direction: ltr;
+    
     &.success {
         color: green;
     }
@@ -148,7 +150,7 @@ html {
 }
 
 .no-orders {
-    direction: ltr;
+    
     text-align: center;
     margin-top: 5vh;
     width: 70vh;
@@ -157,7 +159,6 @@ html {
 .orders-content,
 .credit-content {
     visibility: hidden;
-    display: flex;
     align-items: center;
     border: 1px solid black;
     border-radius: 20px;
@@ -194,9 +195,7 @@ html {
 }
 
 .orders-content {
-    flex-direction: column;
     top: -145px;
-    padding-bottom: 40px;
 }
 
 .add-credit-button.btn-primary {
