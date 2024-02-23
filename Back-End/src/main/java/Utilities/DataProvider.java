@@ -1,6 +1,6 @@
 package Utilities;
 
-import Entities.*;
+import Domain.Entities.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

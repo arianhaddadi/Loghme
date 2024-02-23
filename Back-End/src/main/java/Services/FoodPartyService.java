@@ -1,10 +1,10 @@
 package Services;
 
-import Domain.Restaurant.RestaurantsManager;
-import Entities.*;
+import Domain.Managers.RestaurantsManager;
+import Domain.Entities.*;
 import PeriodicJobs.FoodPartyUpdater;
-import Services.Utilities.ArrayListResponse;
-import Services.Utilities.ResponseMessage;
+import Services.DTOs.FoodPartyResponseDTO;
+import Utilities.Response;
 import Utilities.CollectDataAndSchedule;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +15,11 @@ import java.util.ArrayList;
 public class FoodPartyService {
 
     @RequestMapping(value = "/foodparties", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ArrayListResponse<Restaurant> getFoodPartyRestaurants() {
+    public Response<FoodPartyResponseDTO> getFoodPartyRestaurants() {
         FoodPartyUpdater foodPartyUpdater = CollectDataAndSchedule.getFoodPartyUpdater();
-        ArrayList<Restaurant> foodpartyRestaurants = RestaurantsManager.getInstance().getFoodPartyRestaurants();
-        return new ArrayListResponse<Restaurant>(foodpartyRestaurants, new ResponseMessage(foodPartyUpdater.getMinutes(), foodPartyUpdater.getSeconds(), true));
+        ArrayList<Restaurant> foodPartyRestaurants = RestaurantsManager.getInstance().getFoodPartyRestaurants();
+        FoodPartyResponseDTO foodPartyResponseDTO = new FoodPartyResponseDTO(foodPartyUpdater.getMinutes(), foodPartyUpdater.getSeconds(), foodPartyRestaurants);
+        return new Response<>(foodPartyResponseDTO, true);
     }
 
 }

@@ -1,8 +1,8 @@
 package Services;
 
-import Domain.Cart.CartsManager;
-import Entities.*;
-import Services.Utilities.ResponseMessage;
+import Domain.Managers.CartsManager;
+import Domain.Entities.*;
+import Utilities.Response;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +15,7 @@ public class CartService {
     }
 
     @RequestMapping(value = "/carts", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseMessage updateCart(
+    public Response<Void> updateCart(
                             @RequestAttribute(value = "userEmail") String userEmail,
                             @RequestParam(value = "restaurantId") String restaurantId,
                             @RequestParam(value = "foodName") String foodName,
@@ -26,13 +26,13 @@ public class CartService {
     }
 
     @RequestMapping(value = "/carts", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseMessage finalizeCart(@RequestAttribute(value = "userEmail") String userEmail) {
+    public Response<Void> finalizeCart(@RequestAttribute(value = "userEmail") String userEmail) {
         return CartsManager.getInstance().finalizeOrder(userEmail);
     }
 
 
     @RequestMapping(value = "/carts", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseMessage deleteItem(
+    public Response<Void> deleteItem(
                             @RequestAttribute(value = "userEmail") String userEmail,
                             @RequestParam(value = "restaurantId") String restaurantId,
                             @RequestParam(value = "foodName") String foodName,

@@ -61,7 +61,8 @@ const LoginPage = (props) => {
             const currentUser = props.googleAuthentication.currentUser.get(); 
             const email = currentUser.getBasicProfile().getEmail();
             const idToken = currentUser.getAuthResponse().id_token;
-            axios.post(`${configs.server_url}/login?email=${email}&password=''&isGoogleAuth=${true}&idToken=${idToken}`).then((response) => {
+            axios.post(`${configs.server_url}/login?email=${email}&password=''&isGoogleAuth=${true}&idToken=${idToken}`)
+            .then((response) => {
                 if (response.data.successful) {
                     setToken(response.data.message);
                     goToHomePage();

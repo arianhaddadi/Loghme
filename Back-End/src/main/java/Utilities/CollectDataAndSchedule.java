@@ -1,15 +1,13 @@
 package Utilities;
 
-import Entities.Restaurant;
+import Domain.Entities.Restaurant;
 import PeriodicJobs.FoodPartyUpdater;
-import Domain.Restaurant.RestaurantsManager;
+import Domain.Managers.RestaurantsManager;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @WebListener
 public class CollectDataAndSchedule implements ServletContextListener {

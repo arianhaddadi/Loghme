@@ -1,15 +1,15 @@
 package Services;
 
-import Domain.User.UsersManager;
+import Domain.Managers.UsersManager;
+import Utilities.Response;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class LoginService {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity login(
+    public Response<Void> login(
             @RequestParam(value = "email") String email,
             @RequestParam(value = "password") String password,
             @RequestParam(value = "isGoogleAuth") boolean isGoogleAuth,

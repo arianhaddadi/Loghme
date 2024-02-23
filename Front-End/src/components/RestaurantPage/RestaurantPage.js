@@ -18,10 +18,10 @@ const RestaurantPage = (props) => {
 
     useEffect(() => {
         document.title = "Restaurant";
-        fetchAndStoreRestaurant(id);
+        fetchRestaurant(id);
     }, [])
 
-    const fetchAndStoreRestaurant = (restaurantId) => {
+    const fetchRestaurant = (restaurantId) => {
         axios.get(`${configs.server_url}/restaurants/${restaurantId}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
         .then(response => {

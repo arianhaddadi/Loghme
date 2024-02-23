@@ -1,6 +1,6 @@
 package Repositories;
 
-import Entities.Delivery;
+import Domain.Entities.Delivery;
 import java.util.ArrayList;
 
 public class DeliveriesRepository {

@@ -1,7 +1,7 @@
 package Services;
 
-import Domain.User.UsersManager;
-import Services.Utilities.ResponseMessage;
+import Domain.Managers.UsersManager;
+import Utilities.Response;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SignupService {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseMessage signup(
+    public Response<Void> signup(
             @RequestParam(value = "firstName") String firstName,
             @RequestParam(value = "lastName") String lastName,
             @RequestParam(value = "email") String email,

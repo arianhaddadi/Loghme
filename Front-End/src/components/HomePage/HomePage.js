@@ -42,7 +42,7 @@ const HomePage = (props) => {
         axios.get(`${configs.server_url}/restaurants?pageSize=${configs.home_page_size}&pageNum=${pageNum}`, 
             { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
         .then(response => {
-            setRestaurants(restaurants.concat(response.data.list))
+            setRestaurants(restaurants.concat(response.data.payload))
             setIsLoadingMore(false)
         })
         .catch(error => {
@@ -54,9 +54,9 @@ const HomePage = (props) => {
     const fetchFoodPartyInformation = () => {
         axios.get(`${configs.server_url}/foodparties`, { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
         .then(response => {
-            setFoodPartyRestaurants(response.data.list);
-            setFoodPartyMinutesRemaining(response.data.responseMessage.minutes)
-            setFoodPartySecondsRemaining(response.data.responseMessage.seconds)
+            setFoodPartyRestaurants(response.data.payload.restaurants);
+            setFoodPartyMinutesRemaining(response.data.payload.remainingMinutes)
+            setFoodPartySecondsRemaining(response.data.payload.remainingSeconds)
         })
         .catch(error => {
             console.log("Fetching Food Party Information Failed", error);
@@ -244,14 +244,15 @@ const HomePage = (props) => {
         axios.get(`${configs.server_url}/search?foodName=${searchFoodNameValue}&restaurantName=${searchRestaurantNameValue}&pageSize=${configs.home_page_size}&pageNum=${pageNum}`,
                  { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
             .then(response => {
+                const results = response.data.payload
                 if (searchedRestaurants === null) {
-                    setSearchedRestaurants(response.data.list)
+                    setSearchedRestaurants(results)
                 } else {
-                    setSearchedRestaurants(searchedRestaurants.concat(response.data.list))
+                    setSearchedRestaurants(searchedRestaurants.concat(results))
                 }
                 setIsSearching(false)
                 setIsLoadingMore(false)
-                if(response.data.list.length === 0) {
+                if(results.length === 0) {
                     toast("No more items found.");
                 }
                 else {
