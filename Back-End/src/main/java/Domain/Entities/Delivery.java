@@ -1,6 +1,6 @@
 package Domain.Entities;
 
-import Repositories.DeliveriesRepository;
+import Domain.Managers.DeliveriesManager;
 
 public class Delivery {
     private String id;
@@ -38,7 +38,7 @@ public class Delivery {
     }
 
     public boolean isAlreadyBusy() {
-        for(Delivery delivery : DeliveriesRepository.getInstance().getOnTheWayDeliveries()) {
+        for(Delivery delivery : DeliveriesManager.getInstance().getOnTheWayDeliveries()) {
             if(delivery.id.equals(this.id)) {
                 return true;
             }

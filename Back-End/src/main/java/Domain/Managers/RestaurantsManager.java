@@ -10,17 +10,19 @@ import ObjectMappers.Food.FoodMapper;
 import ObjectMappers.FoodPartyFood.FoodPartyFoodMapper;
 import ObjectMappers.Restaurant.RestaurantMapper;
 
+import Utilities.DataProvider;
+import Utilities.GetRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RestaurantsManager {
-    public static String RESTAURANTS_SERVER_URL = "http://138.197.181.131:8080/restaurants";
+    private static final String RESTAURANTS_SERVER_URL = "http://138.197.181.131:8080/restaurants";
     private static RestaurantsManager instance;
-    private RestaurantMapper restaurantMapper;
-    private FoodMapper foodMapper;
-    private FoodPartyFoodMapper foodPartyFoodMapper;
+    private final RestaurantMapper restaurantMapper;
+    private final FoodMapper foodMapper;
+    private final FoodPartyFoodMapper foodPartyFoodMapper;
 
     public FoodPartyFoodMapper getFoodPartyFoodMapper() {
         return foodPartyFoodMapper;
@@ -37,6 +39,21 @@ public class RestaurantsManager {
             instance = new RestaurantsManager();
         }
         return instance;
+    }
+
+    private ArrayList<Restaurant> fetchRestaurantsInfo() {
+//        String responseString = GetRequest.sendGetRequest(RestaurantsManager.RESTAURANTS_SERVER_URL);
+//        try {
+//            return new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseString, Restaurant[].class)));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        return DataProvider.getRestaurants();
+    }
+
+    public void initialize() {
+        ArrayList<Restaurant> restaurants = fetchRestaurantsInfo();
+        insertRestaurants(restaurants);
     }
 
     private ArrayList<Restaurant> convertRestaurantDTOsListToRestaurantsList(ArrayList<RestaurantDTO> restaurantDTOs) {
@@ -96,7 +113,7 @@ public class RestaurantsManager {
         foodPartyFoodMapper.update(foodPartyFoodDTO);
     }
 
-    public void setRestaurants(ArrayList<Restaurant> restaurants) {
+    public void insertRestaurants(ArrayList<Restaurant> restaurants) {
         for (Restaurant restaurant : restaurants) {
             insertRestaurant(restaurant);
             insertRestaurantMenu(restaurant);
@@ -159,15 +176,5 @@ public class RestaurantsManager {
             food = foodDTO.getFoodForm();
         }
         return food;
-    }
-
-    public ArrayList<Restaurant> parseListOfJson(String input) {
-        try {
-            ArrayList<Restaurant> restaurants = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(input, Restaurant[].class)));
-            return restaurants;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

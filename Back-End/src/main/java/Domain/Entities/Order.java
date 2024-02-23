@@ -1,7 +1,7 @@
 package Domain.Entities;
 
 import Domain.Managers.OrdersManager;
-import Repositories.DeliveriesRepository;
+import Domain.Managers.DeliveriesManager;
 import Utilities.DataProvider;
 
 import java.util.ArrayList;
@@ -76,16 +76,20 @@ public class Order implements Runnable {
         return true;
     }
 
+    private ArrayList<Delivery> fetchDeliveriesInfo() {
+//        String responseString = GetRequest.sendGetRequest(DeliveriesRepository.DELIVERIES_URL);
+//        try {
+//            return new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseString, Delivery[].class)));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        return DataProvider.getDeliveries();
+    }
+
     @Override
     public void run() {
         if (status == Status.SEARCHING_FOR_DELIVERY) {
-//            try {
-//                String responseString = GetRequest.sendGetRequest(DeliveriesRepository.DELIVERIES_URL);
-//                ArrayList<Delivery> deliveries = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseString, Delivery[].class)));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-            ArrayList<Delivery> deliveries = DataProvider.getDeliveries();
+            ArrayList<Delivery> deliveries = fetchDeliveriesInfo();
             scheduler = Executors.newSingleThreadScheduledExecutor();
             if((deliveries.isEmpty()) || (allDeliveriesBusy(deliveries))) {
                 scheduler.schedule(this, 30, TimeUnit.SECONDS);
@@ -94,7 +98,7 @@ public class Order implements Runnable {
                 status = Status.DELIVERY_ON_ITS_WAY;
                 assignDelivery(deliveries);
                 deliveryStartTime = System.currentTimeMillis() / 1000L;
-                DeliveriesRepository.getInstance().getOnTheWayDeliveries().add(assignedDelivery);
+                DeliveriesManager.getInstance().getOnTheWayDeliveries().add(assignedDelivery);
                 deliveryTime = calculateDeliveryTime(assignedDelivery);
                 OrdersManager.getInstance().updateOrderStatus(this);
                 scheduler.schedule(this, deliveryTime, TimeUnit.SECONDS);
@@ -103,7 +107,7 @@ public class Order implements Runnable {
         else {
             status = Status.DELIVERED;
             OrdersManager.getInstance().updateOrderStatus(this);
-            DeliveriesRepository.getInstance().getOnTheWayDeliveries().remove(assignedDelivery);
+            DeliveriesManager.getInstance().getOnTheWayDeliveries().remove(assignedDelivery);
         }
     }
 

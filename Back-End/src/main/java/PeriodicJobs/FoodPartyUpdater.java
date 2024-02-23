@@ -7,13 +7,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class FoodPartyUpdater implements Runnable, Callable<Void> {
-    private final String FOODPARTY_URL = "http://138.197.181.131:8080/foodparty";
+    private static final String FOODPARTY_URL = "http://138.197.181.131:8080/foodparty";
     private int minutes;
     private int seconds;
     private final int period;
@@ -32,12 +33,13 @@ public class FoodPartyUpdater implements Runnable, Callable<Void> {
         return seconds;
     }
 
-    private void clearFoodParty() {
+    private void deleteOldInfo() {
         RestaurantsManager.getInstance().getFoodPartyFoodMapper().deleteAll();
     }
 
-    private void addGivenRestaurants(ArrayList<Restaurant> restaurants) {
-        RestaurantsManager.getInstance().setRestaurants(restaurants);
+    private void insertInfoToDB() {
+        ArrayList<Restaurant> restaurants = fetchInfo();
+        RestaurantsManager.getInstance().insertRestaurants(restaurants);
     }
 
     private void resetTimer() {
@@ -45,26 +47,35 @@ public class FoodPartyUpdater implements Runnable, Callable<Void> {
         seconds = 0;
     }
 
-    private void shutDownPreviousSchedulerAndCreateNewOne() {
+    private void resetScheduler() {
         if(scheduler != null) {
             scheduler.shutdownNow();
         }
         scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.schedule(this::call, 1, TimeUnit.SECONDS);
+    }
+
+    public void shutDown() {
+        scheduler.shutdown();
+    }
+
+    private ArrayList<Restaurant> fetchInfo() {
+        String responseString = GetRequest.sendGetRequest(FOODPARTY_URL);
+        try {
+            Restaurant[] restaurants = new ObjectMapper().readValue(responseString.replaceAll("menu", "foodPartyMenu"), Restaurant[].class);
+            return new ArrayList<>(Arrays.asList(restaurants));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     @Override
     public void run() {
-        clearFoodParty();
-        try {
-            String responseString = GetRequest.sendGetRequest(FOODPARTY_URL);
-            ArrayList<Restaurant> restaurants = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseString.replaceAll("menu", "foodPartyMenu"), Restaurant[].class)));
-            addGivenRestaurants(restaurants);
-            resetTimer();
-            shutDownPreviousSchedulerAndCreateNewOne();
-            scheduler.schedule(this::call, 1, TimeUnit.SECONDS);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        deleteOldInfo();
+        insertInfoToDB();
+        resetTimer();
+        resetScheduler();
     }
 
     @Override
