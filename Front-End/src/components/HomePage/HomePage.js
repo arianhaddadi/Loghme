@@ -243,23 +243,25 @@ const HomePage = (props) => {
     const search = (pageNum) => {
         axios.get(`${configs.server_url}/search?foodName=${searchFoodNameValue}&restaurantName=${searchRestaurantNameValue}&pageSize=${configs.home_page_size}&pageNum=${pageNum}`,
                  { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-            .then(response => {
-                const results = response.data.payload
-                if (searchedRestaurants === null) {
-                    setSearchedRestaurants(results)
-                } else {
-                    setSearchedRestaurants(searchedRestaurants.concat(results))
-                }
-                setIsSearching(false)
-                setIsLoadingMore(false)
-                if(results.length === 0) {
-                    toast("No more items found.");
-                }
-                else {
-                    toast("Search was successfull.");
-                }
+        .then(response => {
+            const results = response.data.payload
+            if (searchedRestaurants === null) {
+                setSearchedRestaurants(results)
+            } else {
+                setSearchedRestaurants(searchedRestaurants.concat(results))
             }
-        )
+            setIsSearching(false)
+            setIsLoadingMore(false)
+            if(results.length === 0) {
+                toast("No more items found.");
+            }
+            else {
+                toast("Search was successfull.");
+            }
+        })
+        .catch(error => {
+            console.log("Search Failed.", error)
+        })
         setIsSearching(true)
     }
 

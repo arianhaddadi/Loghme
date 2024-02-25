@@ -36,8 +36,8 @@ const FoodModal = (props) => {
     const increaseFoodQuantity = () => {
         if(props.isFoodParty && numOfFoodToOrder >= numOfAvailableFood) {
             setNotification({
-                status:"error",
-                message:"Not available!"
+                status: "error",
+                message: "Not available!"
             })
         }
         else {
@@ -56,7 +56,7 @@ const FoodModal = (props) => {
     const addToCart = () => {
         axios.put(`${configs.server_url}/carts?foodName=${props.item.food.name}&restaurantId=${props.item.restaurant.id}&quantity=${numOfFoodToOrder}&isFoodPartyFood=${props.isFoodParty}`, {},
                  { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then((response) => {
+        .then(response => {
             if(response.data.successful) {
                 props.fetchAndStoreCart();
                 setNotification({
@@ -67,11 +67,14 @@ const FoodModal = (props) => {
             }
             else {
                 setNotification({
-                    status:"error",
+                    status: "error",
                     message:response.data.message
                 })
             }
             setIsLoading(false)
+        })
+        .catch(error => {
+            console.log("Adding Items to Cart Failed.", error)
         });
         setIsLoading(true)
     }

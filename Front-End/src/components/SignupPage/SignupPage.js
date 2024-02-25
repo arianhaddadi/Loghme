@@ -16,7 +16,7 @@ const SignupPage = (props) => {
     })
     const [errorMessages, setErrorMessages] = useState({
         firstName: "",
-        lastName:"",
+        lastName: "",
         email: "",
         phoneNumber: "",
         password: "",
@@ -43,7 +43,8 @@ const SignupPage = (props) => {
             else {
                 toast("Signup failed. Email already in use!");
             }
-        }).catch(error => {
+        })
+        .catch(error => {
             console.log(error)
         })
     }

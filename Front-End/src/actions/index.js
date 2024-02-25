@@ -14,7 +14,10 @@ export const fetchAndStoreOrders = () => {
             const pathname = window.location.pathname;
             if (error.response.status === 403 && pathname !== "/login") {
                 window.location.href = "/login";
-            }   
+            }
+            else {
+                console.log("Fetching Orders Failed", error)
+            } 
         });
     }
 }
@@ -32,7 +35,10 @@ export const fetchAndStoreCart = () => {
             const pathname = window.location.pathname;
             if (error.response.status === 403 && pathname !== "/login") {
                 window.location.href = "/login";
-            }   
+            }
+            else {
+                console.log("Fetching Cart Failed", error)
+            }
         });
     }
 }
@@ -50,6 +56,9 @@ export const fetchAndStoreUserInfo = () => {
             const pathname = window.location.pathname;
             if (error.response.status === 403 && pathname !== "/login") {
                 window.location.href = "/login";
+            }
+            else {
+                console.log("Fetching User Profile Failed", error)
             }   
         });
     }

@@ -62,12 +62,13 @@ const LoginPage = (props) => {
             const email = currentUser.getBasicProfile().getEmail();
             const idToken = currentUser.getAuthResponse().id_token;
             axios.post(`${configs.server_url}/login?email=${email}&password=''&isGoogleAuth=${true}&idToken=${idToken}`)
-            .then((response) => {
+            .then(response => {
                 if (response.data.successful) {
                     setToken(response.data.message);
                     goToHomePage();
                 }
-            }).catch((error) => {
+            })
+            .catch(error => {
                 props.googleAuthentication.signOut();
                 props.googleAuthentication.disconnect();
                 if (error.response.status === 403) {
@@ -83,18 +84,18 @@ const LoginPage = (props) => {
 
     const login = () => {
         const {email, password} = inputValues;
-        axios.post(`${configs.server_url}/login?email=${email}&password=${password}&isGoogleAuth=${false}&idToken=""`).then(
-            response => {
-                if (response.data.successful) {
-                    setToken(response.data.message);
-                    goToHomePage();
-                }
-                else {
-                    toast("Wrong Credentials!");
-                }
+        axios.post(`${configs.server_url}/login?email=${email}&password=${password}&isGoogleAuth=${false}&idToken=""`)
+        .then(response => {
+            if (response.data.successful) {
+                setToken(response.data.message);
+                goToHomePage();
             }
-        ).catch((error) => {
-            toast("Request Failed", error);
+            else {
+                toast("Wrong Credentials!");
+            }
+        })
+        .catch(error => {
+            console.log("Login Failed", error);
         });
     }
 

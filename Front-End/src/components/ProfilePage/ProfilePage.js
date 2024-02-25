@@ -48,14 +48,14 @@ const ProfilePage = (props) => {
             setCreditsInputValue("")
             setCreditsNotification({
                 status: "error",
-                message:"Input must be a number",
+                message: "Input must be a number",
             })
         }
         else if(parseFloat(creditsInputValue) < 0) {
             setCreditsInputValue("")
             setCreditsNotification({
                 status: "error",
-                message:"Reducing balance is not allowed!"
+                message: "Reducing balance is not allowed!"
             })
         }
         else {
@@ -64,10 +64,13 @@ const ProfilePage = (props) => {
                 setCreditsLoading(false)
                 setCreditsInputValue("")
                 setCreditsNotification({
-                    status:"success",
-                    message:"Your balance was increased successfully!"
+                    status: "success",
+                    message: "Your balance was increased successfully!"
                 })
                 props.fetchAndStoreUserInfo();
+            })
+            .catch(error => {
+                console.log("Adding Credit Failed.", error)
             });
             setCreditsLoading(true)
             setCreditsNotification(null)

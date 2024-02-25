@@ -42,11 +42,14 @@ const Cart = (props) => {
             }
             else {
                 setNotification({
-                    status:"error",
-                    message:response.data.message
+                    status: "error",
+                    message: response.data.message
                 })
             }
             setIsProcessing(false)
+        })
+        .catch(error => {
+            console.log("Adding Item to Cart Failed.", error)
         });
         setIsProcessing(true)
     }
@@ -57,13 +60,16 @@ const Cart = (props) => {
         .then(() => {
             props.fetchAndStoreCart();
             setIsProcessing(false)
+        })
+        .catch(error => {
+            console.log("Deleting Item from Cart Failed.", error)
         });
         setIsProcessing(true)
     }
 
     const finalizeOrder = () => {
         axios.post(`${configs.server_url}/carts`, {}, { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then((response) => {
+        .then(response => {
             if(response.data.successful) {
                 props.fetchAndStoreCart();
                 props.fetchAndStoreUserInfo();
@@ -80,6 +86,9 @@ const Cart = (props) => {
                 })
             }
             setIsProcessing(false)
+        })
+        .catch(error => {
+            console.log("Finalizing Order Failed.", error)
         });
         setIsProcessing(true)
         setNotification(null)
