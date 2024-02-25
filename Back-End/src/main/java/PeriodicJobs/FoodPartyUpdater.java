@@ -3,6 +3,7 @@ package PeriodicJobs;
 import Domain.Managers.RestaurantsManager;
 import Domain.Entities.Restaurant;
 import ObjectMappers.FoodPartyFood.FoodPartyFoodMapper;
+import Utilities.Configs;
 import Utilities.GetRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -14,7 +15,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class FoodPartyUpdater implements Runnable, Callable<Void> {
-    private static final String FOODPARTY_URL = "http://138.197.181.131:8080/foodparty";
     private int minutes;
     private int seconds;
     private final int period;
@@ -60,9 +60,9 @@ public class FoodPartyUpdater implements Runnable, Callable<Void> {
     }
 
     private ArrayList<Restaurant> fetchInfo() {
-        String responseString = GetRequest.sendGetRequest(FOODPARTY_URL);
+        String responseBody = GetRequest.sendGetRequest(Configs.FOODPARTY_INFO_URL);
         try {
-            Restaurant[] restaurants = new ObjectMapper().readValue(responseString.replaceAll("menu", "foodPartyMenu"), Restaurant[].class);
+            Restaurant[] restaurants = new ObjectMapper().readValue(responseBody.replaceAll("menu", "foodPartyMenu"), Restaurant[].class);
             return new ArrayList<>(Arrays.asList(restaurants));
         } catch (IOException e) {
             e.printStackTrace();

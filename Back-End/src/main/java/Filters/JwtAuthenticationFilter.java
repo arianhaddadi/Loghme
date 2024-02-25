@@ -1,5 +1,6 @@
 package Filters;
 
+import Utilities.Configs;
 import Utilities.TokenProvider;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
@@ -21,7 +22,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         String path = httpServletRequest.getRequestURI();
-        if ("/Loghme_war/login".equals(path) || "/Loghme_war/signup".equals(path)) {
+        if (path.equals(Configs.SERVER_BASE_URL + "/login") || path.equals(Configs.SERVER_BASE_URL + "/signup")) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }

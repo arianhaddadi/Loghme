@@ -6,11 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ConnectionPool {
-    private static final String DATABASE_NAME = "loghme";
-    private static final String DATABASE_URL = "localhost:3306";
-    private static final String DATABASE_USERNAME = "root";
-    private static final String DATABASE_PASSWORD = "loghme";
-    private static final String JDBC_DRIVER_CLASSNAME = "com.mysql.cj.jdbc.Driver";
     private static ConnectionPool instance;
     private BasicDataSource dataSource;
 
@@ -18,10 +13,10 @@ public class ConnectionPool {
         loadDatabaseDriver();
         createDatabase();
         dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(JDBC_DRIVER_CLASSNAME);
-        dataSource.setUrl("jdbc:mysql://" + DATABASE_URL + "/" + DATABASE_NAME + "?useSSL=false&allowPublicKeyRetrieval=true");
-        dataSource.setUsername(DATABASE_USERNAME);
-        dataSource.setPassword(DATABASE_PASSWORD);
+        dataSource.setDriverClassName(Configs.JDBC_DRIVER_CLASSNAME);
+        dataSource.setUrl(Configs.DATABASE_URL + "/" + Configs.DATABASE_NAME + "?useSSL=false&allowPublicKeyRetrieval=true");
+        dataSource.setUsername(Configs.DATABASE_USERNAME);
+        dataSource.setPassword(Configs.DATABASE_PASSWORD);
         dataSource.setMinIdle(20);
         dataSource.setMaxIdle(100);
         dataSource.setMaxOpenPreparedStatements(100);
@@ -29,7 +24,7 @@ public class ConnectionPool {
 
     private void loadDatabaseDriver() {
         try {
-            Class.forName(JDBC_DRIVER_CLASSNAME);
+            Class.forName(Configs.JDBC_DRIVER_CLASSNAME);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -38,22 +33,17 @@ public class ConnectionPool {
     private void createDatabase() {
         try {
             dataSource = new BasicDataSource();
-            dataSource.setDriverClassName(JDBC_DRIVER_CLASSNAME);
-            dataSource.setUrl("jdbc:mysql://" + DATABASE_URL + "?useSSL=false&allowPublicKeyRetrieval=true");
-            dataSource.setUsername(DATABASE_USERNAME);
-            dataSource.setPassword(DATABASE_PASSWORD);
+            dataSource.setDriverClassName(Configs.JDBC_DRIVER_CLASSNAME);
+            dataSource.setUrl(Configs.DATABASE_URL + "?useSSL=false&allowPublicKeyRetrieval=true");
+            dataSource.setUsername(Configs.DATABASE_USERNAME);
+            dataSource.setPassword(Configs.DATABASE_PASSWORD);
 
             Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
-            "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME + ";"
+            "CREATE DATABASE IF NOT EXISTS " + Configs.DATABASE_NAME + ";"
             );
             preparedStatement.executeUpdate();
             preparedStatement.close();
-//            preparedStatement = connection.prepareStatement(
-//                    "USE " + DATABASE_NAME + ";"
-//            );
-//            preparedStatement.executeUpdate();
-//            preparedStatement.close();
             connection.close();
             dataSource.close();
         } catch (SQLException e) {

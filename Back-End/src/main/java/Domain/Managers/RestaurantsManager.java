@@ -10,15 +10,12 @@ import ObjectMappers.Food.FoodMapper;
 import ObjectMappers.FoodPartyFood.FoodPartyFoodMapper;
 import ObjectMappers.Restaurant.RestaurantMapper;
 
+import Utilities.Configs;
 import Utilities.DataProvider;
-import Utilities.GetRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class RestaurantsManager {
-    private static final String RESTAURANTS_SERVER_URL = "http://138.197.181.131:8080/restaurants";
     private static RestaurantsManager instance;
 
     private RestaurantsManager() {
@@ -32,9 +29,9 @@ public class RestaurantsManager {
     }
 
     private ArrayList<Restaurant> fetchRestaurantsInfo() {
-//        String responseString = GetRequest.sendGetRequest(RestaurantsManager.RESTAURANTS_SERVER_URL);
+//        String responseBody = GetRequest.sendGetRequest(Configs.RESTAURANTS_INFO_URL);
 //        try {
-//            return new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseString, Restaurant[].class)));
+//            return new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseBody, Restaurant[].class)));
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }

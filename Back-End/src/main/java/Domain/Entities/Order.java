@@ -1,6 +1,7 @@
 package Domain.Entities;
 
 import Domain.Managers.OrdersManager;
+import Utilities.Configs;
 import Utilities.DataProvider;
 
 import java.util.ArrayList;
@@ -11,8 +12,6 @@ import java.util.stream.Collectors;
 
 
 public class Order implements Runnable {
-    public static final String DELIVERIES_URL = "http://138.197.181.131:8080/deliveries";
-
     public enum Status {
         SEARCHING_FOR_DELIVERY,
         DELIVERY_ON_ITS_WAY,
@@ -53,9 +52,9 @@ public class Order implements Runnable {
 
     private ArrayList<Delivery> fetchDeliveriesInfo() {
         ArrayList<Delivery> allDeliveries;
-//        String responseString = GetRequest.sendGetRequest(DeliveriesRepository.DELIVERIES_URL);
+//        String responseBody = GetRequest.sendGetRequest(Configs.DELIVERIES_INFO_URL);
 //        try {
-//            allDeliveries = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseString, Delivery[].class)));
+//            allDeliveries = new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseBody, Delivery[].class)));
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
