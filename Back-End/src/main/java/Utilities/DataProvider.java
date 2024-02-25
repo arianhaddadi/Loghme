@@ -37,9 +37,9 @@ public class DataProvider {
     }
 
     public static ArrayList<Delivery> getDeliveries() {
-        Delivery d1 = new Delivery("d1", 1, new Location(1.0F, 1.0F));
-        Delivery d2 = new Delivery("d2", 2, new Location(2.0F, 2.0F));
-        Delivery d3 = new Delivery("d3", 3, new Location(3.0F, 3.0F));
+        Delivery d1 = new Delivery("d1", 1, new Location(20.0F, 20.0F));
+        Delivery d2 = new Delivery("d2", 2, new Location(40.0F, 40.0F));
+        Delivery d3 = new Delivery("d3", 3, new Location(60.0F, 60.0F));
 
         return new ArrayList<>(Arrays.asList(d1, d2, d3));
     }

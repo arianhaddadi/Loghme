@@ -21,7 +21,7 @@ public class OrdersManager {
     private OrdersManager() {}
 
     public void addOrder(String id, String status, String userId, Cart cart) {
-        OrderMapper.getInstance().insert(new OrderDTO(id, status, userId, 0, 0));
+        OrderMapper.getInstance().insert(new OrderDTO(id, status, userId));
         if(cart.getCartItems() != null) {
             for(CartItem cartItem : cart.getCartItems()) {
                 OrderItemMapper.getInstance().insert(new OrderItemDTO(cartItem.getQuantity(), id, cartItem.getFood().getName(), cart.getRestaurantId()));
@@ -36,8 +36,6 @@ public class OrdersManager {
     private Order convertOrderDTOToOrder(OrderDTO orderDTO, Cart cart) {
         Order order = new Order(cart, orderDTO.getId(), orderDTO.getUserId());
         order.setStatus(Order.Status.valueOf(orderDTO.getStatus()));
-        order.setDeliveryStartTime(orderDTO.getDeliveryStartTime());
-        order.setDeliveryTime(orderDTO.getDeliveryTime());
         return order;
     }
 
@@ -71,6 +69,6 @@ public class OrdersManager {
     }
 
     public void updateOrderStatus(Order order) {
-        OrderMapper.getInstance().update(new OrderDTO(order.getId(), order.getStatus().name(), order.getUserId(), order.getDeliveryStartTime(), order.getDeliveryTime()));
+        OrderMapper.getInstance().update(new OrderDTO(order.getId(), order.getStatus().name(), order.getUserId()));
     }
 }

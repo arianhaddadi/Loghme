@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -56,8 +55,8 @@ public class FoodPartyUpdater implements Runnable, Callable<Void> {
         scheduler.schedule(this::call, 1, TimeUnit.SECONDS);
     }
 
-    public void shutDown() {
-        scheduler.shutdown();
+    public void shutdown() {
+        scheduler.shutdownNow();
     }
 
     private ArrayList<Restaurant> fetchInfo() {

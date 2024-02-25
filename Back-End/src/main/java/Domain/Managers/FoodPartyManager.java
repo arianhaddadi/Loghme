@@ -18,8 +18,8 @@ public class FoodPartyManager {
     }
 
     public void shutdownFoodParty() {
-        foodPartyUpdater.shutDown();
-        scheduler.shutdown();
+        foodPartyUpdater.shutdown();
+        scheduler.shutdownNow();
     }
 
     public int getRemainingMinutes() {

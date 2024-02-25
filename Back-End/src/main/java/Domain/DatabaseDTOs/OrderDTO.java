@@ -4,17 +4,12 @@ public class OrderDTO {
     private String id;
     private String status;
     private String userId;
-    private long deliveryStartTime;
-    private long deliveryTime;
-
     public OrderDTO() {}
 
-    public OrderDTO(String id, String status, String userId, long deliveryStartTime, long deliveryTime) {
+    public OrderDTO(String id, String status, String userId) {
         this.id = id;
         this.status = status;
         this.userId = userId;
-        this.deliveryStartTime = deliveryStartTime;
-        this.deliveryTime = deliveryTime;
     }
 
     public String getId() {
@@ -39,21 +34,5 @@ public class OrderDTO {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public long getDeliveryStartTime() {
-        return deliveryStartTime;
-    }
-
-    public void setDeliveryStartTime(long deliveryStartTime) {
-        this.deliveryStartTime = deliveryStartTime;
-    }
-
-    public long getDeliveryTime() {
-        return deliveryTime;
-    }
-
-    public void setDeliveryTime(long deliveryTime) {
-        this.deliveryTime = deliveryTime;
     }
 }

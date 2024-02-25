@@ -25,8 +25,6 @@ public class OrderMapper extends Mapper<OrderDTO, String> implements IOrderMappe
                             "id VARCHAR(300), " +
                             "status VARCHAR(300), " +
                             "userId VARCHAR(300), " +
-                            "deliveryStartTime BIGINT, " +
-                            "deliveryTime BIGINT, " +
                             "PRIMARY KEY (id), " +
                             "FOREIGN KEY (userId) REFERENCES Users(email) ON UPDATE CASCADE ON DELETE CASCADE" +
                             ");"
@@ -48,12 +46,10 @@ public class OrderMapper extends Mapper<OrderDTO, String> implements IOrderMappe
 
     @Override
     protected PreparedStatement getInsertStatement(OrderDTO orderDTO, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT IGNORE INTO Orders VALUES (?, ?, ?, ?, ?);");
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT IGNORE INTO Orders VALUES (?, ?, ?);");
         preparedStatement.setString(1, orderDTO.getId());
         preparedStatement.setString(2, orderDTO.getStatus());
         preparedStatement.setString(3, orderDTO.getUserId());
-        preparedStatement.setLong(4, orderDTO.getDeliveryStartTime());
-        preparedStatement.setLong(5, orderDTO.getDeliveryTime());
         return preparedStatement;
     }
 
@@ -65,14 +61,10 @@ public class OrderMapper extends Mapper<OrderDTO, String> implements IOrderMappe
     @Override
     protected PreparedStatement getUpdateStatement(OrderDTO orderDTO, Connection connection) throws SQLException {
 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Orders " +
-                                                                     "SET status = ?, " +
-                                                                     "deliveryStartTime = ?, " +
-                                                                     "deliveryTime = ? " +
+                                                                     "SET status = ? " +
                                                                      "WHERE id = ?;");
         preparedStatement.setString(1, orderDTO.getStatus());
-        preparedStatement.setLong(2, orderDTO.getDeliveryStartTime());
-        preparedStatement.setLong(3, orderDTO.getDeliveryTime());
-        preparedStatement.setString(4, orderDTO.getId());
+        preparedStatement.setString(2, orderDTO.getId());
         return preparedStatement;
     }
 
@@ -91,8 +83,6 @@ PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Orders
         orderDTO.setId(rs.getString("id"));
         orderDTO.setStatus(rs.getString("status"));
         orderDTO.setUserId(rs.getString("userId"));
-        orderDTO.setDeliveryStartTime(rs.getLong("deliveryStartTime"));
-        orderDTO.setDeliveryTime(rs.getLong("deliveryTime"));
         return orderDTO;
     }
 

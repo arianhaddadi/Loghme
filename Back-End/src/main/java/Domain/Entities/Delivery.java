@@ -1,11 +1,10 @@
 package Domain.Entities;
 
-import Domain.Managers.DeliveriesManager;
-
 public class Delivery {
     private String id;
     private long velocity;
     private Location location;
+    boolean isBusy = false;
 
     public Delivery(String id, long velocity, Location location) {
         this.id = id;
@@ -35,14 +34,5 @@ public class Delivery {
 
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    public boolean isAlreadyBusy() {
-        for(Delivery delivery : DeliveriesManager.getInstance().getOnTheWayDeliveries()) {
-            if(delivery.id.equals(this.id)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -43,12 +43,12 @@ public class RestaurantMapper extends Mapper<RestaurantDTO, String> implements I
                                                             Connection connection, Integer limitStart, Integer limitSize) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
                             "SELECT id, name, logo, locationX, locationY " +
-                                "`FROM Restaurants, Foods " +
+                                "FROM Restaurants, Foods " +
                                 "WHERE id = restaurantId " +
                                 "AND ((locationX * locationX) + (locationY * locationY)) <= 170 * 170 " +
                                 "AND name LIKE ? AND foodName LIKE ? " +
                                 "GROUP BY id " +
-                                "L`IMIT ?,?;");
+                                "LIMIT ?,?;");
 
 
         preparedStatement.setString(1, "%" + restaurantName + "%");
