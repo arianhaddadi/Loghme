@@ -2,6 +2,7 @@ package PeriodicJobs;
 
 import Domain.Managers.RestaurantsManager;
 import Domain.Entities.Restaurant;
+import ObjectMappers.FoodPartyFood.FoodPartyFoodMapper;
 import Utilities.GetRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class FoodPartyUpdater implements Runnable, Callable<Void> {
     }
 
     private void deleteOldInfo() {
-        RestaurantsManager.getInstance().getFoodPartyFoodMapper().deleteAll();
+        FoodPartyFoodMapper.getInstance().deleteAll();
     }
 
     private void insertInfoToDB() {

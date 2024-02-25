@@ -20,18 +20,8 @@ import java.util.Arrays;
 public class RestaurantsManager {
     private static final String RESTAURANTS_SERVER_URL = "http://138.197.181.131:8080/restaurants";
     private static RestaurantsManager instance;
-    private final RestaurantMapper restaurantMapper;
-    private final FoodMapper foodMapper;
-    private final FoodPartyFoodMapper foodPartyFoodMapper;
-
-    public FoodPartyFoodMapper getFoodPartyFoodMapper() {
-        return foodPartyFoodMapper;
-    }
 
     private RestaurantsManager() {
-        restaurantMapper = RestaurantMapper.getInstance();
-        foodMapper = FoodMapper.getInstance();
-        foodPartyFoodMapper = FoodPartyFoodMapper.getInstance();
     }
 
     public static RestaurantsManager getInstance() {
@@ -60,8 +50,8 @@ public class RestaurantsManager {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
         for (RestaurantDTO restaurantDTO : restaurantDTOs) {
             Restaurant restaurant = restaurantDTO.getRestaurantForm();
-            restaurant.setMenu(convertFoodDTOListToFoodList(foodMapper.findAll(restaurant.getId(), null, null)));
-            restaurant.setFoodPartyMenu(convertFoodPartyFoodDTOListToFoodPartyFoodList(foodPartyFoodMapper.findAll(restaurant.getId(), null, null)));
+            restaurant.setMenu(convertFoodDTOListToFoodList(FoodMapper.getInstance().findAll(restaurant.getId(), null, null)));
+            restaurant.setFoodPartyMenu(convertFoodPartyFoodDTOListToFoodPartyFoodList(FoodPartyFoodMapper.getInstance().findAll(restaurant.getId(), null, null)));
             restaurants.add(restaurant);
         }
         return restaurants;
@@ -69,12 +59,12 @@ public class RestaurantsManager {
 
     public ArrayList<Restaurant> getRestaurants(Integer pageSize, Integer pageNum) {
         if (pageSize != null && pageNum != null) {
-            return convertRestaurantDTOsListToRestaurantsList(restaurantMapper.findAll( "",
+            return convertRestaurantDTOsListToRestaurantsList(RestaurantMapper.getInstance().findAll( "",
                                                                                         (pageNum - 1) * pageSize,
                                                                                          pageSize));
         }
         else {
-            return convertRestaurantDTOsListToRestaurantsList(restaurantMapper.findAll( "",null, null));
+            return convertRestaurantDTOsListToRestaurantsList(RestaurantMapper.getInstance().findAll( "",null, null));
         }
     }
 
@@ -89,13 +79,13 @@ public class RestaurantsManager {
     }
 
     private void insertRestaurant(Restaurant restaurant) {
-        restaurantMapper.insert(new RestaurantDTO(restaurant));
+        RestaurantMapper.getInstance().insert(new RestaurantDTO(restaurant));
     }
 
     private void insertRestaurantMenu(Restaurant restaurant) {
         if (restaurant.getMenu() != null && !restaurant.getMenu().isEmpty()) {
             for (Food food : restaurant.getMenu()) {
-                foodMapper.insert(new FoodDTO(food, restaurant));
+                FoodMapper.getInstance().insert(new FoodDTO(food, restaurant));
             }
         }
     }
@@ -103,14 +93,14 @@ public class RestaurantsManager {
     private void insertRestaurantFoodPartyMenu(Restaurant restaurant) {
         if (restaurant.getFoodPartyMenu() != null && !restaurant.getFoodPartyMenu().isEmpty()) {
             for (FoodPartyFood foodPartyFood : restaurant.getFoodPartyMenu()) {
-                foodPartyFoodMapper.insert(new FoodPartyFoodDTO(foodPartyFood, restaurant));
+                FoodPartyFoodMapper.getInstance().insert(new FoodPartyFoodDTO(foodPartyFood, restaurant));
             }
         }
     }
 
     public void updateFoodPartyFood(FoodPartyFood foodPartyFood, Restaurant restaurant) {
         FoodPartyFoodDTO foodPartyFoodDTO = new FoodPartyFoodDTO(foodPartyFood, restaurant);
-        foodPartyFoodMapper.update(foodPartyFoodDTO);
+        FoodPartyFoodMapper.getInstance().update(foodPartyFoodDTO);
     }
 
     public void insertRestaurants(ArrayList<Restaurant> restaurants) {
@@ -135,7 +125,7 @@ public class RestaurantsManager {
     }
 
     public ArrayList<Restaurant> search(String foodName, String restaurantName, int pageSize, int pageNum) {
-        return convertRestaurantDTOsListToRestaurantsList(restaurantMapper.findByNameAndMenu(foodName, restaurantName,
+        return convertRestaurantDTOsListToRestaurantsList(RestaurantMapper.getInstance().findByNameAndMenu(foodName, restaurantName,
                                                                                    (pageNum - 1) * pageSize, pageSize));
     }
 
@@ -153,11 +143,11 @@ public class RestaurantsManager {
     }
 
     public Restaurant getRestaurantById(String id) {
-        RestaurantDTO restaurantDTO = restaurantMapper.find(id);
+        RestaurantDTO restaurantDTO = RestaurantMapper.getInstance().find(id);
         if (restaurantDTO != null) {
             Restaurant restaurant = restaurantDTO.getRestaurantForm();
-            restaurant.setMenu(convertFoodDTOListToFoodList(foodMapper.findAll(id, null, null)));
-            restaurant.setFoodPartyMenu(convertFoodPartyFoodDTOListToFoodPartyFoodList(foodPartyFoodMapper.findAll(id, null, null)));
+            restaurant.setMenu(convertFoodDTOListToFoodList(FoodMapper.getInstance().findAll(id, null, null)));
+            restaurant.setFoodPartyMenu(convertFoodPartyFoodDTOListToFoodPartyFoodList(FoodPartyFoodMapper.getInstance().findAll(id, null, null)));
             return restaurant;
         }
         else {
@@ -166,10 +156,10 @@ public class RestaurantsManager {
     }
 
     public Food getFoodById(String id) {
-        FoodDTO foodDTO = foodMapper.find(id);
+        FoodDTO foodDTO = FoodMapper.getInstance().find(id);
         Food food;
         if(foodDTO == null) {
-            FoodPartyFoodDTO foodPartyFoodDTO = foodPartyFoodMapper.find(id);
+            FoodPartyFoodDTO foodPartyFoodDTO = FoodPartyFoodMapper.getInstance().find(id);
             food = foodPartyFoodDTO.getFoodPartyFoodForm();
         }
         else {
