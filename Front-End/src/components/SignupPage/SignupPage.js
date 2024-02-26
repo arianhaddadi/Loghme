@@ -150,7 +150,7 @@ const SignupPage = (props) => {
         return false;
     }
 
-    const getFormInput = (name, labelText, type) => {
+    const getFormInput = (name, labelText, type, autoCompleteValue) => {
         var errorElement = "";
         if(errorMessages[name].length > 0) {
             errorElement = (<div className='errorMessage'>{errorMessages[name]}</div>);
@@ -161,7 +161,7 @@ const SignupPage = (props) => {
         return (
             <div className="form-group">
                 <input value={inputValues[name]} type={type} className="form-control" onChange={handleChange} 
-                        noValidate name={name} placeholder={labelText} />
+                        noValidate name={name} placeholder={labelText} autoComplete={autoCompleteValue} />
                 {errorElement}
             </div>
         )
@@ -178,12 +178,12 @@ const SignupPage = (props) => {
                     <div className="signup-title">Signup</div>
                     <div className="signup-content">
                         <form onSubmit={handleSubmit} noValidate>
-                            {getFormInput("firstName", "First Name", "text")}
-                            {getFormInput("lastName", "Last Name", "text")}
-                            {getFormInput("email", "Email", "email")}
-                            {getFormInput("phoneNumber", "Phone Number", "tel")}
-                            {getFormInput("password", "Password", "password")}
-                            {getFormInput("passwordRepeat", "Repeat Password", "password")}
+                            {getFormInput("firstName", "First Name", "text", "given-name")}
+                            {getFormInput("lastName", "Last Name", "text", "family-name")}
+                            {getFormInput("email", "Email", "email", "email")}
+                            {getFormInput("phoneNumber", "Phone Number", "tel", "tel")}
+                            {getFormInput("password", "Password", "password", "current-password")}
+                            {getFormInput("passwordRepeat", "Repeat Password", "password", "current-password")}
                             <button type="submit" className="btn btn-primary c-button signup-btn">Signup</button>
                             <Link className="goToLoginMessage" to='/login'>Already signed up? Login</Link>
                         </form>

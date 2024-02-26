@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Modal from '../utils/Modal';
-import Spinner from '../Spinner/Spinner';
+import Spinner from "../utils/Spinner";
 import NavigationBar from '../NavigationBar/NavigationBar';
 import configs from '../../configs';
 import {connect} from 'react-redux';

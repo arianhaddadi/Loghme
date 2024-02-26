@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Spinner from '../Spinner/Spinner';
+import Spinner from "../utils/Spinner";
 import configs from '../../configs';
 import {connect} from 'react-redux';
 import {fetchAndStoreCart, fetchAndStoreUserInfo, fetchAndStoreOrders} from "../../actions";

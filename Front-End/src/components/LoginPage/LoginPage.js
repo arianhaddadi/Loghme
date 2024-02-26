@@ -113,11 +113,11 @@ const LoginPage = (props) => {
         })
     }
 
-    const getFormInput = (name, labelText, type) => {
+    const getFormInput = (name, labelText, type, autoCompleteValue) => {
         return (
             <div className="form-group">
                 <input value={inputValues[name]} type={type} className="form-control" onChange={handleChange} 
-                        noValidate name={name} placeholder={labelText} />
+                        noValidate name={name} placeholder={labelText} autoComplete={autoCompleteValue} />
             </div>
         )
     }
@@ -132,8 +132,8 @@ const LoginPage = (props) => {
                     <div className="signup-title">Login</div>
                     <div className="signup-content">
                         <form onSubmit={handleSubmit} noValidate>
-                            {getFormInput("email", "Email", "email")}
-                            {getFormInput("password", "Password", "password")}
+                            {getFormInput("email", "Email", "email", "email")}
+                            {getFormInput("password", "Password", "password", "current-password")}
                             <button type="submit" className="btn btn-primary c-button login-btn">Login</button>
                             <GoogleOAuth />
                             <Link className="goToLoginMessage" to = '/signup'>Haven't signed up before? Sign up here.</Link>
