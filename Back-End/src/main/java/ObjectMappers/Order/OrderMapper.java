@@ -6,7 +6,7 @@ import Utilities.ConnectionPool;
 
 import java.sql.*;
 
-public class OrderMapper extends Mapper<OrderDTO, String> implements IOrderMapper{
+public class OrderMapper extends Mapper<OrderDTO, String> {
     private static OrderMapper instance;
 
     public static OrderMapper getInstance() {
@@ -86,7 +86,6 @@ PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Orders
         return orderDTO;
     }
 
-    @Override
     public int getCount() {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();

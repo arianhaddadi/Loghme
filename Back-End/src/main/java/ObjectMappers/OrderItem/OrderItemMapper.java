@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class OrderItemMapper  extends Mapper<OrderItemDTO, String> implements IOrderItemMapper {
+public class OrderItemMapper extends Mapper<OrderItemDTO, String> {
     private static OrderItemMapper instance;
 
     public static OrderItemMapper getInstance() {

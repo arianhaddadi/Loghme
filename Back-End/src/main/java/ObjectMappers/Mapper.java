@@ -40,7 +40,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I>{
             return null;
         }
     }
-
+    @Override
     public void insert(T obj) {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
@@ -54,6 +54,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I>{
         }
     }
 
+    @Override
     public void delete(I id) {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
@@ -67,6 +68,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I>{
         }
     }
 
+    @Override
     public ArrayList<T> findAll(I id, Integer limitStart,Integer limitSize) {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
@@ -87,6 +89,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I>{
         }
     }
 
+    @Override
     public void update(T obj) {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();

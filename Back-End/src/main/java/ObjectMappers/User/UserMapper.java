@@ -6,7 +6,7 @@ import Utilities.ConnectionPool;
 
 import java.sql.*;
 
-public class UserMapper extends Mapper<UserDTO, String> implements IUserMapper {
+public class UserMapper extends Mapper<UserDTO, String> {
     private static UserMapper instance;
 
     public static UserMapper getInstance() {
@@ -91,7 +91,6 @@ public class UserMapper extends Mapper<UserDTO, String> implements IUserMapper {
         return userDTO;
     }
 
-    @Override
     public UserDTO findUserByEmailAndPassword(String email, String password) {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();

@@ -6,7 +6,7 @@ import Utilities.ConnectionPool;
 
 import java.sql.*;
 
-public class CartMapper extends Mapper<CartDTO, String> implements ICartMapper {
+public class CartMapper extends Mapper<CartDTO, String> {
     private static CartMapper instance;
 
     public static CartMapper getInstance() {

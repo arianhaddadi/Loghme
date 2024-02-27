@@ -7,7 +7,7 @@ import Utilities.ConnectionPool;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class RestaurantMapper extends Mapper<RestaurantDTO, String> implements IRestaurantMapper {
+public class RestaurantMapper extends Mapper<RestaurantDTO, String> {
 
     private static RestaurantMapper instance;
 

@@ -5,7 +5,7 @@ import ObjectMappers.Mapper;
 import Utilities.ConnectionPool;
 import java.sql.*;
 
-public class FoodPartyFoodMapper extends Mapper<FoodPartyFoodDTO, String> implements IFoodPartyFoodMapper {
+public class FoodPartyFoodMapper extends Mapper<FoodPartyFoodDTO, String> {
 
     private static FoodPartyFoodMapper instance;
 
