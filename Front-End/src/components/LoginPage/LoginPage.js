@@ -5,8 +5,9 @@ import GoogleOAuth from './GoogleOAuth';
 import configs from '../../configs';
 import {connect} from 'react-redux';
 import {ToastContainer, toast} from 'react-toastify';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {storeGoogleAuthenticationObject} from '../../actions';
+import { redirect } from '../../utils';
 
 const LoginPage = (props) => {
 
@@ -15,10 +16,9 @@ const LoginPage = (props) => {
         "password": ""
     })
 
-    const navigate = useNavigate()
     useEffect(() => {
         if (localStorage.getItem(configs.jwt_token_name)) {
-            navigate("/")
+            redirect("/")
         }
         else {
             document.title = "Login";
@@ -52,7 +52,7 @@ const LoginPage = (props) => {
     const goToHomePage = () => {
         toast("Successfully Logged In!");
         setTimeout(() => {
-            navigate("/");                        
+            redirect("/");                        
         }, configs.notification_length);
     }
 
@@ -74,7 +74,7 @@ const LoginPage = (props) => {
                 if (error.response.status === 403) {
                     toast("No account was registered with this email address. You need to sign up first!");
                     setTimeout(() => {
-                        navigate("/signup");
+                        redirect("/signup");
                     }, configs.notification_length);
                 }
             })

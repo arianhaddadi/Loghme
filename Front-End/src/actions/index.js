@@ -1,5 +1,6 @@
 import axios from 'axios';
 import configs from '../configs';
+import { redirect } from '../utils';
 
 export const fetchAndStoreOrders = () => {
     return (dispatch) => {
@@ -13,7 +14,7 @@ export const fetchAndStoreOrders = () => {
         .catch(error => {
             const pathname = window.location.pathname;
             if (error.response.status === 403 && pathname !== "/login") {
-                window.location.href = "/login";
+                redirect("/login")
             }
             else {
                 console.log("Fetching Orders Failed", error)
@@ -34,7 +35,7 @@ export const fetchAndStoreCart = () => {
         .catch(error => {
             const pathname = window.location.pathname;
             if (error.response.status === 403 && pathname !== "/login") {
-                window.location.href = "/login";
+                redirect("/login")
             }
             else {
                 console.log("Fetching Cart Failed", error)
@@ -55,7 +56,7 @@ export const fetchAndStoreUserInfo = () => {
         .catch(error => {
             const pathname = window.location.pathname;
             if (error.response.status === 403 && pathname !== "/login") {
-                window.location.href = "/login";
+                redirect("/login")
             }
             else {
                 console.log("Fetching User Profile Failed", error)

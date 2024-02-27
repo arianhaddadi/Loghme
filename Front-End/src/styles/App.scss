@@ -1,15 +1,17 @@
-@import "./Normalize/Normalize.scss";
-@import "./NavigationBar/NavigationBar.scss";
-@import "./ProfilePage/ProfilePage.scss";
-@import "./RestaurantPage/RestaurantPage.scss";
-@import "./SignupPage/SignupPage.scss";
-@import "./Modal/Modal.scss";
-@import "./Cart/Cart.scss";
-@import "./Spinner/Spinner.scss";
-@import "./HomePage/HomePage.scss";
-@import "./Food/Food.scss";
-@import "./flaticon/flaticon.css";
-@import "./LoginPage/LoginPage.scss";
+@import "Normalize.scss";
+@import "NavigationBar.scss";
+@import "ProfilePage.scss";
+@import "RestaurantPage.scss";
+@import "SignupPage.scss";
+@import "Modal.scss";
+@import "Cart.scss";
+@import "Spinner.scss";
+@import "HomePage.scss";
+@import "Food.scss";
+@import "flaticon/flaticon.css";
+@import "LoginPage.scss";
+@import 'react-toastify/dist/ReactToastify.css';
+
 
 @font-face {
     font-family: Vazir;

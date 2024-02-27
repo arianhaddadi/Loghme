@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Modal from '../utils/Modal';
 import Spinner from "../utils/Spinner";
-import NavigationBar from '../NavigationBar/NavigationBar';
 import configs from '../../configs';
 import {connect} from 'react-redux';
 import {fetchAndStoreOrders, fetchAndStoreUserInfo} from "../../actions";
@@ -288,7 +287,6 @@ const ProfilePage = (props) => {
 
     return (
         <>  
-            <NavigationBar hideProfile />
             <div className="head-bar profile">
                 {renderProfileInfo()}
             </div>

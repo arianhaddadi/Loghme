@@ -1,12 +1,10 @@
 import logo from '../../styles/images/Logo.png';
-import CartFunctionsContext from '../../contexts/CartFunctionsContext';
 import {connect} from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import configs from '../../configs';
+import { redirect } from '../../utils';
 
 
 const NavigationBar = (props) => {
-    const navigate = useNavigate()
 
     const handleExit = () => {
         const googleAuthentication = props.googleAuthentication;
@@ -15,30 +13,23 @@ const NavigationBar = (props) => {
             googleAuthentication.disconnect();
         }
         localStorage.removeItem(configs.jwt_token_name);
-        navigate("/login");
+        redirect("/login");
     };
 
     return (
-        <CartFunctionsContext.Consumer>
-            {(value) => {
-                const numOfCartItems = value.getCartSize();
-                return (
-                    <div className="navigation-bar">
-                        <div onClick={() => handleExit()} className={`exit ${props.hideExit ? "hide" : ""}`}>
-                            Logout
-                        </div>
-                        <div onClick={() => navigate("/profile")} className={`profile ${props.hideProfile ? "hide" : ""}`}>
-                            Profile
-                        </div>
-                        <i onClick={value.openCart} className="flaticon-smart-cart cart-logo"></i>
-                        <div onClick={value.openCart} className={`cart-quantity ${numOfCartItems > 0 ? "isNotEmpty" : ""}`}>
-                            {numOfCartItems > 0 ? numOfCartItems : ""}
-                        </div>
-                        <img onClick={() => navigate("/")} src={logo} className={`loghme-logo ${props.hideLogo ? "hide" : ""}`} alt="" />
-                    </div>
-                )
-            }}
-        </CartFunctionsContext.Consumer>  
+        <div className="navigation-bar">
+            <div onClick={handleExit} className="exit">
+                Logout
+            </div>
+            <div onClick={() => redirect("/profile")} className="profile">
+                Profile
+            </div>
+            <i onClick={props.openCart} className="flaticon-smart-cart cart-logo"></i>
+            <div onClick={props.openCart} className={`cart-quantity ${props.cartSize > 0 ? "isNotEmpty" : ""}`}>
+                {props.cartSize > 0 ? props.cartSize : ""}
+            </div>
+            <img onClick={() => redirect("/")} src={logo} className="loghme-logo" alt="" />
+        </div>
     );
 }
 

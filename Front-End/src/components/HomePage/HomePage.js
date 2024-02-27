@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
 import logo from '../../styles/images/Logo.png';
-import NavigationBar from '../NavigationBar/NavigationBar';
 import FoodPartySection from './FoodPartySection';
 import RestaurantsSection from './RestaurantsSection';
 import configs from '../../configs';
@@ -68,7 +67,6 @@ const HomePage = () => {
 
     return (
         <>  
-            <NavigationBar hideLogo />
             <ToastContainer autoClose={configs.notification_length} />
             <div className="home-container">
                 <div className="home-head-bar">

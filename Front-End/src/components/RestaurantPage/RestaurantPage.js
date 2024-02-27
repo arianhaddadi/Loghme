@@ -5,7 +5,6 @@ import axios from 'axios';
 import Cart from '../Cart/Cart';
 import Modal from '../utils/Modal';
 import FoodModal from '../FoodModal/FoodModal';
-import NavigationBar from '../NavigationBar/NavigationBar';
 import RestaurantMenuItem from '../RestaurantPage/RestaurantMenuItem';
 import configs from '../../configs';
 import {fetchAndStoreCart} from '../../actions';
@@ -107,7 +106,6 @@ const RestaurantPage = (props) => {
 
     return (
         <>
-            <NavigationBar />
             <div className="restaurant-container">
                 <div className="head-bar"></div>
                 {renderContent()}

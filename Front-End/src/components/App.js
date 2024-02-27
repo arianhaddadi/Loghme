@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {connect} from "react-redux";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import 'react-toastify/dist/ReactToastify.css';
+import NavigationBar from './NavigationBar/NavigationBar';
 import Footer from './Footer/Footer';
 import HomePage from "./HomePage/HomePage";
 import SignupPage from "./SignupPage/SignupPage";
@@ -10,9 +10,8 @@ import RestaurantPage from "./RestaurantPage/RestaurantPage";
 import ProfilePage from "./ProfilePage/ProfilePage";
 import Modal from './utils/Modal';
 import Cart from './Cart/Cart';
-import CartFunctionsContext from '../contexts/CartFunctionsContext';
 import configs from '../configs';
-
+import { redirect } from '../utils';
 
 
 const App = (props) => {
@@ -20,7 +19,7 @@ const App = (props) => {
     const [showCart, setShowCart] = useState(false);
 
     if (localStorage.getItem(configs.jwt_token_name) === null && window.location.pathname !== '/login') {
-        window.location.href = "/login";
+        redirect("/login")
     }
 
     const getCartSize = () => {
@@ -50,21 +49,27 @@ const App = (props) => {
         }
     }
 
+    const renderNavigationBar = () => {
+        const outsidePathnames = ['/login', '/signup']
+        if (!outsidePathnames.includes(window.location.pathname)) {
+            return <NavigationBar cartSize={getCartSize()} openCart={openCartModal} />
+        }
+    }
+
     return (
         <>
-            <CartFunctionsContext.Provider value={{getCartSize:getCartSize, openCart:openCartModal}}>
-                {renderCart()}
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="/" exact element={<HomePage/>} />
-                        <Route path="/signup" exact element={<SignupPage/>} />
-                        <Route path="/login" exact element={<LoginPage/>} />
-                        <Route path="/restaurants/:id" exact element={<RestaurantPage/>} />
-                        <Route path="/profile" exact element={<ProfilePage/>} />
-                    </Routes>
-                </BrowserRouter>
-                <Footer />
-            </CartFunctionsContext.Provider>
+            {renderCart()}
+            {renderNavigationBar()}
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<HomePage/>} />
+                    <Route path="/signup" element={<SignupPage/>} />
+                    <Route path="/login" element={<LoginPage/>} />
+                    <Route path="/restaurants/:id" element={<RestaurantPage/>} />
+                    <Route path="/profile" element={<ProfilePage/>} />
+                </Routes>
+            </BrowserRouter>
+            <Footer />
         </>
     )
 

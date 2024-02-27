@@ -45,6 +45,7 @@ const SignupPage = (props) => {
             }
         })
         .catch(error => {
+            toast("Signup failed. Please try again.")
             console.log(error)
         })
     }
