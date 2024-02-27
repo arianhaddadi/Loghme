@@ -3,7 +3,7 @@ import RestaurantItem from './RestaurantItem';
 import {useNavigate} from 'react-router-dom';
 import configs from '../../configs';
 import Spinner from "../utils/Spinner";
-import axios from 'axios';
+import { sendRequest, RequestMethods } from '../../utils';
 
 
 
@@ -21,15 +21,16 @@ const RestaurantsSection = (props) => {
     }, [])
 
     const fetchRestaurants = (pageNum) => {
-        axios.get(`${configs.server_url}/restaurants?pageSize=${configs.home_page_size}&pageNum=${pageNum}`, 
-            { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then(response => {
-            setRestaurants(restaurants.concat(response.data.payload))
-            setIsLoadingMore(false)
-        })
-        .catch(error => {
-            console.log("Fetching Restaurants Failed", error);
-        });
+        const requestArgs = {
+            method: RequestMethods.GET,
+            url: `/restaurants?pageSize=${configs.home_page_size}&pageNum=${pageNum}`,
+            errorHandler: (error) => console.log("Fetching Restaurants Failed", error),
+            successHandler: (response) => {
+                setRestaurants(restaurants.concat(response.data.payload))
+                setIsLoadingMore(false)
+            }
+        }
+        sendRequest(requestArgs)
         setIsLoadingMore(true)
     }
 

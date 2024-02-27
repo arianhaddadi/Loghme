@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Spinner from "../utils/Spinner";
-import configs from '../../configs';
 import {connect} from 'react-redux';
 import {fetchAndStoreCart, fetchAndStoreUserInfo, fetchAndStoreOrders} from "../../actions";
+import { sendRequest, RequestMethods } from '../../utils';
+
 
 const Cart = (props) => {
 
@@ -34,62 +34,66 @@ const Cart = (props) => {
     }, [props.cart])
 
     const addItem = (foodName, restaurantId, isFoodPartyFood) => {
-        axios.put(`${configs.server_url}/carts?foodName=${foodName}&restaurantId=${restaurantId}&quantity=${1}&isFoodPartyFood=${isFoodPartyFood}`, {},
-                 { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then(response => {
-            if(response.data.successful) {
-                props.fetchAndStoreCart();
-            }
-            else {
-                setNotification({
-                    status: "error",
-                    message: response.data.message
-                })
-            }
-            setIsProcessing(false)
-        })
-        .catch(error => {
-            console.log("Adding Item to Cart Failed.", error)
-        });
+        const requestArgs = {
+            method: RequestMethods.PUT,
+            url: `/carts?foodName=${foodName}&restaurantId=${restaurantId}&quantity=${1}&isFoodPartyFood=${isFoodPartyFood}`,
+            errorHandler: (error) => console.log("Adding Item to Cart Failed.", error),
+            successHandler: (response) => {
+                if(response.data.successful) {
+                    props.fetchAndStoreCart();
+                }
+                else {
+                    setNotification({
+                        status: "error",
+                        message: response.data.message
+                    })
+                }
+                setIsProcessing(false)
+            }    
+        }
+        sendRequest(requestArgs)
         setIsProcessing(true)
     }
 
     const deleteItem = (foodName, restaurantId, isFoodPartyFood) => {
-        axios.delete(`${configs.server_url}/carts?foodName=${foodName}&restaurantId=${restaurantId}&isFoodPartyFood=${isFoodPartyFood}`,
-                     { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}}, {})
-        .then(() => {
-            props.fetchAndStoreCart();
-            setIsProcessing(false)
-        })
-        .catch(error => {
-            console.log("Deleting Item from Cart Failed.", error)
-        });
+        const requestArgs = {
+            method: RequestMethods.DELETE,
+            url: `/carts?foodName=${foodName}&restaurantId=${restaurantId}&isFoodPartyFood=${isFoodPartyFood}`,
+            errorHandler: (error) => console.log("Deleting Item from Cart Failed.", error),
+            successHandler: () => {
+                props.fetchAndStoreCart();
+                setIsProcessing(false)
+            }    
+        }
+        sendRequest(requestArgs)
         setIsProcessing(true)
     }
 
     const finalizeOrder = () => {
-        axios.post(`${configs.server_url}/carts`, {}, { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then(response => {
-            if(response.data.successful) {
-                props.fetchAndStoreCart();
-                props.fetchAndStoreUserInfo();
-                props.fetchAndStoreOrders();
-                setNotification({
-                    status: "success",
-                    message: "Your order was successfully placed."
-                })
-            }
-            else {
-                setNotification({
-                    status: "error",
-                    message: "Your balance is not enough!"
-                })
-            }
-            setIsProcessing(false)
-        })
-        .catch(error => {
-            console.log("Finalizing Order Failed.", error)
-        });
+        const requestArgs = {
+            method: RequestMethods.POST,
+            url: `/carts`,
+            errorHandler: (error) => console.log("Finalizing Order Failed.", error),
+            successHandler: (response) => {
+                if(response.data.successful) {
+                    props.fetchAndStoreCart();
+                    props.fetchAndStoreUserInfo();
+                    props.fetchAndStoreOrders();
+                    setNotification({
+                        status: "success",
+                        message: "Your order was successfully placed."
+                    })
+                }
+                else {
+                    setNotification({
+                        status: "error",
+                        message: "Your balance is not enough!"
+                    })
+                }
+                setIsProcessing(false)
+            }    
+        }
+        sendRequest(requestArgs)
         setIsProcessing(true)
         setNotification(null)
     }

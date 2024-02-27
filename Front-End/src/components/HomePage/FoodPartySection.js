@@ -1,11 +1,9 @@
 import {useState, useEffect} from 'react';
-import axios from 'axios';
 import FoodPartyItem from './FoodPartyItem';
 import Modal from '../utils/Modal';
 import FoodModal from '../FoodModal/FoodModal';
 import Spinner from "../utils/Spinner";
-import configs from '../../configs';
-
+import { sendRequest, RequestMethods } from '../../utils';
 
 
 const FoodParty = () => {
@@ -52,15 +50,17 @@ const FoodParty = () => {
     }
 
     const fetchFoodPartyInformation = () => {
-        axios.get(`${configs.server_url}/foodparties`, { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then(response => {
-            setFoodPartyRestaurants(response.data.payload.restaurants);
-            setFoodPartyMinutesRemaining(response.data.payload.remainingMinutes)
-            setFoodPartySecondsRemaining(response.data.payload.remainingSeconds)
-        })
-        .catch(error => {
-            console.log("Fetching Food Party Information Failed", error);
-        });
+        const requestArgs = {
+            method: RequestMethods.GET,
+            url: "/foodparties",
+            errorHandler: (error) => console.log("Fetching Food Party Information Failed", error),
+            successHandler: (response) => {
+                setFoodPartyRestaurants(response.data.payload.restaurants);
+                setFoodPartyMinutesRemaining(response.data.payload.remainingMinutes)
+                setFoodPartySecondsRemaining(response.data.payload.remainingSeconds)
+            }
+        }
+        sendRequest(requestArgs)
     }
 
     const closeFoodPartyModal = () => {

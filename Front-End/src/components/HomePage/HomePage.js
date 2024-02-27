@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react';
-import axios from 'axios';
 import logo from '../../styles/images/Logo.png';
 import FoodPartySection from './FoodPartySection';
 import RestaurantsSection from './RestaurantsSection';
 import configs from '../../configs';
-import {ToastContainer, toast} from 'react-toastify';
+import {toast} from 'react-toastify';
+import { sendRequest, RequestMethods } from '../../utils';
 
 const HomePage = () => {
     const [searchRestaurantNameValue, setSearchRestaurantName] = useState("")
@@ -19,26 +19,27 @@ const HomePage = () => {
     }, [])
 
     const search = (pageNum) => {
-        axios.get(`${configs.server_url}/search?foodName=${searchFoodNameValue}&restaurantName=${searchRestaurantNameValue}&pageSize=${configs.home_page_size}&pageNum=${pageNum}`,
-                 { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then(response => {
-            const results = response.data.payload
-            if (searchedRestaurants === null) {
-                setSearchedRestaurants(results)
-            } else {
-                setSearchedRestaurants(searchedRestaurants.concat(results))
+        const requestArgs = {
+            method: RequestMethods.GET,
+            url: `/search?foodName=${searchFoodNameValue}&restaurantName=${searchRestaurantNameValue}&pageSize=${configs.home_page_size}&pageNum=${pageNum}`,
+            errorHandler: (error) => console.log("Search Failed.", error),
+            successHandler: (response) => {
+                const results = response.data.payload
+                if (searchedRestaurants === null) {
+                    setSearchedRestaurants(results)
+                } else {
+                    setSearchedRestaurants(searchedRestaurants.concat(results))
+                }
+                setIsSearching(false)
+                if(results.length === 0) {
+                    toast("No more items found.");
+                }
+                else {
+                    toast("Search was successfull.");
+                }
             }
-            setIsSearching(false)
-            if(results.length === 0) {
-                toast("No more items found.");
-            }
-            else {
-                toast("Search was successfull.");
-            }
-        })
-        .catch(error => {
-            console.log("Search Failed.", error)
-        })
+        }
+        sendRequest(requestArgs)
         setIsSearching(true)
         setNumOfPagesSearchResults(pageNum)
     }
@@ -67,7 +68,6 @@ const HomePage = () => {
 
     return (
         <>  
-            <ToastContainer autoClose={configs.notification_length} />
             <div className="home-container">
                 <div className="home-head-bar">
                     <img onClick={() => setSearchedRestaurants(null)} src={logo} className="loghme-logo-home" alt="" />

@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import logo from "../../styles/images/Logo.png";
 import GoogleOAuth from './GoogleOAuth';
 import configs from '../../configs';
 import {connect} from 'react-redux';
-import {ToastContainer, toast} from 'react-toastify';
+import {toast} from 'react-toastify';
 import {Link} from 'react-router-dom';
 import {storeGoogleAuthenticationObject} from '../../actions';
 import { redirect } from '../../utils';
+import { sendRequest, RequestMethods } from '../../utils';
+
 
 const LoginPage = (props) => {
 
@@ -61,42 +62,53 @@ const LoginPage = (props) => {
             const currentUser = props.googleAuthentication.currentUser.get(); 
             const email = currentUser.getBasicProfile().getEmail();
             const idToken = currentUser.getAuthResponse().id_token;
-            axios.post(`${configs.server_url}/login?email=${email}&password=''&isGoogleAuth=${true}&idToken=${idToken}`)
-            .then(response => {
-                if (response.data.successful) {
-                    setToken(response.data.message);
-                    goToHomePage();
+            const requestArgs = {
+                method: RequestMethods.POST,
+                url: `/login?email=${email}&password=''&isGoogleAuth=${true}&idToken=${idToken}`,
+                errorHandler: (error) => {
+                    props.googleAuthentication.signOut();
+                    props.googleAuthentication.disconnect();
+                    if (error.response.status === 403) {
+                        toast("No account was registered with this email address. You need to sign up first!");
+                        setTimeout(() => {
+                            redirect("/signup");
+                        }, configs.notification_length);
+                    }
+                },
+                successHandler: (response) => {
+                    if (response.data.successful) {
+                        handleSuccessfullLogin(response.data.message)
+                    }
+                    else {
+                        toast("Login With Google Failed.")
+                    }
                 }
-            })
-            .catch(error => {
-                props.googleAuthentication.signOut();
-                props.googleAuthentication.disconnect();
-                if (error.response.status === 403) {
-                    toast("No account was registered with this email address. You need to sign up first!");
-                    setTimeout(() => {
-                        redirect("/signup");
-                    }, configs.notification_length);
-                }
-            })
-                
+            }
+            sendRequest(requestArgs)   
         }
     }
 
     const login = () => {
         const {email, password} = inputValues;
-        axios.post(`${configs.server_url}/login?email=${email}&password=${password}&isGoogleAuth=${false}&idToken=""`)
-        .then(response => {
-            if (response.data.successful) {
-                setToken(response.data.message);
-                goToHomePage();
+        const requestArgs = {
+            method: RequestMethods.POST,
+            url: `/login?email=${email}&password=${password}&isGoogleAuth=${false}&idToken=""`,
+            errorHandler: (error) => console.log("Login Failed", error),
+            successHandler: (response) => {
+                if (response.data.successful) {
+                    handleSuccessfullLogin(response.data.message)
+                }
+                else {
+                    toast("Wrong Credentials!");
+                }
             }
-            else {
-                toast("Wrong Credentials!");
-            }
-        })
-        .catch(error => {
-            console.log("Login Failed", error);
-        });
+        }
+        sendRequest(requestArgs)
+    }
+
+    const handleSuccessfullLogin = (token) => {
+        setToken(token);
+        goToHomePage();
     }
 
     const handleSubmit = (event) => {
@@ -124,7 +136,6 @@ const LoginPage = (props) => {
     
     return (
         <>
-            <ToastContainer autoClose={configs.notification_length} />
             <div className="main-container">
                 <div className="back-filter"></div>
                 <div className="signup-box">

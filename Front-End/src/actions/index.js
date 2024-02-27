@@ -1,67 +1,38 @@
-import axios from 'axios';
-import configs from '../configs';
-import { redirect } from '../utils';
+import { sendRequest, RequestMethods } from '../utils';
 
 export const fetchAndStoreOrders = () => {
     return (dispatch) => {
-        axios.get(`${configs.server_url}/orders`, { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then(response => {
-                dispatch({
-                    type: "ORDERS",
-                    payload: response.data.payload
-                });
-        })
-        .catch(error => {
-            const pathname = window.location.pathname;
-            if (error.response.status === 403 && pathname !== "/login") {
-                redirect("/login")
-            }
-            else {
-                console.log("Fetching Orders Failed", error)
-            } 
-        });
+        const requestArgs = {
+            method: RequestMethods.GET,
+            url: "/orders",
+            successHandler: (response) => dispatch({type: "ORDERS", payload: response.data.payload}),
+            errorHandler: (error) => console.log("Fetching Orders Failed.", error)
+        }
+        sendRequest(requestArgs)
     }
 }
 
 export const fetchAndStoreCart = () => {
     return (dispatch) => {
-        axios.get(`${configs.server_url}/carts`, { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then(response => {
-                dispatch({
-                    type: "CART",
-                    payload: response.data
-                });
-        })
-        .catch(error => {
-            const pathname = window.location.pathname;
-            if (error.response.status === 403 && pathname !== "/login") {
-                redirect("/login")
-            }
-            else {
-                console.log("Fetching Cart Failed", error)
-            }
-        });
+        const requestArgs = {
+            method: RequestMethods.GET,
+            url: "/carts",
+            successHandler: (response) => dispatch({type: "CART", payload: response.data}),
+            errorHandler: (error) => console.log("Fetching Cart Failed.", error)
+        }
+        sendRequest(requestArgs)
     }
 }
 
 export const fetchAndStoreUserInfo = () => {
     return (dispatch) => {
-        axios.get(`${configs.server_url}/profiles`, { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then(response => {
-                dispatch({
-                    type: "USER",
-                    payload: response.data
-                });
-        })
-        .catch(error => {
-            const pathname = window.location.pathname;
-            if (error.response.status === 403 && pathname !== "/login") {
-                redirect("/login")
-            }
-            else {
-                console.log("Fetching User Profile Failed", error)
-            }   
-        });
+        const requestArgs = {
+            method: RequestMethods.GET,
+            url: "/profiles",
+            successHandler: (response) => dispatch({type: "USER", payload: response.data}),
+            errorHandler: (error) => console.log("Fetching User Profile Failed.", error)
+        }
+        sendRequest(requestArgs)
     }
 }
 

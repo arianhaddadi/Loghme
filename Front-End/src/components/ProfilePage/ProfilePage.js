@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
 import Modal from '../utils/Modal';
 import Spinner from "../utils/Spinner";
-import configs from '../../configs';
 import {connect} from 'react-redux';
 import {fetchAndStoreOrders, fetchAndStoreUserInfo} from "../../actions";
+import { sendRequest, RequestMethods } from '../../utils';
 
 
 const ProfilePage = (props) => {
@@ -58,19 +57,21 @@ const ProfilePage = (props) => {
             })
         }
         else {
-            axios.put(`${configs.server_url}/credits?amount=${creditsInputValue}`, {}, { headers: { 'Authorization': `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-            .then(() => {
-                setCreditsLoading(false)
-                setCreditsInputValue("")
-                setCreditsNotification({
-                    status: "success",
-                    message: "Your balance was increased successfully!"
-                })
-                props.fetchAndStoreUserInfo();
-            })
-            .catch(error => {
-                console.log("Adding Credit Failed.", error)
-            });
+            const requestArgs = {
+                method: RequestMethods.PUT,
+                url: `/credits?amount=${creditsInputValue}`,
+                errorHandler: (error) => console.log("Adding Credit Failed.", error),
+                successHandler: () => {
+                    setCreditsLoading(false)
+                    setCreditsInputValue("")
+                    setCreditsNotification({
+                        status: "success",
+                        message: "Your balance was increased successfully!"
+                    })
+                    props.fetchAndStoreUserInfo();
+                }
+            }
+            sendRequest(requestArgs)
             setCreditsLoading(true)
             setCreditsNotification(null)
         }
@@ -175,17 +176,17 @@ const ProfilePage = (props) => {
         return cartItems.map((elem, index) => {
             return (
                 <div key={index} className="order-modal-item">
-                    <div className="price">
-                        {elem.food.price}
-                    </div>
-                    <div className="quantity">
-                        {elem.quantity}
+                    <div className="index">
+                        {index+1}
                     </div>
                     <div className="food-name">
                        {elem.food.name}
                     </div>
-                    <div className="index">
-                        {index+1}
+                    <div className="quantity">
+                        {elem.quantity}
+                    </div>
+                    <div className="price">
+                        {elem.food.price}
                     </div>
                 </div>
             );
@@ -209,17 +210,17 @@ const ProfilePage = (props) => {
                 <hr />
                 <div className="order-modal-items-table">
                     <div className="order-modal-items-table-head">
-                        <div className="price">
-                            Price
-                        </div>
-                        <div className="quantity">
-                            Quantity
+                        <div className="index">
+                            Index
                         </div>
                         <div className="food-name">
                             Name
                         </div>
-                        <div className="index">
-                            Index
+                        <div className="quantity">
+                            Quantity
+                        </div>
+                        <div className="price">
+                            Price
                         </div>
                     </div>
                     {renderOrderItems(order.cart.cartItems)}

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import logo from "../../styles/images/Logo.png";
 import configs from '../../configs';
 import {Link, useNavigate} from 'react-router-dom';
-import {ToastContainer, toast} from 'react-toastify';
+import {toast} from 'react-toastify';
+import { sendRequest, RequestMethods } from '../../utils';
+
 
 const SignupPage = (props) => {
     const [inputValues, setInputValues] = useState({
@@ -32,22 +33,26 @@ const SignupPage = (props) => {
 
     const signup = () => {
         const {firstName, lastName, email, phoneNumber, password} = inputValues;
-        axios.post(`${configs.server_url}/signup?firstName=${firstName}&lastName=${lastName}&password=${password}&email=${email}&phoneNumber=${phoneNumber}`)
-        .then(response => {
-            if (response.data.successful) {
-                toast("Successfully Signed Up!");
-                setTimeout(() => {
-                    navigate("/login")
-                }, configs.notification_length);
+        const requestArgs = {
+            method: RequestMethods.POST,
+            url: `/signup?firstName=${firstName}&lastName=${lastName}&password=${password}&email=${email}&phoneNumber=${phoneNumber}`,
+            errorHandler: (error) => {
+                toast("Signup failed. Please try again.")
+                console.log(error)
+            },
+            successHandler: (response) => {
+                if (response.data.successful) {
+                    toast("Successfully Signed Up!");
+                    setTimeout(() => {
+                        navigate("/login")
+                    }, configs.notification_length);
+                }
+                else {
+                    toast("Signup failed. Email already in use!");
+                }
             }
-            else {
-                toast("Signup failed. Email already in use!");
-            }
-        })
-        .catch(error => {
-            toast("Signup failed. Please try again.")
-            console.log(error)
-        })
+        }
+        sendRequest(requestArgs)
     }
 
     const handleSubmit = (event) => {
@@ -171,7 +176,6 @@ const SignupPage = (props) => {
 
     return (
         <>
-            <ToastContainer autoClose={configs.notification_length} />
             <div className="main-container">
                 <div className="back-filter"></div>
                 <div className="signup-box">

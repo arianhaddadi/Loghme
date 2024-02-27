@@ -35,11 +35,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                     filterChain.doFilter(servletRequest, servletResponse);
                 }
                 catch (Exception e) {
-                    httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "JWT token is not valid!");
+                    httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token is not valid!");
                 }
             }
             else {
-                httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "JWT token is not valid!");
+                httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token is not valid!");
             }
         }
         else {

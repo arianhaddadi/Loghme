@@ -1,13 +1,13 @@
 import {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import {connect} from 'react-redux';
-import axios from 'axios';
 import Cart from '../Cart/Cart';
 import Modal from '../utils/Modal';
 import FoodModal from '../FoodModal/FoodModal';
 import RestaurantMenuItem from '../RestaurantPage/RestaurantMenuItem';
-import configs from '../../configs';
 import {fetchAndStoreCart} from '../../actions';
+import { sendRequest, RequestMethods } from '../../utils';
+
 
 const RestaurantPage = (props) => {
     const [foodToShow, setFoodToShow] = useState(null)
@@ -21,14 +21,15 @@ const RestaurantPage = (props) => {
     }, [])
 
     const fetchRestaurant = (restaurantId) => {
-        axios.get(`${configs.server_url}/restaurants/${restaurantId}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then(response => {
-            setRestaurant(response.data);
-        })
-        .catch(error => {
-            console.error('Error fetching restaurant:', error);
-        });
+        const requestArgs = {
+            method: RequestMethods.GET,
+            url: `/restaurants/${restaurantId}`,
+            errorHandler: (error) => console.error('Error fetching restaurant:', error),
+            successHandler: (response) => {
+                setRestaurant(response.data);
+            }
+        }
+        sendRequest(requestArgs)
     }
 
     const orderFood = (food, restaurant) => {

@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import axios from 'axios';
 import Spinner from '../utils/Spinner';
-import configs from '../../configs';
-
+import { sendRequest, RequestMethods } from '../../utils';
 import {connect} from 'react-redux';
 import {fetchAndStoreCart} from '../../actions';
 
@@ -54,28 +52,29 @@ const FoodModal = (props) => {
     }
 
     const addToCart = () => {
-        axios.put(`${configs.server_url}/carts?foodName=${props.item.food.name}&restaurantId=${props.item.restaurant.id}&quantity=${numOfFoodToOrder}&isFoodPartyFood=${props.isFoodParty}`, {},
-                 { headers: { Authorization: `Bearer ${localStorage.getItem(configs.jwt_token_name)}`}})
-        .then(response => {
-            if(response.data.successful) {
-                props.fetchAndStoreCart();
-                setNotification({
-                    status: "success",
-                    message: "Added To Cart!"
-                })
-                if (props.isFoodParty) setNumOfAvailableFood(numOfAvailableFood - numOfFoodToOrder)
-            }
-            else {
-                setNotification({
-                    status: "error",
-                    message:response.data.message
-                })
-            }
-            setIsLoading(false)
-        })
-        .catch(error => {
-            console.log("Adding Items to Cart Failed.", error)
-        });
+        const requestArgs = {
+            method: RequestMethods.PUT,
+            url: `/carts?foodName=${props.item.food.name}&restaurantId=${props.item.restaurant.id}&quantity=${numOfFoodToOrder}&isFoodPartyFood=${props.isFoodParty}`,
+            errorHandler: (error) => console.log("Adding Items to Cart Failed.", error),
+            successHandler: (response) => {
+                if(response.data.successful) {
+                    props.fetchAndStoreCart();
+                    setNotification({
+                        status: "success",
+                        message: "Added To Cart!"
+                    })
+                    if (props.isFoodParty) setNumOfAvailableFood(numOfAvailableFood - numOfFoodToOrder)
+                }
+                else {
+                    setNotification({
+                        status: "error",
+                        message:response.data.message
+                    })
+                }
+                setIsLoading(false)
+            }    
+        }
+        sendRequest(requestArgs)
         setIsLoading(true)
     }
 

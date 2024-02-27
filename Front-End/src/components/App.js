@@ -12,6 +12,8 @@ import Modal from './utils/Modal';
 import Cart from './Cart/Cart';
 import configs from '../configs';
 import { redirect } from '../utils';
+import {ToastContainer} from 'react-toastify';
+
 
 
 const App = (props) => {
@@ -60,6 +62,7 @@ const App = (props) => {
         <>
             {renderCart()}
             {renderNavigationBar()}
+            <ToastContainer autoClose={configs.notification_length} />
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<HomePage/>} />
