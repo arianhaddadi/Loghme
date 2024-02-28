@@ -2,22 +2,21 @@ package Utilities;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 public class TokenProvider {
-    private static final String CLIENT_ID = "467864659090-qdhdvpgingk25pvq8m81gusn9tmflcgt.apps.googleusercontent.com";
-    private static final String SECRET_KEY = "loghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghme";
     public static final String HEADER = "Authorization";
     public static final String PREFIX = "Bearer ";
-    public static final int EXPIRATION_DAYS = 10;
+    private static final String TOKEN_ISSUER = "login";
     private static TokenProvider instance;
-
-    private TokenProvider() {
-    }
+    private static final String JWT_TOKEN_SECRET = "loghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghme";
+    private static final int LOGIN_TOKEN_EXPIRATION_DAYS = 10;
+    private TokenProvider() {}
 
     public static TokenProvider getInstance() {
         if (instance == null) {
@@ -44,33 +43,35 @@ public class TokenProvider {
     }
 
     public String createToken(String userEmail) {
-        String jwtToken = Jwts.builder()
-                .setIssuer("login")
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_DAYS * 24 * 3600 * 1000))
-                .claim("userEmail", userEmail)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8))
+        return Jwts.builder()
+                .issuer(TOKEN_ISSUER)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + LOGIN_TOKEN_EXPIRATION_DAYS * 24 * 3600 * 1000))
+                .claim(Configs.USER_ID_ATTRIBUTE, userEmail)
+                .signWith(Keys.hmacShaKeyFor(JWT_TOKEN_SECRET.getBytes(StandardCharsets.UTF_8)))
                 .compact();
-
-        return jwtToken;
     }
 
-    public boolean validateToken(String authToken) {
+    public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey((TokenProvider.SECRET_KEY).getBytes(StandardCharsets.UTF_8)).parse(authToken);
+            Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(JWT_TOKEN_SECRET.getBytes(StandardCharsets.UTF_8)))
+                .build()
+                .parse(token);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public String getUserEmailFromToken(String authToken) {
+    public String getUserEmailFromToken(String token) {
         try {
             return Jwts.parser()
-                    .setSigningKey((TokenProvider.SECRET_KEY).getBytes(StandardCharsets.UTF_8))
-                    .parseClaimsJws(authToken)
-                    .getBody().get("userEmail")
-                    .toString();
+                       .verifyWith(Keys.hmacShaKeyFor(JWT_TOKEN_SECRET.getBytes(StandardCharsets.UTF_8)))
+                       .build()
+                       .parseSignedClaims(token)
+                       .getPayload().get(Configs.USER_ID_ATTRIBUTE)
+                       .toString();
         } catch (SignatureException e) {
             return "";
         }

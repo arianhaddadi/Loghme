@@ -3,17 +3,14 @@ package Filters;
 import Utilities.Configs;
 import Utilities.TokenProvider;
 import org.springframework.util.StringUtils;
-import org.springframework.web.filter.GenericFilterBean;
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class JwtAuthenticationFilter implements Filter {
 
-    public JwtAuthenticationFilter() {
-    }
+    public JwtAuthenticationFilter() {}
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException,
@@ -26,12 +23,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-        String jwt = this.resolveToken(httpServletRequest);
+        String jwt = resolveToken(httpServletRequest);
         if (StringUtils.hasText(jwt)) {
             if (TokenProvider.getInstance().validateToken(jwt)) {
                 try {
                     String userEmail = TokenProvider.getInstance().getUserEmailFromToken(jwt);
-                    httpServletRequest.setAttribute("userEmail", userEmail);
+                    httpServletRequest.setAttribute(Configs.USER_ID_ATTRIBUTE, userEmail);
                     filterChain.doFilter(servletRequest, servletResponse);
                 }
                 catch (Exception e) {

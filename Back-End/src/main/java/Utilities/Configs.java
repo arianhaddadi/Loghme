@@ -10,6 +10,5 @@ public class Configs {
     public static final String DELIVERIES_INFO_URL = "http://138.197.181.131:8080/deliveries";
     public static final String RESTAURANTS_INFO_URL = "http://138.197.181.131:8080/restaurants";
     public static final String SERVER_BASE_URL = "/Loghme_war";
-
-
+    public static final String USER_ID_ATTRIBUTE = "userId";
 }
