@@ -33,7 +33,7 @@ public class CartsManager {
         ArrayList<CartItemDTO> cartItemDTOs = CartItemMapper.getInstance().findAll(cartDTO.getUserId(), null, null);
         for(CartItemDTO cartItemDTO : cartItemDTOs) {
             Food food = RestaurantsManager.getInstance().getFoodById(cartItemDTO.getFoodName() + "," + cartItemDTO.getRestaurantId());
-            cart.addCartItem(food, restaurant, cartItemDTO.getQuantity());
+            cart.addItem(new CartItem(food, cartItemDTO.getQuantity()));
         }
         return cart;
     }
@@ -44,12 +44,13 @@ public class CartsManager {
             return new Response<>("Restaurant doesn't exist!", false);
         }
         else {
-            Food food = restaurant.getFoodOrFoodPartyByName(isFoodPartyFood, foodName);
-            Cart cart = getCart(userEmail);
+            Food food = restaurant.getFoodByName(isFoodPartyFood, foodName);
             if(food == null) {
                 return new Response<>("Food doesn't exist!", false);
             }
-            else if(cart.isEmpty() || cart.getRestaurantId().equals(restaurantId)) {
+
+            Cart cart = getCart(userEmail);
+            if(cart.isEmpty() || cart.getRestaurantId().equals(restaurantId)) {
                 if(isFoodPartyFood) {
                     if (((FoodPartyFood)food).getCount() < quantity) {
                         return new Response<>("There isn't enough number of this food for adding to cart!", false);
@@ -74,19 +75,13 @@ public class CartsManager {
             return new Response<>("Restaurant doesn't exist!", false);
         }
         else {
-            if(isFoodPartyFood) {
-                FoodPartyFood food = restaurant.getFoodPartyFoodByName(foodName);
-                if(food == null) {
-                    return new Response<>("Food doesn't exist!", false);
-                }
-                food.increaseCount(1);
-                RestaurantsManager.getInstance().updateFoodPartyFood(food, restaurant);
+            Food food = restaurant.getFoodByName(isFoodPartyFood, foodName);
+            if(food == null) {
+                return new Response<>("Food doesn't exist!", false);
             }
-            else {
-                Food food = restaurant.getFoodByName(foodName);
-                if(food == null) {
-                    return new Response<>("Food doesn't exist!", false);
-                }
+            if(isFoodPartyFood) {
+                ((FoodPartyFood)food).increaseCount(1);
+                RestaurantsManager.getInstance().updateFoodPartyFood(((FoodPartyFood)food), restaurant);
             }
             CartsManager.getInstance().decreaseItemQuantity(userEmail, foodName, restaurantId);
             return new Response<>("Item was successfully removed!", true);
@@ -102,7 +97,11 @@ public class CartsManager {
             return new Response<>("Your credit is not enough!", false);
         }
         else {
-            user.finalizeOrder();
+            UsersManager.getInstance().addCredit(userEmail, user.getCart().getSum() * (-1));
+            Order order = new Order(user.getCart(), Integer.toString(OrdersManager.getInstance().getCount() + 1), userEmail);
+            OrdersManager.getInstance().addOrder(order.getId(), order.getStatus().name(), userEmail, user.getCart());
+            order.deliver();
+            emptyCart(userEmail);
             return new Response<>("Order was finalized!", true);
         }
     }

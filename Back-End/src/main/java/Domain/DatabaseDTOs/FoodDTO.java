@@ -11,9 +11,7 @@ public class FoodDTO {
     protected float price;
     protected float popularity;
 
-    public FoodDTO() {
-        return;
-    }
+    public FoodDTO() {}
 
     public FoodDTO(Food food, Restaurant restaurant) {
         this.name = food.getName();

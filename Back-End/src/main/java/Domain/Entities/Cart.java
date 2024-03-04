@@ -3,13 +3,10 @@ package Domain.Entities;
 import java.util.ArrayList;
 
 public class Cart {
-    private final ArrayList<CartItem> cartItems;
+    private final ArrayList<CartItem> cartItems = new ArrayList<>();;
     private Restaurant restaurant;
 
-    public Cart() {
-        cartItems = new ArrayList<>();
-    }
-
+    public Cart() {}
 
     public Boolean isEmpty() {
         return cartItems.isEmpty();
@@ -20,11 +17,6 @@ public class Cart {
             return restaurant.getId();
         else
             return "";
-    }
-
-    public void addCartItem(Food food, Restaurant restaurant, int quantity) {
-        this.restaurant = restaurant;
-        cartItems.add(new CartItem(food, quantity));
     }
 
     public void addItem(CartItem cartItem) {

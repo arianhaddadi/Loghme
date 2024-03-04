@@ -121,7 +121,7 @@ public class RestaurantMapper extends Mapper<RestaurantDTO, String> {
     @Override
     protected PreparedStatement getFindAllStatement(String id, Connection connection,
                                                     Integer limitStart, Integer limitSize) throws SQLException {
-        if (limitStart != null && limitSize != null) {
+        if (limitSize != null) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                             "SELECT * FROM Restaurants " +
                                 "WHERE ((locationX * locationX) + (locationY * locationY)) <= 170 * 170 " +

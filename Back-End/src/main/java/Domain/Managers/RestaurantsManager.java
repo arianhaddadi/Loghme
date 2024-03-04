@@ -9,7 +9,6 @@ import Domain.Entities.Restaurant;
 import ObjectMappers.Food.FoodMapper;
 import ObjectMappers.FoodPartyFood.FoodPartyFoodMapper;
 import ObjectMappers.Restaurant.RestaurantMapper;
-
 import Utilities.Configs;
 import Utilities.DataProvider;
 
@@ -55,24 +54,23 @@ public class RestaurantsManager {
     }
 
     public ArrayList<Restaurant> getRestaurants(Integer pageSize, Integer pageNum) {
-        if (pageSize != null && pageNum != null) {
-            return convertRestaurantDTOsListToRestaurantsList(RestaurantMapper.getInstance().findAll( "",
+        return convertRestaurantDTOsListToRestaurantsList(RestaurantMapper.getInstance().findAll("",
                                                                                         (pageNum - 1) * pageSize,
                                                                                          pageSize));
-        }
-        else {
-            return convertRestaurantDTOsListToRestaurantsList(RestaurantMapper.getInstance().findAll( "",null, null));
-        }
+    }
+
+    private ArrayList<Restaurant> getAllRestaurants() {
+        return convertRestaurantDTOsListToRestaurantsList(RestaurantMapper.getInstance().findAll("",null, null));
     }
 
     public ArrayList<Restaurant> getFoodPartyRestaurants() {
-        ArrayList<Restaurant> foodpartyRestaurants = new ArrayList<>();
-        for(Restaurant restaurant : getRestaurants(null, null)) {
-            if (restaurant.getFoodPartyMenu() != null && !restaurant.getFoodPartyMenu().isEmpty()) {
-                foodpartyRestaurants.add(restaurant);
+        ArrayList<Restaurant> foodPartyRestaurants = new ArrayList<>();
+        for(Restaurant restaurant : getAllRestaurants()) {
+            if (!restaurant.getFoodPartyMenu().isEmpty()) {
+                foodPartyRestaurants.add(restaurant);
             }
         }
-        return foodpartyRestaurants;
+        return foodPartyRestaurants;
     }
 
     private void insertRestaurant(Restaurant restaurant) {
@@ -80,7 +78,7 @@ public class RestaurantsManager {
     }
 
     private void insertRestaurantMenu(Restaurant restaurant) {
-        if (restaurant.getMenu() != null && !restaurant.getMenu().isEmpty()) {
+        if (!restaurant.getMenu().isEmpty()) {
             for (Food food : restaurant.getMenu()) {
                 FoodMapper.getInstance().insert(new FoodDTO(food, restaurant));
             }
@@ -88,7 +86,7 @@ public class RestaurantsManager {
     }
 
     private void insertRestaurantFoodPartyMenu(Restaurant restaurant) {
-        if (restaurant.getFoodPartyMenu() != null && !restaurant.getFoodPartyMenu().isEmpty()) {
+        if (!restaurant.getFoodPartyMenu().isEmpty()) {
             for (FoodPartyFood foodPartyFood : restaurant.getFoodPartyMenu()) {
                 FoodPartyFoodMapper.getInstance().insert(new FoodPartyFoodDTO(foodPartyFood, restaurant));
             }

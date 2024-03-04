@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Restaurant {
     private String id, name, logo;
     private Location location;
-    private ArrayList<Food> menu;
-    private ArrayList<FoodPartyFood> foodPartyMenu;
+    private ArrayList<Food> menu = new ArrayList<>();
+    private ArrayList<FoodPartyFood> foodPartyMenu = new ArrayList<>();
 
     public Restaurant(String id, String name, String logo, Location location,
                       ArrayList<Food> menu, ArrayList<FoodPartyFood> foodPartyMenu) {
@@ -25,11 +25,28 @@ public class Restaurant {
         this.location = location;
     }
 
-    public Food getFoodByName(String name) {
-        if(menu == null) return null;
+    public Food getFoodByName(Boolean isFoodPartyFood, String foodName) {
+        if(isFoodPartyFood) {
+            return getFoodPartyFoodByName(foodName);
+        }
+        else {
+            return getFoodByName(foodName);
+        }
+    }
+
+    private Food getFoodByName(String name) {
         for(Food food : menu) {
             if (food.getName().equals(name))
                 return food;
+        }
+        return null;
+    }
+
+    private FoodPartyFood getFoodPartyFoodByName(String foodName) {
+        for(FoodPartyFood foodPartyFood : foodPartyMenu) {
+            if(foodPartyFood.getName().equals(foodName)) {
+                return foodPartyFood;
+            }
         }
         return null;
     }
@@ -80,24 +97,5 @@ public class Restaurant {
 
     public void setFoodPartyMenu(ArrayList<FoodPartyFood> foodPartyMenu) {
         this.foodPartyMenu = foodPartyMenu;
-    }
-
-    public FoodPartyFood getFoodPartyFoodByName(String foodName) {
-        if(foodPartyMenu == null) return null;
-        for(FoodPartyFood foodPartyFood : foodPartyMenu) {
-            if(foodPartyFood.getName().equals(foodName)) {
-                return foodPartyFood;
-            }
-        }
-        return null;
-    }
-
-    public Food getFoodOrFoodPartyByName(Boolean isFoodPartyFood, String foodName) {
-        if(isFoodPartyFood) {
-            return getFoodPartyFoodByName(foodName);
-        }
-        else {
-            return getFoodByName(foodName);
-        }
     }
 }

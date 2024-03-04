@@ -11,22 +11,20 @@ public class FoodPartyFood extends Food {
         this.oldPrice = oldPrice;
     }
 
+    public void decreaseCount(int num) {
+        count -= num;
+    }
+
+    public void increaseCount(int num) {
+        count += num;
+    }
+
     public int getCount() {
         return count;
     }
 
     public float getOldPrice() {
         return oldPrice;
-    }
-
-    public void decreaseCount(int num) {
-        if(count >= num) {
-            count -= num;
-        }
-    }
-
-    public void increaseCount(int num) {
-        count += num;
     }
 
     public void setCount(int count) {

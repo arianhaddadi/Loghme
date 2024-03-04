@@ -62,6 +62,10 @@ public class Order implements Runnable {
         return allDeliveries.stream().filter(element -> !element.isBusy).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    public void deliver() {
+        run();
+    }
+
     @Override
     public void run() {
         if (scheduler == null) scheduler = Executors.newSingleThreadScheduledExecutor();

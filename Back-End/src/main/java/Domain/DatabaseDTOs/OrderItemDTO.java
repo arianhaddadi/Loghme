@@ -9,8 +9,7 @@ public class OrderItemDTO {
     private String foodName;
     private String restaurantId;
 
-    public OrderItemDTO() {
-    }
+    public OrderItemDTO() {}
 
     public OrderItemDTO(int quantity, String orderId, String foodName, String restaurantId) {
         this.quantity = quantity;

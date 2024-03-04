@@ -10,8 +10,7 @@ public class UserDTO {
     private String phoneNumber;
     private float credit;
 
-    public UserDTO() {
-    }
+    public UserDTO() {}
 
     public UserDTO(User user) {
         this.name = user.getName();

@@ -2,7 +2,6 @@ package Domain.Entities;
 
 public class Location {
     private final float x, y;
-
     public Location(float x, float y) {
         this.x = x;
         this.y = y;
@@ -17,7 +16,7 @@ public class Location {
     }
 
     public double calculateDistance(Location otherLocation) {
-        return Math.sqrt(Math.pow(this.x - otherLocation.x, 2) + Math.pow(this.y - otherLocation.y, 2));
+        return Math.sqrt(Math.pow(x - otherLocation.x, 2) + Math.pow(y - otherLocation.y, 2));
     }
 
     @Override
