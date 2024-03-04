@@ -68,7 +68,7 @@ const FoodModal = (props) => {
                 else {
                     setNotification({
                         status: "error",
-                        message:response.data.message
+                        message: response.data.message
                     })
                 }
                 setIsLoading(false)

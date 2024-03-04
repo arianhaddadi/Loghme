@@ -302,8 +302,8 @@ const ProfilePage = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        orders:state.orders,
-        user:state.user,
+        orders: state.orders,
+        user: state.user,
     }
 }
 

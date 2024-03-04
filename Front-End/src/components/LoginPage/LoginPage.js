@@ -158,7 +158,7 @@ const LoginPage = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        googleAuthentication:state.googleAuthentication
+        googleAuthentication: state.googleAuthentication
     }
 }
 

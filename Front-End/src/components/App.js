@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {connect} from "react-redux";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import NavigationBar from './NavigationBar/NavigationBar';
-import Footer from './Footer/Footer';
 import HomePage from "./HomePage/HomePage";
 import SignupPage from "./SignupPage/SignupPage";
 import LoginPage from "./LoginPage/LoginPage";
@@ -58,6 +57,14 @@ const App = (props) => {
         }
     }
 
+    const renderFooter = () => {
+        return (
+            <footer className="copyright">
+                &copy; All rights are reserved!
+            </footer>
+        )
+    }
+
     return (
         <>
             {renderCart()}
@@ -72,7 +79,7 @@ const App = (props) => {
                     <Route path="/profile" element={<ProfilePage/>} />
                 </Routes>
             </BrowserRouter>
-            <Footer />
+            {renderFooter()}
         </>
     )
 
@@ -80,7 +87,7 @@ const App = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        cart:state.cart,
+        cart: state.cart,
     }
 }
 
