@@ -1,7 +1,6 @@
-package ObjectMappers.Food;
+package ObjectMappers;
 
 import Domain.DatabaseDTOs.FoodDTO;
-import ObjectMappers.Mapper;
 import Utilities.ConnectionPool;
 
 import java.sql.*;

@@ -3,8 +3,8 @@ package Domain.Managers;
 import Domain.DatabaseDTOs.CartDTO;
 import Domain.DatabaseDTOs.UserDTO;
 import Domain.Entities.*;
-import ObjectMappers.Cart.CartMapper;
-import ObjectMappers.User.UserMapper;
+import ObjectMappers.CartMapper;
+import ObjectMappers.UserMapper;
 import Utilities.Response;
 import Utilities.TokenProvider;
 
@@ -45,8 +45,8 @@ public class UsersManager {
     }
 
     public boolean checkUserEmailAndPassword(String email, String password) {
-        UserDTO user = UserMapper.getInstance().findUserByEmailAndPassword(email, Integer.toString(password.hashCode()));
-        return !(user == null);
+        UserDTO user = UserMapper.getInstance().find(email);
+        return user.getPassword().equals(Integer.toString(password.hashCode()));
     }
 
     public Response<Void> login(String email, String password, boolean isGoogleAuth, String idToken) {

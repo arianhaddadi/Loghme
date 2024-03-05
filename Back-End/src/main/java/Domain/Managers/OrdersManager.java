@@ -3,8 +3,8 @@ package Domain.Managers;
 import Domain.DatabaseDTOs.OrderDTO;
 import Domain.DatabaseDTOs.OrderItemDTO;
 import Domain.Entities.*;
-import ObjectMappers.Order.OrderMapper;
-import ObjectMappers.OrderItem.OrderItemMapper;
+import ObjectMappers.OrderMapper;
+import ObjectMappers.OrderItemMapper;
 
 import java.util.ArrayList;
 
@@ -29,8 +29,8 @@ public class OrdersManager {
         }
     }
 
-    public int getCount() {
-        return OrderMapper.getInstance().getCount();
+    public int getNumOfOrders() {
+        return OrderMapper.getInstance().getNumOfOrders();
     }
 
     private Order convertOrderDTOToOrder(OrderDTO orderDTO, Cart cart) {

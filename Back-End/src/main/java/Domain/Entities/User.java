@@ -7,8 +7,12 @@ import Domain.Managers.UsersManager;
 import java.util.ArrayList;
 
 public class User {
-    private String name, familyName, email, password, phoneNumber;
-    private float credit;
+    private final String name;
+    private final String familyName;
+    private final String email;
+    private final String password;
+    private final String phoneNumber;
+    private final float credit;
     private Cart cart;
     public User(String name, String familyName, String email, String password, String phoneNumber, float credit) {
         this.name = name;
@@ -26,10 +30,6 @@ public class User {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getFamilyName() {

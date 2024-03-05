@@ -1,8 +1,7 @@
-package ObjectMappers.Restaurant;
+package ObjectMappers;
 
 import Domain.DatabaseDTOs.RestaurantDTO;
 import Domain.Entities.Location;
-import ObjectMappers.Mapper;
 import Utilities.ConnectionPool;
 import java.sql.*;
 import java.util.ArrayList;

@@ -3,7 +3,6 @@ package Domain.Entities;
 public class FoodPartyFood extends Food {
     private int count;
     private float oldPrice;
-
     public FoodPartyFood(String name, String description, String image,
                         float price, float popularity, int count, float oldPrice) {
         super(name, description, image, price, popularity);

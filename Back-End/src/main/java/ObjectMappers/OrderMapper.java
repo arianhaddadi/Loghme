@@ -1,7 +1,6 @@
-package ObjectMappers.Order;
+package ObjectMappers;
 
 import Domain.DatabaseDTOs.OrderDTO;
-import ObjectMappers.Mapper;
 import Utilities.ConnectionPool;
 
 import java.sql.*;
@@ -60,9 +59,9 @@ public class OrderMapper extends Mapper<OrderDTO, String> {
 
     @Override
     protected PreparedStatement getUpdateStatement(OrderDTO orderDTO, Connection connection) throws SQLException {
-PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Orders " +
-                                                                     "SET status = ? " +
-                                                                     "WHERE id = ?;");
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Orders " +
+                                                                             "SET status = ? " +
+                                                                             "WHERE id = ?;");
         preparedStatement.setString(1, orderDTO.getStatus());
         preparedStatement.setString(2, orderDTO.getId());
         return preparedStatement;
@@ -86,10 +85,14 @@ PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Orders
         return orderDTO;
     }
 
+    private PreparedStatement getNumOfOrdersStatement(Connection connection) throws SQLException {
+        return connection.prepareStatement("SELECT COUNT(*) AS total FROM Orders");
+    }
+
     public int getNumOfOrders() {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS total FROM Orders");
+            PreparedStatement preparedStatement = getNumOfOrdersStatement(connection);
             ResultSet resultSet = preparedStatement.executeQuery();
             int count = -1;
             if (resultSet.next()) {

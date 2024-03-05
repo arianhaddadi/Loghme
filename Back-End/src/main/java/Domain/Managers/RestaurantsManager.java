@@ -6,10 +6,9 @@ import Domain.DatabaseDTOs.RestaurantDTO;
 import Domain.Entities.Food;
 import Domain.Entities.FoodPartyFood;
 import Domain.Entities.Restaurant;
-import ObjectMappers.Food.FoodMapper;
-import ObjectMappers.FoodPartyFood.FoodPartyFoodMapper;
-import ObjectMappers.Restaurant.RestaurantMapper;
-import Utilities.Configs;
+import ObjectMappers.FoodMapper;
+import ObjectMappers.FoodPartyFoodMapper;
+import ObjectMappers.RestaurantMapper;
 import Utilities.DataProvider;
 
 import java.util.ArrayList;

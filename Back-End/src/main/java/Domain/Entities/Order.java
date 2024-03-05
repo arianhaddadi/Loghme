@@ -23,7 +23,6 @@ public class Order implements Runnable {
     private Status status;
     private final Cart cart;
     private ScheduledExecutorService scheduler;
-
     public Order(Cart cart, String id, String userId) {
         this.id = id;
         this.userId = userId;

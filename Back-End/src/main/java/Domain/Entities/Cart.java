@@ -5,9 +5,7 @@ import java.util.ArrayList;
 public class Cart {
     private final ArrayList<CartItem> cartItems = new ArrayList<>();;
     private Restaurant restaurant;
-
     public Cart() {}
-
     public Boolean isEmpty() {
         return cartItems.isEmpty();
     }

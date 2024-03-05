@@ -1,7 +1,6 @@
-package ObjectMappers.User;
+package ObjectMappers;
 
 import Domain.DatabaseDTOs.UserDTO;
-import ObjectMappers.Mapper;
 import Utilities.ConnectionPool;
 
 import java.sql.*;
@@ -86,32 +85,9 @@ public class UserMapper extends Mapper<UserDTO, String> {
         userDTO.setName(rs.getString("name"));
         userDTO.setFamilyName(rs.getString("familyName"));
         userDTO.setEmail(rs.getString("email"));
+        userDTO.setPassword(rs.getString("password"));
         userDTO.setPhoneNumber(rs.getString("phoneNumber"));
         userDTO.setCredit(rs.getFloat("credit"));
         return userDTO;
-    }
-
-    public UserDTO findUserByEmailAndPassword(String email, String password) {
-        try {
-            Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE email = ? AND password = ?;");
-            preparedStatement.setString(1, email);
-            preparedStatement.setString(2, password);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            UserDTO user;
-            if (resultSet.next()) {
-                user = convertResultSetToObject(resultSet);
-            }
-            else {
-                user = null;
-            }
-            resultSet.close();
-            preparedStatement.close();
-            connection.close();
-            return user;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }

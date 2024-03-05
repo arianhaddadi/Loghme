@@ -1,7 +1,6 @@
-package ObjectMappers.Cart;
+package ObjectMappers;
 
 import Domain.DatabaseDTOs.CartDTO;
-import ObjectMappers.Mapper;
 import Utilities.ConnectionPool;
 
 import java.sql.*;

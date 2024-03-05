@@ -3,9 +3,9 @@ package Domain.Managers;
 import Domain.DatabaseDTOs.CartDTO;
 import Domain.DatabaseDTOs.CartItemDTO;
 import Domain.Entities.*;
-import ObjectMappers.Cart.CartMapper;
-import ObjectMappers.CartItem.CartItemMapper;
-import ObjectMappers.Restaurant.RestaurantMapper;
+import ObjectMappers.CartMapper;
+import ObjectMappers.CartItemMapper;
+import ObjectMappers.RestaurantMapper;
 import Utilities.Response;
 
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public class CartsManager {
         }
         else {
             UsersManager.getInstance().addCredit(userEmail, user.getCart().getSum() * (-1));
-            Order order = new Order(user.getCart(), Integer.toString(OrdersManager.getInstance().getCount() + 1), userEmail);
+            Order order = new Order(user.getCart(), Integer.toString(OrdersManager.getInstance().getNumOfOrders() + 1), userEmail);
             OrdersManager.getInstance().addOrder(order.getId(), order.getStatus().name(), userEmail, user.getCart());
             order.deliver();
             emptyCart(userEmail);

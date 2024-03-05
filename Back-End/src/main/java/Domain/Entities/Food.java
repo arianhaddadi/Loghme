@@ -1,9 +1,11 @@
 package Domain.Entities;
 
 public class Food {
-    protected String name, description, image;
-    protected float price, popularity;
-
+    protected String name;
+    protected String description;
+    protected String image;
+    protected float price;
+    protected float popularity;
     public Food(String name, String description, String image,
                 float price, float popularity) {
         this.name = name;

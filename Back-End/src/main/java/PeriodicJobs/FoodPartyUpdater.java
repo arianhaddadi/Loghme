@@ -2,7 +2,7 @@ package PeriodicJobs;
 
 import Domain.Managers.RestaurantsManager;
 import Domain.Entities.Restaurant;
-import ObjectMappers.FoodPartyFood.FoodPartyFoodMapper;
+import ObjectMappers.FoodPartyFoodMapper;
 import Utilities.Configs;
 import Utilities.GetRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;

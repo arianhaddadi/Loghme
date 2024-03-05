@@ -1,7 +1,8 @@
 package Domain.Entities;
 
 public class Location {
-    private final float x, y;
+    private final float x;
+    private final float y;
     public Location(float x, float y) {
         this.x = x;
         this.y = y;

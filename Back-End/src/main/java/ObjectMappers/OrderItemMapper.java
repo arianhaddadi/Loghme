@@ -1,7 +1,6 @@
-package ObjectMappers.OrderItem;
+package ObjectMappers;
 
 import Domain.DatabaseDTOs.OrderItemDTO;
-import ObjectMappers.Mapper;
 import Utilities.ConnectionPool;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

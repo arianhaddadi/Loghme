@@ -3,7 +3,9 @@ package Domain.Entities;
 import java.util.ArrayList;
 
 public class Restaurant {
-    private String id, name, logo;
+    private String id;
+    private String name;
+    private String logo;
     private Location location;
     private ArrayList<Food> menu = new ArrayList<>();
     private ArrayList<FoodPartyFood> foodPartyMenu = new ArrayList<>();
