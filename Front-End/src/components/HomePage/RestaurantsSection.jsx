@@ -11,6 +11,7 @@ const RestaurantsSection = (props) => {
     const [restaurants, setRestaurants] = useState([])
     const [numOfPages, setNumOfPages] = useState(1)
     const [isLoadingMore, setIsLoadingMore] = useState(false)
+    const [noMoreResults, setNoMoreResults] = useState(false)
 
 
     const navigate = useNavigate()
@@ -28,6 +29,7 @@ const RestaurantsSection = (props) => {
             successHandler: (response) => {
                 setRestaurants(restaurants.concat(response.data.payload))
                 setIsLoadingMore(false)
+                if (response.data.payload.length < configs.home_page_size) setNoMoreResults(true)
             }
         }
         sendRequest(requestArgs)
@@ -57,6 +59,7 @@ const RestaurantsSection = (props) => {
     }
 
     const renderShowMoreButton = () => {
+        if (noMoreResults) return;
         return (
             <>
                 <button onClick={loadMore} className="submit-button btn show-more-button">Show More</button>
@@ -67,6 +70,13 @@ const RestaurantsSection = (props) => {
 
     const renderRestaurantItems = () => {
         const restaurantsToRender = props.searchedRestaurants === null ? restaurants : props.searchedRestaurants;
+        if (restaurantsToRender.length === 0) {
+            return (
+                <div className='no-restaurant-items'>
+                    No Restaurants To Show
+                </div>
+            )
+        }
         return restaurantsToRender.map((elem, index) => {
             return (
                 <RestaurantItem key={index} item={elem} viewRestaurantPage={viewRestaurantPage} />

@@ -86,16 +86,14 @@ PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Orders
         return orderDTO;
     }
 
-    public int getCount() {
+    public int getNumOfOrders() {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS total FROM Orders");
             ResultSet resultSet = preparedStatement.executeQuery();
-            int count;
+            int count = -1;
             if (resultSet.next()) {
                 count = resultSet.getInt("total");
-            } else {
-                count = -1;
             }
             resultSet.close();
             preparedStatement.close();

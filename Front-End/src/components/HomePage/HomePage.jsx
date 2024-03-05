@@ -25,7 +25,7 @@ const HomePage = () => {
             errorHandler: (error) => console.log("Search Failed.", error),
             successHandler: (response) => {
                 const results = response.data.payload
-                if (searchedRestaurants === null) {
+                if (pageNum === 1) {
                     setSearchedRestaurants(results)
                 } else {
                     setSearchedRestaurants(searchedRestaurants.concat(results))
