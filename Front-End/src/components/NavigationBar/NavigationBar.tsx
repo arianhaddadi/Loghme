@@ -1,10 +1,18 @@
+import React from 'react';
 import logo from '../../styles/images/Logo.png';
 import {connect} from 'react-redux';
-import configs from '../../configs';
-import { redirect } from '../../utils';
+import configs from '../../app/configs.ts';
+import { redirect } from '../../utils/redirect.ts';
+import { RootState } from '../../app/store.ts';
+import { GoogleAuthState } from '../../reducers/googleAuthenticationReducer.ts';
 
+interface NavigationBarProps {
+    googleAuthentication: GoogleAuthState,
+    cartSize: number,
+    openCart: () => void
+}
 
-const NavigationBar = (props) => {
+const NavigationBar = (props: NavigationBarProps) => {
 
     const handleExit = () => {
         const googleAuthentication = props.googleAuthentication;
@@ -33,7 +41,7 @@ const NavigationBar = (props) => {
     );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
     return {
         googleAuthentication: state.googleAuthentication
     }

@@ -1,13 +1,24 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from "../../styles/images/Logo.png";
-import configs from '../../configs';
-import {Link, useNavigate} from 'react-router-dom';
+import configs from '../../app/configs.ts';
+import {Link} from 'react-router-dom';
 import {toast} from 'react-toastify';
-import { sendRequest, RequestMethods } from '../../utils';
+import { sendRequest, RequestMethods } from '../../utils/request.ts';
+import { redirect } from '../../utils/redirect.ts';
+import { RequestArguments } from '../../utils/types';
 
+interface SignupFormInput {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    password: string;
+    passwordRepeat: string;
+    [key: string]: string;
+}
 
-const SignupPage = (props) => {
-    const [inputValues, setInputValues] = useState({
+const SignupPage = () => {
+    const [inputValues, setInputValues] = useState<SignupFormInput>({
         firstName: "",
         lastName: "",
         email: "",
@@ -15,7 +26,7 @@ const SignupPage = (props) => {
         password: "",
         passwordRepeat: "",
     })
-    const [errorMessages, setErrorMessages] = useState({
+    const [errorMessages, setErrorMessages] = useState<SignupFormInput>({
         firstName: "",
         lastName: "",
         email: "",
@@ -24,16 +35,14 @@ const SignupPage = (props) => {
         passwordRepeat: ""
     })
 
-    const navigate = useNavigate()
-
     useEffect(() => {
-        if (localStorage.getItem(configs.jwt_token_name)) navigate("/") 
+        if (localStorage.getItem(configs.jwt_token_name)) redirect("/") 
         else document.title = "Signup";
     }, [])
 
     const signup = () => {
-        const {firstName, lastName, email, phoneNumber, password} = inputValues;
-        const requestArgs = {
+        const {firstName, lastName, email, phoneNumber, password}: SignupFormInput = inputValues;
+        const requestArgs: RequestArguments =  {
             method: RequestMethods.POST,
             url: `/signup?firstName=${firstName}&lastName=${lastName}&password=${password}&email=${email}&phoneNumber=${phoneNumber}`,
             errorHandler: (error) => {
@@ -44,7 +53,7 @@ const SignupPage = (props) => {
                 if (response.data.successful) {
                     toast("Successfully Signed Up!");
                     setTimeout(() => {
-                        navigate("/login")
+                        redirect("/login")
                     }, configs.notification_length);
                 }
                 else {
@@ -55,7 +64,7 @@ const SignupPage = (props) => {
         sendRequest(requestArgs)
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if(hasError()) {
             toast("Fix the errors first!");
@@ -65,90 +74,89 @@ const SignupPage = (props) => {
         }
     }
 
-    const validateValues = (name, value, isAfterSubmit) => {
-        let errors = errorMessages;
+    const validateValues = (name: string, value: string, isAfterSubmit: boolean) => {
         const validEmailRegex = RegExp(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/);
     
         switch (name) {
             case 'firstName':
             case "lastName":
                 if(((value !== "") && (value.length < 2)) || ((value === "") && (isAfterSubmit))) {
-                    errors[name] = "First and last names must have a minimum of 5 letters.";
+                    errorMessages[name] = "First and last names must have a minimum of 5 letters.";
                 }
                 else {
-                    errors[name] = "";
+                    errorMessages[name] = "";
                 }
                 break;
             case 'email': 
                 if(((value !== "") && (!validEmailRegex.test(value))) || ((value === "") && (isAfterSubmit))) {
-                    errors.email = "Invalid email address!";
+                    errorMessages.email = "Invalid email address!";
                 }
                 else {
-                    errors.email = "";
+                    errorMessages.email = "";
                 }
                 break;
             case 'phoneNumber':
                 if((value !== "") && (!Number(value))) {
-                    errors.phoneNumber = "Invalid phone number!";
+                    errorMessages.phoneNumber = "Invalid phone number!";
                 }
                 else if(((value !== "") && (value.length < 8)) || ((value === "") && (isAfterSubmit))) {
-                    errors.phoneNumber = "Phone number must have at least 8 digits!";
+                    errorMessages.phoneNumber = "Phone number must have at least 8 digits!";
                 }
                 else {
-                    errors.phoneNumber = ""
+                    errorMessages.phoneNumber = ""
                 }
                 break;
             case 'password': 
                 if(((value !== "") && (value.length < 8)) || ((value === "") && (isAfterSubmit))) {
-                    errors.password = "Password must be at least 8 letters long!";
+                    errorMessages.password = "Password must be at least 8 letters long!";
                 }
                 else {
-                    errors.password = "";
+                    errorMessages.password = "";
                 }
                 if((inputValues.passwordRepeat !== "") && (inputValues.passwordRepeat !== value)) {
-                    errors.passwordRepeat = "Passwords do not match!"
+                    errorMessages.passwordRepeat = "Passwords do not match!"
                 }
                 else if((inputValues.passwordRepeat === "") && (isAfterSubmit)) {
-                    errors.passwordRepeat = "This field is required!"
+                    errorMessages.passwordRepeat = "This field is required!"
                 }
                 else {
-                    errors.passwordRepeat = "";
+                    errorMessages.passwordRepeat = "";
                 }
                 break;
             case 'passwordRepeat': 
                 if((value !== "") && (value !== inputValues.password)) {
-                    errors.passwordRepeat = "Passwords do not match!"
+                    errorMessages.passwordRepeat = "Passwords do not match!"
                 }
                 else if((value === "") && (isAfterSubmit)) {
-                    errors.passwordRepeat = "This field is required!"
+                    errorMessages.passwordRepeat = "This field is required!"
                 }
                 else {
-                    errors.passwordRepeat = "";
+                    errorMessages.passwordRepeat = "";
                 }
                 break;
             default:
                 break;
         }
         
-        setErrorMessages(errors)
+        setErrorMessages(errorMessages)
         setInputValues ({
             ...inputValues,
             [name]: value
         })
     }
 
-    const handleChange = (event) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
-        const { name, value } = event.target;
+        const { name, value }: HTMLInputElement = event.target;
         validateValues(name, value, false);
     }
 
     const hasError = () => {
-        for(var key in inputValues) {
+        for(let key in inputValues) {
             validateValues(key, inputValues[key], true);
         }
 
-        for(var value in errorMessages) {
+        for(let value in errorMessages) {
             if(errorMessages[value] !== "") {
                 return true;
             }
@@ -156,18 +164,15 @@ const SignupPage = (props) => {
         return false;
     }
 
-    const getFormInput = (name, labelText, type, autoCompleteValue) => {
-        var errorElement = "";
+    const getFormInput = (name: string, labelText: string, type: string, autoCompleteValue: string) => {
+        let errorElement = (<div className='errorMessageEmpty'>_</div>);
         if(errorMessages[name].length > 0) {
             errorElement = (<div className='errorMessage'>{errorMessages[name]}</div>);
-        }
-        else {
-            errorElement = (<div className='errorMessageEmpty'>_</div>);
         }
         return (
             <div className="form-group">
                 <input value={inputValues[name]} type={type} className="form-control" onChange={handleChange} 
-                        noValidate name={name} placeholder={labelText} autoComplete={autoCompleteValue} />
+                        name={name} placeholder={labelText} autoComplete={autoCompleteValue} />
                 {errorElement}
             </div>
         )

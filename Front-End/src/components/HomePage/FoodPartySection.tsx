@@ -1,16 +1,17 @@
-import {useState, useEffect} from 'react';
-import FoodPartyItem from './FoodPartyItem';
-import Modal from '../utils/Modal';
-import FoodModal from '../FoodModal/FoodModal';
-import Spinner from "../utils/Spinner";
-import { sendRequest, RequestMethods } from '../../utils';
+import React, {useState, useEffect} from 'react';
+import FoodPartyItem from './FoodPartyItem.tsx';
+import Modal from '../utils/Modal.tsx';
+import FoodModal, { FoodModalFood } from '../FoodModal/FoodModal.tsx';
+import Spinner from "../utils/Spinner.tsx";
+import { sendRequest, RequestMethods } from '../../utils/request.ts';
+import { Nullable, RequestArguments, Restaurant, Food } from '../../utils/types';
 
 
 const FoodParty = () => {
-    const [visibleFoodItem, setVisibleFoodItem] = useState(null)
-    const [foodPartyRestaurants, setFoodPartyRestaurants] = useState(null)
-    const [foodPartyMinutesRemaining, setFoodPartyMinutesRemaining] = useState(0)
-    const [foodPartySecondsRemaining, setFoodPartySecondsRemaining] = useState(0)
+    const [visibleFoodItem, setVisibleFoodItem] = useState<Nullable<FoodModalFood>>(null)
+    const [foodPartyRestaurants, setFoodPartyRestaurants] = useState<Nullable<Restaurant[]>>(null)
+    const [foodPartyMinutesRemaining, setFoodPartyMinutesRemaining] = useState<number>(0)
+    const [foodPartySecondsRemaining, setFoodPartySecondsRemaining] = useState<number>(0)
 
     useEffect(() => {
         fetchFoodPartyInformation();
@@ -21,10 +22,9 @@ const FoodParty = () => {
         setTimeout(downCountTimer, 1000)
     }, [foodPartySecondsRemaining, foodPartyMinutesRemaining])
 
-    const styleTime = (time) => {
-        time = time.toString();
-        if(time.length === 1) time = "0" + time;
-        return time;
+    const styleTime = (time: number) => {
+        if(time.toString().length === 1) return  "0" + time.toString();
+        else return time.toString();
     }
 
     const downCountTimer = () => {
@@ -42,7 +42,7 @@ const FoodParty = () => {
         }
     }
 
-    const orderFoodPartyFood = (restaurant, food) => {
+    const orderFoodPartyFood = (restaurant: Restaurant, food: Food) => {
         setVisibleFoodItem({
             restaurant: restaurant,
             food: food
@@ -50,7 +50,7 @@ const FoodParty = () => {
     }
 
     const fetchFoodPartyInformation = () => {
-        const requestArgs = {
+        const requestArgs: RequestArguments =  {
             method: RequestMethods.GET,
             url: "/foodparties",
             errorHandler: (error) => console.log("Fetching Food Party Information Failed", error),
@@ -70,7 +70,7 @@ const FoodParty = () => {
 
     const showFoodPartyModal = () => {
         return (
-            <FoodModal isFoodParty item={visibleFoodItem} />
+            <FoodModal item={visibleFoodItem!} />
         )
     }
 
@@ -92,7 +92,7 @@ const FoodParty = () => {
                 );
             }
             else {
-                let foodpartyItems = [];
+                let foodpartyItems: React.JSX.Element[] = [];
                 for (let i = 0; i < foodPartyRestaurants.length; i++) {
                     foodpartyItems = foodpartyItems.concat(foodPartyRestaurants[i].foodPartyMenu.map(
                     (elem, index) => {

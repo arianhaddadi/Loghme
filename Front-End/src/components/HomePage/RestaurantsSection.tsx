@@ -1,28 +1,31 @@
-import {useState, useEffect} from 'react';
-import RestaurantItem from './RestaurantItem';
-import {useNavigate} from 'react-router-dom';
-import configs from '../../configs';
-import Spinner from "../utils/Spinner";
-import { sendRequest, RequestMethods } from '../../utils';
+import React, {useState, useEffect} from 'react';
+import RestaurantItem from './RestaurantItem.tsx';
+import configs from '../../app/configs.ts';
+import Spinner from "../utils/Spinner.tsx";
+import { sendRequest, RequestMethods } from '../../utils/request.ts';
+import { redirect } from '../../utils/redirect.ts';
+import {RequestArguments, Restaurant} from '../../utils/types';
+
+interface RestaurantsSectionProps {
+    isSearching: boolean,
+    searchedRestaurants: Restaurant[],
+    searchMore: () => void
+}
 
 
-
-const RestaurantsSection = (props) => {
-    const [restaurants, setRestaurants] = useState([])
-    const [numOfPages, setNumOfPages] = useState(1)
-    const [isLoadingMore, setIsLoadingMore] = useState(false)
-    const [noMoreResults, setNoMoreResults] = useState(false)
-
-
-    const navigate = useNavigate()
+const RestaurantsSection = (props: RestaurantsSectionProps) => {
+    const [restaurants, setRestaurants] = useState<Restaurant[]>([])
+    const [numOfPages, setNumOfPages] = useState<number>(1)
+    const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false)
+    const [noMoreResults, setNoMoreResults] = useState<boolean>(false)
 
     useEffect(() => {
         document.title = "Home";
         fetchRestaurants(1);
     }, [])
 
-    const fetchRestaurants = (pageNum) => {
-        const requestArgs = {
+    const fetchRestaurants = (pageNum: number) => {
+        const requestArgs: RequestArguments =  {
             method: RequestMethods.GET,
             url: `/restaurants?pageSize=${configs.home_page_size}&pageNum=${pageNum}`,
             errorHandler: (error) => console.log("Fetching Restaurants Failed", error),
@@ -36,8 +39,8 @@ const RestaurantsSection = (props) => {
         setIsLoadingMore(true)
     }
 
-    const viewRestaurantPage = (restaurantId) => {
-        navigate(`/restaurants/${restaurantId}`);
+    const viewRestaurantPage = (restaurantId: string) => {
+        redirect(`/restaurants/${restaurantId}`);
     }
 
     const renderLoadingMoreSpinner = () => {
@@ -49,7 +52,7 @@ const RestaurantsSection = (props) => {
     }
 
     const loadMore = () => {
-        if (props.searchedRestaurants === null) {
+        if (props.searchedRestaurants.length === 0) {
             fetchRestaurants(numOfPages + 1);
             setNumOfPages(numOfPages + 1);
         }
@@ -69,7 +72,7 @@ const RestaurantsSection = (props) => {
     }
 
     const renderRestaurantItems = () => {
-        const restaurantsToRender = props.searchedRestaurants === null ? restaurants : props.searchedRestaurants;
+        const restaurantsToRender: Restaurant[] = props.searchedRestaurants.length === 0 ? restaurants : props.searchedRestaurants;
         if (restaurantsToRender.length === 0) {
             return (
                 <div className='no-restaurant-items'>
@@ -86,7 +89,7 @@ const RestaurantsSection = (props) => {
 
     const renderRestaurants = () => {
         if (restaurants.length === 0 ||
-            (props.isSearching && props.searchedRestaurants === null)) {
+            (props.isSearching && props.searchedRestaurants.length === 0)) {
             
             return (
                 <Spinner additionalClassName="" />

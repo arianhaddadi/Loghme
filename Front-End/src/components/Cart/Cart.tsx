@@ -1,14 +1,25 @@
-import { useEffect, useState } from 'react';
-import Spinner from "../utils/Spinner";
+import React, { useEffect, useState } from 'react';
+import Spinner from "../utils/Spinner.tsx";
 import {connect} from 'react-redux';
-import {fetchAndStoreCart, fetchAndStoreUserInfo, fetchAndStoreOrders} from "../../actions";
-import { sendRequest, RequestMethods } from '../../utils';
+import {fetchCart, fetchUserInfo, fetchOrders} from "../../actions/index.ts";
+import { sendRequest, RequestMethods } from '../../utils/request.ts';
+import { ActionCreator, Cart as CartType, CartItem, Notification, Nullable, RequestArguments, User, Order } from '../../utils/types';
+import { RootState } from '../../app/store.ts';
+import { CartState } from '../../reducers/CartReducer.ts';
+
+interface CartProps {
+    fetchCart: ActionCreator<CartType>,
+    fetchUserInfo: ActionCreator<User>,
+    fetchOrders: ActionCreator<Order[]>,
+    type?: string,
+    cart: CartState
+}
 
 
-const Cart = (props) => {
+const Cart = (props: CartProps) => {
 
-    const [isProcessing, setIsProcessing] = useState(props.cart !== null ? false : true)
-    const [notification, setNotification] = useState(() => {
+    const [isProcessing, setIsProcessing] = useState<boolean>(props.cart === null)
+    const [notification, setNotification] = useState<Nullable<Notification>>(() => {
         if (props.cart === null || !props.cart.empty) {
             return null;
         }
@@ -20,7 +31,7 @@ const Cart = (props) => {
     });
 
     useEffect(() => {
-        if(props.cart === null) props.fetchAndStoreCart();
+        if(props.cart === null) props.fetchCart();
     }, [])
 
     useEffect(() => {
@@ -33,14 +44,14 @@ const Cart = (props) => {
         setIsProcessing(false)
     }, [props.cart])
 
-    const addItem = (foodName, restaurantId, isFoodPartyFood) => {
-        const requestArgs = {
+    const addItem = (foodName: string, restaurantId: string, isFoodPartyFood: boolean) => {
+        const requestArgs: RequestArguments =  {
             method: RequestMethods.PUT,
             url: `/carts?foodName=${foodName}&restaurantId=${restaurantId}&quantity=${1}&isFoodPartyFood=${isFoodPartyFood}`,
             errorHandler: (error) => console.log("Adding Item to Cart Failed.", error),
             successHandler: (response) => {
                 if(response.data.successful) {
-                    props.fetchAndStoreCart();
+                    props.fetchCart();
                 }
                 else {
                     setNotification({
@@ -55,13 +66,13 @@ const Cart = (props) => {
         setIsProcessing(true)
     }
 
-    const deleteItem = (foodName, restaurantId, isFoodPartyFood) => {
-        const requestArgs = {
+    const deleteItem = (foodName: string, restaurantId: string, isFoodPartyFood: boolean) => {
+        const requestArgs: RequestArguments =  {
             method: RequestMethods.DELETE,
             url: `/carts?foodName=${foodName}&restaurantId=${restaurantId}&isFoodPartyFood=${isFoodPartyFood}`,
             errorHandler: (error) => console.log("Deleting Item from Cart Failed.", error),
             successHandler: () => {
-                props.fetchAndStoreCart();
+                props.fetchCart();
                 setIsProcessing(false)
             }    
         }
@@ -70,15 +81,15 @@ const Cart = (props) => {
     }
 
     const finalizeOrder = () => {
-        const requestArgs = {
+        const requestArgs: RequestArguments =  {
             method: RequestMethods.POST,
             url: `/carts`,
             errorHandler: (error) => console.log("Finalizing Order Failed.", error),
             successHandler: (response) => {
                 if(response.data.successful) {
-                    props.fetchAndStoreCart();
-                    props.fetchAndStoreUserInfo();
-                    props.fetchAndStoreOrders();
+                    props.fetchCart();
+                    props.fetchUserInfo();
+                    props.fetchOrders();
                     setNotification({
                         status: "success",
                         message: "Your order was successfully placed."
@@ -98,7 +109,7 @@ const Cart = (props) => {
         setNotification(null)
     }
 
-    const calculateTotalCartPrice = (cartItems) => {
+    const calculateTotalCartPrice = (cartItems: CartItem[]) => {
         let price = 0;
         for (let i = 0; i < cartItems.length; i++) {
             price += cartItems[i].food.price * cartItems[i].quantity;
@@ -116,9 +127,9 @@ const Cart = (props) => {
                     <div className="cart-item-name-quantity">
                         <div className="cart-item-name">{food.name}</div>
                         <div className="cart-item-quantity">
-                            <i onClick={() => addItem(food.name, restaurantId, food.count === undefined ? false : true)} className="flaticon-plus plus-logo"></i>
+                            <i onClick={() => addItem(food.name, restaurantId, food.count !== undefined)} className="flaticon-plus plus-logo"></i>
                             <div>{elem.quantity}</div>
-                            <i onClick={() => deleteItem(food.name, restaurantId, food.count === undefined ? false : true)} className="flaticon-minus minus-logo"></i>
+                            <i onClick={() => deleteItem(food.name, restaurantId, food.count !== undefined)} className="flaticon-minus minus-logo"></i>
                         </div>
                     </div>
                     <div className="cart-item-price">{food.price} Dollars</div>
@@ -182,10 +193,10 @@ const Cart = (props) => {
     );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
     return {
         cart: state.cart,
     }
 }
 
-export default connect(mapStateToProps, {fetchAndStoreCart, fetchAndStoreUserInfo, fetchAndStoreOrders})(Cart);
+export default connect(mapStateToProps, {fetchCart, fetchUserInfo, fetchOrders})(Cart);

@@ -1,25 +1,25 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from '../../styles/images/Logo.png';
-import FoodPartySection from './FoodPartySection';
-import RestaurantsSection from './RestaurantsSection';
-import configs from '../../configs';
+import FoodPartySection from './FoodPartySection.tsx';
+import RestaurantsSection from './RestaurantsSection.tsx';
+import configs from '../../app/configs.ts';
 import {toast} from 'react-toastify';
-import { sendRequest, RequestMethods } from '../../utils';
+import { sendRequest, RequestMethods } from '../../utils/request.ts';
+import {RequestArguments, Restaurant} from '../../utils/types';
 
 const HomePage = () => {
-    const [searchRestaurantNameValue, setSearchRestaurantName] = useState("")
-    const [searchFoodNameValue, setSearchFoodName] = useState("")
-    const [searchedRestaurants, setSearchedRestaurants] = useState(null)
-    const [isSearching, setIsSearching] = useState(false)
-    const [numOfPagesSearchResults, setNumOfPagesSearchResults] = useState(0)
+    const [searchRestaurantNameValue, setSearchRestaurantName] = useState<string>("")
+    const [searchFoodNameValue, setSearchFoodName] = useState<string>("")
+    const [searchedRestaurants, setSearchedRestaurants] = useState<Restaurant[]>([])
+    const [isSearching, setIsSearching] = useState<boolean>(false)
+    const [numOfPagesSearchResults, setNumOfPagesSearchResults] = useState<number>(0)
     
-
     useEffect(() => {
         document.title = "Home";
     }, [])
 
-    const search = (pageNum) => {
-        const requestArgs = {
+    const search = (pageNum: number) => {
+        const requestArgs: RequestArguments =  {
             method: RequestMethods.GET,
             url: `/search?foodName=${searchFoodNameValue}&restaurantName=${searchRestaurantNameValue}&pageSize=${configs.home_page_size}&pageNum=${pageNum}`,
             errorHandler: (error) => console.log("Search Failed.", error),
@@ -35,7 +35,7 @@ const HomePage = () => {
                     toast("No more items found.");
                 }
                 else {
-                    toast("Search was successfull.");
+                    toast("Search was successful.");
                 }
             }
         }
@@ -44,13 +44,13 @@ const HomePage = () => {
         setNumOfPagesSearchResults(pageNum)
     }
 
-    const handleSearchSubmit = (event) => {
+    const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if((searchRestaurantNameValue === "") && (searchFoodNameValue === "")) {
             toast("Please complete at least one of the fields!")
         }
         else {
-            setSearchedRestaurants(null)
+            setSearchedRestaurants([])
             search(1);
         }
     }
@@ -59,7 +59,7 @@ const HomePage = () => {
         search(numOfPagesSearchResults + 1);
     }
 
-    const handleSearchChange = (event) => {
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         const {name, value} = event.target;
         if (name === "searchFoodName") setSearchFoodName(value);
@@ -70,17 +70,17 @@ const HomePage = () => {
         <>  
             <div className="home-container">
                 <div className="home-head-bar">
-                    <img onClick={() => setSearchedRestaurants(null)} src={logo} className="loghme-logo-home" alt="" />
+                    <img onClick={() => setSearchedRestaurants([])} src={logo} className="loghme-logo-home" alt="" />
                     <div className="restaurant-desription-home">
                         The best online food ordering website in the world!
                     </div>
                     <form className="search-bar-home" onSubmit={handleSearchSubmit} noValidate>
                         <button type="submit" className="btn btn-warning">Search</button>
                         <input name="searchRestaurantName" onChange={handleSearchChange} 
-                            noValidate type="text" className="btn search-bar-home-restaurant-name" 
+                            type="text" className="btn search-bar-home-restaurant-name"
                             placeholder="Restaurant Name" value={searchRestaurantNameValue}/>
                         <input name="searchFoodName" onChange={handleSearchChange} 
-                            noValidate type="text" className="btn search-bar-home-food-name" 
+                            type="text" className="btn search-bar-home-food-name"
                             placeholder="Food Name" value={searchFoodNameValue}/>
                     </form>
                     <div className="head-bar-cover"></div>

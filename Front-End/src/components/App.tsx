@@ -1,23 +1,27 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {connect} from "react-redux";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import NavigationBar from './NavigationBar/NavigationBar';
-import HomePage from "./HomePage/HomePage";
-import SignupPage from "./SignupPage/SignupPage";
-import LoginPage from "./LoginPage/LoginPage";
-import RestaurantPage from "./RestaurantPage/RestaurantPage";
-import ProfilePage from "./ProfilePage/ProfilePage";
-import Modal from './utils/Modal';
-import Cart from './Cart/Cart';
-import configs from '../configs';
-import { redirect } from '../utils';
+import NavigationBar from './NavigationBar/NavigationBar.tsx';
+import HomePage from "./HomePage/HomePage.tsx";
+import SignupPage from "./SignupPage/SignupPage.tsx";
+import LoginPage from "./LoginPage/LoginPage.tsx";
+import RestaurantPage from "./RestaurantPage/RestaurantPage.tsx";
+import ProfilePage from "./ProfilePage/ProfilePage.tsx";
+import Modal from './utils/Modal.tsx';
+import Cart from './Cart/Cart.tsx';
+import configs from '../app/configs.ts';
+import { redirect } from '../utils/redirect.ts';
 import {ToastContainer} from 'react-toastify';
+import { RootState } from '../app/store.ts';
+import { CartState } from '../reducers/CartReducer.ts';
 
+interface AppProps {
+    cart: CartState
+}
 
+const App = (props: AppProps) => {
 
-const App = (props) => {
-
-    const [showCart, setShowCart] = useState(false);
+    const [showCart, setShowCart] = useState<boolean>(false);
 
     if (localStorage.getItem(configs.jwt_token_name) === null && window.location.pathname !== '/login') {
         redirect("/login")
@@ -26,7 +30,7 @@ const App = (props) => {
     const getCartSize = () => {
         if(props.cart) {
             return props.cart.cartItems.length;
-        }
+        } else return 0;
     }
 
 
@@ -60,7 +64,7 @@ const App = (props) => {
     const renderFooter = () => {
         return (
             <footer className="copyright">
-                &copy; All rights are reserved!
+                {"\u00A9 All rights are reserved!"}
             </footer>
         )
     }
@@ -85,7 +89,7 @@ const App = (props) => {
 
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
     return {
         cart: state.cart,
     }

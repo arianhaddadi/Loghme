@@ -1,4 +1,12 @@
-const RestaurantItem = (props) => {
+import React from "react";
+import { Restaurant } from "../../utils/types";
+
+interface RestaurantItemProps {
+    item: Restaurant,
+    viewRestaurantPage: (restaurantId: string) => void
+}
+
+const RestaurantItem = (props: RestaurantItemProps) => {
     const item = props.item;
     return (
         <div className="restaurant-item">

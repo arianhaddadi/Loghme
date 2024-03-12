@@ -1,4 +1,13 @@
-const RestaurantMenuItem = (props) => {
+import React from "react";
+import { Restaurant, Food } from "../../utils/types";
+
+interface RestaurantMenuItemProps {
+    item: Food,
+    restaurant: Restaurant,
+    orderFood: (food: Food, restaurant: Restaurant) => void
+}
+
+const RestaurantMenuItem = (props: RestaurantMenuItemProps) => {
     const item = props.item;
     return (
         <div onClick={() => props.orderFood(item, props.restaurant)} className="menu-item">

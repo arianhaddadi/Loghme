@@ -1,6 +1,11 @@
-import { useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 
-const Modal = (props) => {
+interface ModalProps {
+    close: () => void,
+    render: () => ReactNode
+}
+
+const Modal = (props: ModalProps) => {
 
     useEffect(() => {
         document.body.style.overflow="hidden";

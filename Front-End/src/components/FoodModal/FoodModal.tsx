@@ -1,18 +1,30 @@
-import { useState } from 'react';
-import Spinner from '../utils/Spinner';
-import { sendRequest, RequestMethods } from '../../utils';
+import React, { useState } from 'react';
+import Spinner from '../utils/Spinner.tsx';
+import { sendRequest, RequestMethods } from '../../utils/request.ts';
+import { Notification, Nullable, RequestArguments, Restaurant, Food, Optional, ActionCreator, Cart } from '../../utils/types';
 import {connect} from 'react-redux';
-import {fetchAndStoreCart} from '../../actions';
+import {fetchCart} from '../../actions/index.ts';
 
-const FoodModal = (props) => {
+export interface FoodModalFood {
+    restaurant: Restaurant,
+    food: Food
+}
 
-    const [numOfAvailableFood, setNumOfAvailableFood] = useState(props.item.food.count)
-    const [numOfFoodToOrder, setNumOfFoodToOrder] = useState(1)
-    const [isLoading, setIsLoading] = useState(false)
-    const [notification, setNotification] = useState(null)
+interface FoodModalProps {
+    fetchCart: ActionCreator<Cart>,
+    item: FoodModalFood
+}
 
-    const renderOldPrice = (food) => {
-        if(props.isFoodParty) {
+
+const FoodModal = (props: FoodModalProps) => {
+
+    const [numOfAvailableFood, setNumOfAvailableFood] = useState<Optional<number>>(props.item.food.count)
+    const [numOfFoodToOrder, setNumOfFoodToOrder] = useState<number>(1)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [notification, setNotification] = useState<Nullable<Notification>>(null)
+
+    const renderOldPrice = (food: Food) => {
+        if(props.item.food.oldPrice) {
             return (
                 <div className="food-modal-old-price">
                     {food.oldPrice}
@@ -22,7 +34,7 @@ const FoodModal = (props) => {
     }
 
     const renderNumOfAvailableFood = () => {
-        if(props.isFoodParty) {
+        if(props.item.food.count) {
             return (
                 <div className="food-modal-available-quantity">
                     {numOfAvailableFood === 0 ? "Not Available" : `Number of Remaining Items: ${numOfAvailableFood}`}
@@ -32,7 +44,7 @@ const FoodModal = (props) => {
     }
 
     const increaseFoodQuantity = () => {
-        if(props.isFoodParty && numOfFoodToOrder >= numOfAvailableFood) {
+        if(numOfAvailableFood !== undefined && numOfFoodToOrder >= numOfAvailableFood) {
             setNotification({
                 status: "error",
                 message: "Not available!"
@@ -52,18 +64,18 @@ const FoodModal = (props) => {
     }
 
     const addToCart = () => {
-        const requestArgs = {
+        const requestArgs: RequestArguments =  {
             method: RequestMethods.PUT,
-            url: `/carts?foodName=${props.item.food.name}&restaurantId=${props.item.restaurant.id}&quantity=${numOfFoodToOrder}&isFoodPartyFood=${props.isFoodParty}`,
+            url: `/carts?foodName=${props.item.food.name}&restaurantId=${props.item.restaurant.id}&quantity=${numOfFoodToOrder}&isFoodPartyFood=${props.item.food.count !== undefined}`,
             errorHandler: (error) => console.log("Adding Items to Cart Failed.", error),
             successHandler: (response) => {
                 if(response.data.successful) {
-                    props.fetchAndStoreCart();
+                    props.fetchCart();
                     setNotification({
                         status: "success",
                         message: "Added To Cart!"
                     })
-                    if (props.isFoodParty) setNumOfAvailableFood(numOfAvailableFood - numOfFoodToOrder)
+                    if (numOfAvailableFood !== undefined) setNumOfAvailableFood(numOfAvailableFood - numOfFoodToOrder)
                 }
                 else {
                     setNotification({
@@ -118,7 +130,7 @@ const FoodModal = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className={`food-modal-quantity-order ${props.isFoodParty ? "" : "ordinaryFood"}`}>
+                <div className={`food-modal-quantity-order ${numOfAvailableFood !== undefined ? "" : "ordinaryFood"}`}>
                     {renderNumOfAvailableFood()}
                     <div className="food-modal-order">
                         <div className="food-modal-order-quantity">
@@ -153,4 +165,4 @@ const FoodModal = (props) => {
     )
 }
 
-export default connect(null, {fetchAndStoreCart})(FoodModal);
+export default connect(null, {fetchCart})(FoodModal);

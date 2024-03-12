@@ -1,6 +1,13 @@
+import React from "react";
 import {connect} from "react-redux";
+import { RootState } from "../../app/store";
+import { GoogleAuthState } from "../../reducers/googleAuthenticationReducer";
 
-const GoogleOAuth = (props) => {
+interface GoogleOAuthProps {
+    googleAuthentication: GoogleAuthState
+}
+
+const GoogleOAuth = (props: GoogleOAuthProps) => {
     const signIn = () => {
         if (props.googleAuthentication) {
             props.googleAuthentication.signIn();
@@ -15,7 +22,7 @@ const GoogleOAuth = (props) => {
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
     return {
         googleAuthentication: state.googleAuthentication
     }

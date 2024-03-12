@@ -1,27 +1,34 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import {connect} from 'react-redux';
-import Cart from '../Cart/Cart';
-import Modal from '../utils/Modal';
-import FoodModal from '../FoodModal/FoodModal';
-import RestaurantMenuItem from '../RestaurantPage/RestaurantMenuItem';
-import {fetchAndStoreCart} from '../../actions';
-import { sendRequest, RequestMethods } from '../../utils';
+import Cart from '../Cart/Cart.tsx';
+import Modal from '../utils/Modal.tsx';
+import FoodModal, { FoodModalFood } from '../FoodModal/FoodModal.tsx';
+import RestaurantMenuItem from './RestaurantMenuItem.tsx';
+import {fetchCart} from '../../actions/index.ts';
+import { sendRequest, RequestMethods } from '../../utils/request.ts';
+import { redirect } from '../../utils/redirect.ts';
+import { Nullable, RequestArguments, Restaurant, Food, ActionCreator, Cart as CartType} from '../../utils/types';
+
+interface RestaurantPageProps {
+    fetchCart: ActionCreator<CartType>
+}
 
 
-const RestaurantPage = (props) => {
-    const [foodToShow, setFoodToShow] = useState(null)
-    const [restaurant, setRestaurant] = useState(null)
+const RestaurantPage = (props: RestaurantPageProps) => {
+    const [foodToShow, setFoodToShow] = useState<Nullable<FoodModalFood>>(null)
+    const [restaurant, setRestaurant] = useState<Nullable<Restaurant>>(null)
 
-    const {id} = useParams()
+    const {id} = useParams<string>()
 
     useEffect(() => {
         document.title = "Restaurant";
-        fetchRestaurant(id);
+        if (id === undefined) redirect("/");
+        else fetchRestaurant(id);
     }, [])
 
-    const fetchRestaurant = (restaurantId) => {
-        const requestArgs = {
+    const fetchRestaurant = (restaurantId: string) => {
+        const requestArgs: RequestArguments =  {
             method: RequestMethods.GET,
             url: `/restaurants/${restaurantId}`,
             errorHandler: (error) => console.error('Error fetching restaurant:', error),
@@ -32,7 +39,7 @@ const RestaurantPage = (props) => {
         sendRequest(requestArgs)
     }
 
-    const orderFood = (food, restaurant) => {
+    const orderFood = (food: Food, restaurant: Restaurant) => {
         setFoodToShow({
             food: food,
             restaurant: restaurant
@@ -40,7 +47,7 @@ const RestaurantPage = (props) => {
     }
 
     const renderMenuItems = () => {
-        const menu = restaurant.menu;
+        const menu = restaurant!.menu;
         if (menu === null || menu.length === 0) {
             return (
                 <div className="no-restaurant-items">
@@ -51,7 +58,7 @@ const RestaurantPage = (props) => {
         else {
             return menu.map((elem, index) => {
                 return (
-                    <RestaurantMenuItem key={index} item={elem} orderFood={orderFood} restaurant={restaurant} />
+                    <RestaurantMenuItem key={index} item={elem} orderFood={orderFood} restaurant={restaurant!} />
                 )
             })
         }
@@ -87,13 +94,13 @@ const RestaurantPage = (props) => {
     }
 
     const closeFoodModal = () => {
-        props.fetchAndStoreCart();
+        props.fetchCart();
         setFoodToShow(null);
     }
 
     const showFoodModal = () => {
         return (
-            <FoodModal isFoodParty={false} item={foodToShow} />
+            <FoodModal item={foodToShow!} />
         );
     }
 
@@ -118,4 +125,4 @@ const RestaurantPage = (props) => {
 }
 
 
-export default connect(undefined, {fetchAndStoreCart})(RestaurantPage);
+export default connect(undefined, {fetchCart})(RestaurantPage);

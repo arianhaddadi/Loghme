@@ -1,4 +1,13 @@
-const FoodPartyItem = (props) => {
+import React from "react";
+import { Food, Restaurant } from "../../utils/types";
+
+interface FoodPartyItemProps {
+    item: Food,
+    restaurant: Restaurant,
+    orderFood: (restaurant: Restaurant, food: Food) => void
+}
+
+const FoodPartyItem = (props: FoodPartyItemProps) => {
     const item = props.item;
     return (
         <div className="food-party-item">

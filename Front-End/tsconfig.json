@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "noImplicitAny": true,
+      "allowImportingTsExtensions": true,
+      "noEmit": true,
+      "noImplicitThis": true,
+      "jsx": "react-jsx",
+      "esModuleInterop": true
+    }
+}

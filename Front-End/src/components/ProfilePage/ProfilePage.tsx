@@ -1,32 +1,43 @@
-import { useEffect, useRef, useState } from 'react';
-import Modal from '../utils/Modal';
-import Spinner from "../utils/Spinner";
+import React, { useEffect, useRef, useState } from 'react';
+import Modal from '../utils/Modal.tsx';
+import Spinner from "../utils/Spinner.tsx";
 import {connect} from 'react-redux';
-import {fetchAndStoreOrders, fetchAndStoreUserInfo} from "../../actions";
-import { sendRequest, RequestMethods } from '../../utils';
+import {fetchOrders, fetchUserInfo} from "../../actions/index.ts";
+import { sendRequest, RequestMethods } from '../../utils/request.ts';
+import {ActionCreator, CartItem, Notification, Nullable, Order, RequestArguments, User} from '../../utils/types';
+import { RootState } from '../../app/store.ts';
+import { OrdersState } from '../../reducers/OrdersReducer.ts';
+import { UserState } from '../../reducers/UserReducer.ts';
+
+interface ProfilePageProps {
+    fetchOrders: ActionCreator<Order[]>,
+    fetchUserInfo: ActionCreator<User>
+    orders: OrdersState,
+    user: UserState
+}
 
 
-const ProfilePage = (props) => {
-    const [visibleOrder, setVisibleOrder] = useState(null)
-    const [creditsNotification, setCreditsNotification] = useState(null)
-    const [creditsLoading, setCreditsLoading] = useState(false)
-    const [creditsInputValue, setCreditsInputValue] = useState("")
+const ProfilePage = (props: ProfilePageProps) => {
+    const [visibleOrder, setVisibleOrder] = useState<Nullable<Order>>(null)
+    const [creditsNotification, setCreditsNotification] = useState<Nullable<Notification>>(null)
+    const [creditsLoading, setCreditsLoading] = useState<boolean>(false)
+    const [creditsInputValue, setCreditsInputValue] = useState<string>("")
     
-    const ordersUpdater = useRef(null)
+    const ordersUpdater = useRef<Nullable<NodeJS.Timeout>>(null)
     
 
     useEffect(() => {
         document.title = "Profile";
-        props.fetchAndStoreOrders();
-        props.fetchAndStoreUserInfo();
-        ordersUpdater.current = setInterval(props.fetchAndStoreOrders, 30 * 1000)
+        props.fetchOrders();
+        props.fetchUserInfo();
+        ordersUpdater.current = setInterval(props.fetchOrders, 30 * 1000)
 
         return () => {
-            clearInterval(ordersUpdater.current)
+            clearInterval(ordersUpdater.current!)
         }
     }, [])
 
-    const renderPersonalInfoItem = (info, iconClass) => {
+    const renderPersonalInfoItem = (info: string, iconClass: string) => {
         return (
             <div className="personal-info-item">
                 <div>{info}</div>
@@ -42,7 +53,7 @@ const ProfilePage = (props) => {
                 message: "Input is empty!",
             })
         }
-        else if(isNaN(creditsInputValue)) {
+        else if(isNaN(parseFloat(creditsInputValue))) {
             setCreditsInputValue("")
             setCreditsNotification({
                 status: "error",
@@ -57,7 +68,7 @@ const ProfilePage = (props) => {
             })
         }
         else {
-            const requestArgs = {
+            const requestArgs: RequestArguments =  {
                 method: RequestMethods.PUT,
                 url: `/credits?amount=${creditsInputValue}`,
                 errorHandler: (error) => console.log("Adding Credit Failed.", error),
@@ -68,7 +79,7 @@ const ProfilePage = (props) => {
                         status: "success",
                         message: "Your balance was increased successfully!"
                     })
-                    props.fetchAndStoreUserInfo();
+                    props.fetchUserInfo();
                 }
             }
             sendRequest(requestArgs)
@@ -114,7 +125,7 @@ const ProfilePage = (props) => {
         )
     } 
 
-    const renderOrderStatusButton = (deliveryStatus) => {
+    const renderOrderStatusButton = (deliveryStatus: string) => {
         if (deliveryStatus === "DELIVERY_ON_ITS_WAY") {
             return (
                 <div className="btn-success on-the-way-button" >
@@ -138,25 +149,25 @@ const ProfilePage = (props) => {
         }
     }
 
-    const viewOrder = (order) => {
+    const viewOrder = (order: Order) => {
         setVisibleOrder(order)
     }
 
-    const renderOrdersRows = (orders) => {
+    const renderOrdersRows = () => {
         if (props.orders === null) {
             return (
                 <Spinner additionalClassName="orders-spinner"/>
             );
         }
         else {
-            if (orders.length === 0) {
+            if (props.orders.length === 0) {
                 return (
                     <div className="no-orders">
                         No orders to show
                     </div>
                 )
             }
-            return orders.map((elem, index) => {
+            return props.orders.map((elem, index) => {
                 return (
                     <div key={index} onClick={() => viewOrder(elem)} className="order">
                         <div className="order-index">{index+1}</div>
@@ -172,7 +183,7 @@ const ProfilePage = (props) => {
         }
     }
 
-    const renderOrderItems = (cartItems) => {
+    const renderOrderItems = (cartItems: CartItem[]) => {
         return cartItems.map((elem, index) => {
             return (
                 <div key={index} className="order-modal-item">
@@ -193,7 +204,7 @@ const ProfilePage = (props) => {
         });
     }
 
-    const calculateOrderPrice = (cartItems) => {
+    const calculateOrderPrice = (cartItems: CartItem[]) => {
         let price = 0;
         for (let i = 0; i < cartItems.length; i++) {
             price += cartItems[i].food.price * cartItems[i].quantity;
@@ -201,7 +212,7 @@ const ProfilePage = (props) => {
         return price;
     }
 
-    const renderOrderInfo = (order) => {
+    const renderOrderInfo = (order: Order) => {
         return (
             <div onClick={(event) => event.stopPropagation()} className="order-modal">
                 <div className="order-modal-restaurant-name">
@@ -247,7 +258,7 @@ const ProfilePage = (props) => {
     }
 
     const handleClickOnOrdersTab = () => {
-        props.fetchAndStoreOrders();
+        props.fetchOrders();
         setCreditsNotification(null);
     }
 
@@ -259,7 +270,7 @@ const ProfilePage = (props) => {
                     Orders
                 </label>
                 <div className="orders-content">
-                    {renderOrdersRows(props.orders)}
+                    {renderOrdersRows()}
                 </div>
             </div>
         );
@@ -300,7 +311,7 @@ const ProfilePage = (props) => {
     );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
     return {
         orders: state.orders,
         user: state.user,
@@ -308,4 +319,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, {fetchAndStoreOrders, fetchAndStoreUserInfo})(ProfilePage);
+export default connect(mapStateToProps, {fetchOrders, fetchUserInfo})(ProfilePage);

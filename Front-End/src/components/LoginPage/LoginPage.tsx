@@ -1,18 +1,31 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from "../../styles/images/Logo.png";
-import GoogleOAuth from './GoogleOAuth';
-import configs from '../../configs';
+import GoogleOAuth from './GoogleOAuth.tsx';
+import configs from '../../app/configs.ts';
 import {connect} from 'react-redux';
 import {toast} from 'react-toastify';
 import {Link} from 'react-router-dom';
-import {storeGoogleAuthenticationObject} from '../../actions';
-import { redirect } from '../../utils';
-import { sendRequest, RequestMethods } from '../../utils';
+import {storeGoogleAuthenticationObject} from '../../actions/index.ts';
+import { redirect } from '../../utils/redirect.ts';
+import { sendRequest, RequestMethods } from '../../utils/request.ts';
+import { RequestArguments, ActionCreator } from '../../utils/types';
+import { RootState } from '../../app/store.ts';
+import { GoogleAuthState } from '../../reducers/googleAuthenticationReducer.ts';
 
+interface LoginFormInput {
+    email: string;
+    password: string;
+    [key: string]: string;
+}
 
-const LoginPage = (props) => {
+interface LoginPageProps {
+    googleAuthentication: GoogleAuthState;
+    storeGoogleAuthenticationObject: ActionCreator<GoogleAuthState>;
+}
 
-    const [inputValues, setInputValues] = useState({
+const LoginPage = (props: LoginPageProps) => {
+
+    const [inputValues, setInputValues] = useState<LoginFormInput>({
         "email": "",
         "password": ""
     })
@@ -23,30 +36,30 @@ const LoginPage = (props) => {
         }
         else {
             document.title = "Login";
-            handleGoogleAuth();
+            // handleGoogleAuth();
         }
     }, [])
 
-    const handleGoogleAuth = () => {
-        if (!window.gapi || !window.gapi.auth2) {
-            window.gapi.load("client:auth2", () => {
-                window.gapi.client.init({
-                    clientId: "467864659090-qdhdvpgingk25pvq8m81gusn9tmflcgt.apps.googleusercontent.com",
-                    scope: "email"
-                }).then(() => {
-                    const authentication = window.gapi.auth2.getAuthInstance();
-                    authentication.isSignedIn.listen(handleGoogleSignIn);
-                    props.storeGoogleAuthenticationObject(authentication);
-                })
-            })
-        }
-        else {
-            props.googleAuthentication.signOut();
-            props.googleAuthentication.disconnect();
-        }
-    }
+    // const handleGoogleAuth = () => {
+    //     if (!window.gapi || !window.gapi.auth) {
+    //         window.gapi.load("client:auth2", () => {
+    //             window.gapi.client.init({
+    //                 clientId: "467864659090-qdhdvpgingk25pvq8m81gusn9tmflcgt.apps.googleusercontent.com",
+    //                 scope: "email"
+    //             }).then(() => {
+    //                 const authentication = window.gapi.auth2.getAuthInstance();
+    //                 authentication.isSignedIn.listen(handleGoogleSignIn);
+    //                 props.storeGoogleAuthenticationObject(authentication);
+    //             })
+    //         })
+    //     }
+    //     else {
+    //         props.googleAuthentication.signOut();
+    //         props.googleAuthentication.disconnect();
+    //     }
+    // }
 
-    const setToken = (token) => {
+    const setToken = (token: string) => {
         localStorage.setItem(configs.jwt_token_name, token);
     }
 
@@ -57,12 +70,12 @@ const LoginPage = (props) => {
         }, configs.notification_length);
     }
 
-    const handleGoogleSignIn = (isSignedIn) => {
+    const handleGoogleSignIn = (isSignedIn: boolean) => {
         if (isSignedIn) {
             const currentUser = props.googleAuthentication.currentUser.get(); 
             const email = currentUser.getBasicProfile().getEmail();
             const idToken = currentUser.getAuthResponse().id_token;
-            const requestArgs = {
+            const requestArgs: RequestArguments =  {
                 method: RequestMethods.POST,
                 url: `/login?email=${email}&password=''&isGoogleAuth=${true}&idToken=${idToken}`,
                 errorHandler: (error) => {
@@ -90,7 +103,7 @@ const LoginPage = (props) => {
 
     const login = () => {
         const {email, password} = inputValues;
-        const requestArgs = {
+        const requestArgs: RequestArguments =  {
             method: RequestMethods.POST,
             url: `/login?email=${email}&password=${password}&isGoogleAuth=${false}&idToken=""`,
             errorHandler: (error) => console.log("Login Failed", error),
@@ -106,17 +119,17 @@ const LoginPage = (props) => {
         sendRequest(requestArgs)
     }
 
-    const handleSuccessfullLogin = (token) => {
+    const handleSuccessfullLogin = (token: string) => {
         setToken(token);
         goToHomePage();
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         login();
     }
 
-    const handleChange = (event) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         const { name, value } = event.target;
         setInputValues({
@@ -125,11 +138,11 @@ const LoginPage = (props) => {
         })
     }
 
-    const getFormInput = (name, labelText, type, autoCompleteValue) => {
+    const getFormInput = (name: string, labelText: string, type: string, autoCompleteValue: string) => {
         return (
             <div className="form-group">
                 <input value={inputValues[name]} type={type} className="form-control" onChange={handleChange} 
-                        noValidate name={name} placeholder={labelText} autoComplete={autoCompleteValue} />
+                        name={name} placeholder={labelText} autoComplete={autoCompleteValue} />
             </div>
         )
     }
@@ -156,7 +169,7 @@ const LoginPage = (props) => {
     );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
     return {
         googleAuthentication: state.googleAuthentication
     }
