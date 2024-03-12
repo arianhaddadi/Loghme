@@ -1,4 +1,3 @@
-import React from "react";
 import { Restaurant, Food } from "../../utils/types";
 
 interface RestaurantMenuItemProps {

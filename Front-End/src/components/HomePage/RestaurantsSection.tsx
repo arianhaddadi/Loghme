@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import RestaurantItem from './RestaurantItem.tsx';
 import configs from '../../app/configs.ts';
 import Spinner from "../utils/Spinner.tsx";

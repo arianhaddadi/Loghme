@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Spinner from '../utils/Spinner.tsx';
 import { sendRequest, RequestMethods } from '../../utils/request.ts';
 import { Notification, Nullable, RequestArguments, Restaurant, Food, Optional, ActionCreator, Cart } from '../../utils/types';

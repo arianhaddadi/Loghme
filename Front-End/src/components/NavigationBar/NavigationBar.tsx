@@ -1,4 +1,3 @@
-import React from 'react';
 import logo from '../../styles/images/Logo.png';
 import {connect} from 'react-redux';
 import configs from '../../app/configs.ts';

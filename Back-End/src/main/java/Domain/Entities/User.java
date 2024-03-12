@@ -1,11 +1,5 @@
 package Domain.Entities;
 
-import Domain.Managers.CartsManager;
-import Domain.Managers.OrdersManager;
-import Domain.Managers.UsersManager;
-
-import java.util.ArrayList;
-
 public class User {
     private final String name;
     private final String familyName;
@@ -52,7 +46,9 @@ public class User {
         return cart;
     }
 
-    public void setCart(Cart cart) {this.cart = cart; }
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
 
     public String getPassword() {
         return password;

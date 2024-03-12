@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Modal from '../utils/Modal.tsx';
 import Spinner from "../utils/Spinner.tsx";
 import {connect} from 'react-redux';

@@ -1,4 +1,3 @@
-import React from "react";
 import {connect} from "react-redux";
 import { RootState } from "../../app/store";
 import { GoogleAuthState } from "../../reducers/googleAuthenticationReducer";

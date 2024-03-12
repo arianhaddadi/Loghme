@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Spinner from "../utils/Spinner.tsx";
 import {connect} from 'react-redux';
 import {fetchCart, fetchUserInfo, fetchOrders} from "../../actions/index.ts";
