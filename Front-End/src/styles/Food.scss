@@ -4,7 +4,7 @@
     background-color: white;
     margin: 0 auto;
     border-radius: 10px;
-    width: 40%;
+    width: fit-content;
     padding: 10px 20px;
     .food-modal-notification {
         width: 100%;
@@ -41,27 +41,20 @@
         .food-modal-info {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            width: 100%;
-            margin-right: 15px;
+            margin-left: 15px;
             .food-modal-food-name-star {
                 display: flex;
                 width: 100%;
                 margin-top: 12px;
                 .food-modal-food-name {
                     font-size: 1.5em;
-                    text-align: left;
                 }
                 .food-modal-star-popularity {
-                    position: relative;
-                    top: 7px;
                     font-size: 1.2em;
                     color: #ffbf66;
                     display: flex;
-                    margin-right: 20px;
                     .food-modal-popularity {
                         color: black;
-                        margin-right: 3px;
                         display: inline-block;
                     }
                 }
@@ -76,7 +69,6 @@
                 margin-top: 10px;
                 font-size: 1.3em;
                 .food-modal-old-price {
-                    margin-left: 20px;
                     text-decoration: line-through;
                     text-decoration-color: rgb(231, 91, 91);
                 }
@@ -90,22 +82,20 @@
         align-items: center;
         justify-content: space-between;
         border-top: 1px dashed darkgray;
-        &.ordinaryFood {
-            justify-content: flex-end;
-        }
         .food-modal-available-quantity {
             border-radius: 7px;
             background-color: #f3f7f3;
             padding: 8px 20px 1px 20px;
             color: #807e7e;
-            height: 40px;
             border: solid 0.5px #807e7e;
+            text-align: center;
             &.zero-quantity {
                 color: red;
             }
         }
         .food-modal-order {
             display: flex;
+            width: 100%;
             .food-modal-order-quantity {
                 font-size: 1.8em;
                 justify-content: space-between;
@@ -118,9 +108,6 @@
                 .minus-logo::before {
                     font-size: 0.7em;
                 }
-            }
-            .btn {
-                margin-right: 15px;
             }
         }
     }
