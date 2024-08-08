@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProfileService {
 
-    @RequestMapping(value = "/profiles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            value = "/profiles",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public User getProfile(@RequestAttribute(value = Configs.USER_ID_ATTRIBUTE) String userEmail) {
         return UsersManager.getInstance().findUserByEmail(userEmail);
     }
-
 }

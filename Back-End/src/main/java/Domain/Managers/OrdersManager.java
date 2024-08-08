@@ -11,6 +11,8 @@ import java.util.ArrayList;
 public class OrdersManager {
     private static OrdersManager instance;
 
+    private OrdersManager() {}
+
     public static OrdersManager getInstance() {
         if (instance == null) {
             instance = new OrdersManager();
@@ -18,13 +20,17 @@ public class OrdersManager {
         return instance;
     }
 
-    private OrdersManager() {}
-
     public void addOrder(String id, String status, String userId, Cart cart) {
         OrderMapper.getInstance().insert(new OrderDTO(id, status, userId));
-        if(cart.getCartItems() != null) {
-            for(CartItem cartItem : cart.getCartItems()) {
-                OrderItemMapper.getInstance().insert(new OrderItemDTO(cartItem.getQuantity(), id, cartItem.getFood().getName(), cart.getRestaurantId()));
+        if (cart.getCartItems() != null) {
+            for (CartItem cartItem : cart.getCartItems()) {
+                OrderItemMapper.getInstance()
+                        .insert(
+                                new OrderItemDTO(
+                                        cartItem.getQuantity(),
+                                        id,
+                                        cartItem.getFood().getName(),
+                                        cart.getRestaurantId()));
             }
         }
     }
@@ -42,7 +48,7 @@ public class OrdersManager {
     public ArrayList<Order> getAllOrders(String userEmail) {
         ArrayList<OrderDTO> orderDTOs = OrderMapper.getInstance().findAll(userEmail, null, null);
         ArrayList<Order> orders = new ArrayList<>();
-        for(OrderDTO orderDTO : orderDTOs) {
+        for (OrderDTO orderDTO : orderDTOs) {
             Cart cart = getOrderCart(orderDTO.getId());
             orders.add(convertOrderDTOToOrder(orderDTO, cart));
         }
@@ -51,12 +57,20 @@ public class OrdersManager {
 
     public Cart getOrderCart(String orderId) {
         Cart cart = new Cart();
-        ArrayList<OrderItemDTO> orderItemDTOs = OrderItemMapper.getInstance().findAll(orderId, null, null);
-        if(!orderItemDTOs.isEmpty()) {
-            cart.setRestaurant(RestaurantsManager.getInstance().getRestaurantById(orderItemDTOs.get(0).getRestaurantId()));
+        ArrayList<OrderItemDTO> orderItemDTOs =
+                OrderItemMapper.getInstance().findAll(orderId, null, null);
+        if (!orderItemDTOs.isEmpty()) {
+            cart.setRestaurant(
+                    RestaurantsManager.getInstance()
+                            .getRestaurantById(orderItemDTOs.get(0).getRestaurantId()));
         }
-        for(OrderItemDTO orderItemDTO : orderItemDTOs) {
-            Food food = RestaurantsManager.getInstance().getFoodById(orderItemDTO.getFoodName() + "," + orderItemDTO.getRestaurantId());
+        for (OrderItemDTO orderItemDTO : orderItemDTOs) {
+            Food food =
+                    RestaurantsManager.getInstance()
+                            .getFoodById(
+                                    orderItemDTO.getFoodName()
+                                            + ","
+                                            + orderItemDTO.getRestaurantId());
             cart.addItem(orderItemDTO.getCartItemForm(food));
         }
         return cart;
@@ -69,6 +83,7 @@ public class OrdersManager {
     }
 
     public void updateOrderStatus(Order order) {
-        OrderMapper.getInstance().update(new OrderDTO(order.getId(), order.getStatus().name(), order.getUserId()));
+        OrderMapper.getInstance()
+                .update(new OrderDTO(order.getId(), order.getStatus().name(), order.getUserId()));
     }
 }

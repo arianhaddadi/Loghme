@@ -11,13 +11,19 @@ import java.util.ArrayList;
 @RestController
 public class SearchService {
 
-    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response<ArrayList<Restaurant>> searchRestaurants(@RequestParam(value = "foodName") String foodName,
-                                                             @RequestParam(value = "restaurantName") String restaurantName,
-                                                             @RequestParam(value = "pageSize") int pageSize,
-                                                             @RequestParam(value = "pageNum") int pageNum) {
+    @RequestMapping(
+            value = "/search",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response<ArrayList<Restaurant>> searchRestaurants(
+            @RequestParam(value = "foodName") String foodName,
+            @RequestParam(value = "restaurantName") String restaurantName,
+            @RequestParam(value = "pageSize") int pageSize,
+            @RequestParam(value = "pageNum") int pageNum) {
 
-        return new Response<>(RestaurantsManager.getInstance().search(foodName, restaurantName, pageSize, pageNum), true);
+        return new Response<>(
+                RestaurantsManager.getInstance()
+                        .search(foodName, restaurantName, pageSize, pageNum),
+                true);
     }
-
 }

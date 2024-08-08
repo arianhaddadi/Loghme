@@ -6,6 +6,7 @@ import Domain.Entities.Restaurant;
 public class FoodPartyFoodDTO extends FoodDTO {
     private float oldPrice;
     private int count;
+
     public FoodPartyFoodDTO() {}
 
     public FoodPartyFoodDTO(FoodPartyFood foodPartyFood, Restaurant restaurant) {

@@ -13,13 +13,15 @@ public class JwtAuthenticationFilter implements Filter {
     public JwtAuthenticationFilter() {}
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException,
-            ServletException {
+    public void doFilter(
+            ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         String path = httpServletRequest.getRequestURI();
-        if (path.equals(Configs.SERVER_BASE_URL + "/login") || path.equals(Configs.SERVER_BASE_URL + "/signup")) {
+        if (path.equals(Configs.SERVER_BASE_URL + "/login")
+                || path.equals(Configs.SERVER_BASE_URL + "/signup")) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
@@ -30,17 +32,17 @@ public class JwtAuthenticationFilter implements Filter {
                     String userEmail = TokenProvider.getInstance().getUserEmailFromToken(jwt);
                     httpServletRequest.setAttribute(Configs.USER_ID_ATTRIBUTE, userEmail);
                     filterChain.doFilter(servletRequest, servletResponse);
+                } catch (Exception e) {
+                    httpServletResponse.sendError(
+                            HttpServletResponse.SC_UNAUTHORIZED, "JWT token is not valid!");
                 }
-                catch (Exception e) {
-                    httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token is not valid!");
-                }
+            } else {
+                httpServletResponse.sendError(
+                        HttpServletResponse.SC_UNAUTHORIZED, "JWT token is not valid!");
             }
-            else {
-                httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token is not valid!");
-            }
-        }
-        else {
-            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You need to login to access this page!");
+        } else {
+            httpServletResponse.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED, "You need to login to access this page!");
         }
     }
 

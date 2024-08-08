@@ -10,7 +10,15 @@ public class FoodPartyManager {
     private static FoodPartyManager instance;
     private final FoodPartyUpdater foodPartyUpdater = new FoodPartyUpdater(30);
     private ScheduledExecutorService scheduler;
+
     private FoodPartyManager() {}
+
+    public static FoodPartyManager getInstance() {
+        if (instance == null) {
+            instance = new FoodPartyManager();
+        }
+        return instance;
+    }
 
     public void initialize() {
         scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -28,12 +36,5 @@ public class FoodPartyManager {
 
     public int getRemainingSeconds() {
         return foodPartyUpdater.getSeconds();
-    }
-
-    public static FoodPartyManager getInstance() {
-        if (instance == null) {
-            instance = new FoodPartyManager();
-        }
-        return instance;
     }
 }

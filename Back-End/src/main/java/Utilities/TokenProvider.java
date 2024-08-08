@@ -13,9 +13,11 @@ public class TokenProvider {
     public static final String HEADER = "Authorization";
     public static final String PREFIX = "Bearer ";
     private static final String TOKEN_ISSUER = "login";
-    private static TokenProvider instance;
-    private static final String JWT_TOKEN_SECRET = "loghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghme";
+    private static final String JWT_TOKEN_SECRET =
+            "loghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghmeloghme";
     private static final int LOGIN_TOKEN_EXPIRATION_DAYS = 10;
+    private static TokenProvider instance;
+
     private TokenProvider() {}
 
     public static TokenProvider getInstance() {
@@ -27,13 +29,15 @@ public class TokenProvider {
 
     public String getEmailFromGoogleToken(String idTokenString) {
         try {
-            String responseBody = GetRequest.sendGetRequest("https://oauth2.googleapis.com/tokeninfo?id_token=" + idTokenString);
+            String responseBody =
+                    GetRequest.sendGetRequest(
+                            "https://oauth2.googleapis.com/tokeninfo?id_token=" + idTokenString);
             JsonNode response = new ObjectMapper().readTree(responseBody);
             String email = response.get("email").asText();
             boolean emailVerified = response.get("email_verified").asBoolean();
             long exp = response.get("exp").asLong();
             long timestamp = System.currentTimeMillis() / 1000;
-            if(emailVerified && (timestamp < exp)) {
+            if (emailVerified && (timestamp < exp)) {
                 return email;
             }
         } catch (IOException e) {
@@ -46,7 +50,10 @@ public class TokenProvider {
         return Jwts.builder()
                 .issuer(TOKEN_ISSUER)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + LOGIN_TOKEN_EXPIRATION_DAYS * 24 * 3600 * 1000))
+                .expiration(
+                        new Date(
+                                System.currentTimeMillis()
+                                        + LOGIN_TOKEN_EXPIRATION_DAYS * 24 * 3600 * 1000))
                 .claim(Configs.USER_ID_ATTRIBUTE, userEmail)
                 .signWith(Keys.hmacShaKeyFor(JWT_TOKEN_SECRET.getBytes(StandardCharsets.UTF_8)))
                 .compact();
@@ -55,9 +62,10 @@ public class TokenProvider {
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(JWT_TOKEN_SECRET.getBytes(StandardCharsets.UTF_8)))
-                .build()
-                .parse(token);
+                    .verifyWith(
+                            Keys.hmacShaKeyFor(JWT_TOKEN_SECRET.getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parse(token);
             return true;
         } catch (Exception e) {
             return false;
@@ -67,11 +75,13 @@ public class TokenProvider {
     public String getUserEmailFromToken(String token) {
         try {
             return Jwts.parser()
-                       .verifyWith(Keys.hmacShaKeyFor(JWT_TOKEN_SECRET.getBytes(StandardCharsets.UTF_8)))
-                       .build()
-                       .parseSignedClaims(token)
-                       .getPayload().get(Configs.USER_ID_ATTRIBUTE)
-                       .toString();
+                    .verifyWith(
+                            Keys.hmacShaKeyFor(JWT_TOKEN_SECRET.getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get(Configs.USER_ID_ATTRIBUTE)
+                    .toString();
         } catch (SignatureException e) {
             return "";
         }

@@ -22,12 +22,12 @@ public class OrderItemDTO {
         return quantity;
     }
 
-    public CartItem getCartItemForm(Food food) {
-        return new CartItem(food, quantity);
-    }
-
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public CartItem getCartItemForm(Food food) {
+        return new CartItem(food, quantity);
     }
 
     public String getOrderId() {

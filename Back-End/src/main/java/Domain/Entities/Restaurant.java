@@ -10,8 +10,13 @@ public class Restaurant {
     private ArrayList<Food> menu = new ArrayList<>();
     private ArrayList<FoodPartyFood> foodPartyMenu = new ArrayList<>();
 
-    public Restaurant(String id, String name, String logo, Location location,
-                      ArrayList<Food> menu, ArrayList<FoodPartyFood> foodPartyMenu) {
+    public Restaurant(
+            String id,
+            String name,
+            String logo,
+            Location location,
+            ArrayList<Food> menu,
+            ArrayList<FoodPartyFood> foodPartyMenu) {
         this.id = id;
         this.name = name;
         this.logo = logo;
@@ -28,25 +33,23 @@ public class Restaurant {
     }
 
     public Food getFoodByName(Boolean isFoodPartyFood, String foodName) {
-        if(isFoodPartyFood) {
+        if (isFoodPartyFood) {
             return getFoodPartyFoodByName(foodName);
-        }
-        else {
+        } else {
             return getFoodByName(foodName);
         }
     }
 
     private Food getFoodByName(String name) {
-        for(Food food : menu) {
-            if (food.getName().equals(name))
-                return food;
+        for (Food food : menu) {
+            if (food.getName().equals(name)) return food;
         }
         return null;
     }
 
     private FoodPartyFood getFoodPartyFoodByName(String foodName) {
-        for(FoodPartyFood foodPartyFood : foodPartyMenu) {
-            if(foodPartyFood.getName().equals(foodName)) {
+        for (FoodPartyFood foodPartyFood : foodPartyMenu) {
+            if (foodPartyFood.getName().equals(foodName)) {
                 return foodPartyFood;
             }
         }

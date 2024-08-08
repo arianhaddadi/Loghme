@@ -26,5 +26,4 @@ public class CartDTO {
     public void setRestaurantId(String restaurantId) {
         this.restaurantId = restaurantId;
     }
-
 }

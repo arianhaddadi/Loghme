@@ -8,7 +8,14 @@ public class User {
     private final String phoneNumber;
     private final float credit;
     private Cart cart;
-    public User(String name, String familyName, String email, String password, String phoneNumber, float credit) {
+
+    public User(
+            String name,
+            String familyName,
+            String email,
+            String password,
+            String phoneNumber,
+            float credit) {
         this.name = name;
         this.familyName = familyName;
         this.email = email;

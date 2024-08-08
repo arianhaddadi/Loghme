@@ -16,8 +16,7 @@ import java.util.ArrayList;
 public class RestaurantsManager {
     private static RestaurantsManager instance;
 
-    private RestaurantsManager() {
-    }
+    private RestaurantsManager() {}
 
     public static RestaurantsManager getInstance() {
         if (instance == null) {
@@ -27,12 +26,13 @@ public class RestaurantsManager {
     }
 
     private ArrayList<Restaurant> fetchRestaurantsInfo() {
-//        String responseBody = GetRequest.sendGetRequest(Configs.RESTAURANTS_INFO_URL);
-//        try {
-//            return new ArrayList<>(Arrays.asList(new ObjectMapper().readValue(responseBody, Restaurant[].class)));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        //        String responseBody = GetRequest.sendGetRequest(Configs.RESTAURANTS_INFO_URL);
+        //        try {
+        //            return new ArrayList<>(Arrays.asList(new
+        // ObjectMapper().readValue(responseBody, Restaurant[].class)));
+        //        } catch (IOException e) {
+        //            e.printStackTrace();
+        //        }
         return DataProvider.getRestaurants();
     }
 
@@ -41,30 +41,36 @@ public class RestaurantsManager {
         insertRestaurants(restaurants);
     }
 
-    private ArrayList<Restaurant> convertRestaurantDTOsListToRestaurantsList(ArrayList<RestaurantDTO> restaurantDTOs) {
+    private ArrayList<Restaurant> convertRestaurantDTOsListToRestaurantsList(
+            ArrayList<RestaurantDTO> restaurantDTOs) {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
         for (RestaurantDTO restaurantDTO : restaurantDTOs) {
             Restaurant restaurant = restaurantDTO.getRestaurantForm();
-            restaurant.setMenu(convertFoodDTOListToFoodList(FoodMapper.getInstance().findAll(restaurant.getId(), null, null)));
-            restaurant.setFoodPartyMenu(convertFoodPartyFoodDTOListToFoodPartyFoodList(FoodPartyFoodMapper.getInstance().findAll(restaurant.getId(), null, null)));
+            restaurant.setMenu(
+                    convertFoodDTOListToFoodList(
+                            FoodMapper.getInstance().findAll(restaurant.getId(), null, null)));
+            restaurant.setFoodPartyMenu(
+                    convertFoodPartyFoodDTOListToFoodPartyFoodList(
+                            FoodPartyFoodMapper.getInstance()
+                                    .findAll(restaurant.getId(), null, null)));
             restaurants.add(restaurant);
         }
         return restaurants;
     }
 
     public ArrayList<Restaurant> getRestaurants(Integer pageSize, Integer pageNum) {
-        return convertRestaurantDTOsListToRestaurantsList(RestaurantMapper.getInstance().findAll("",
-                                                                                        (pageNum - 1) * pageSize,
-                                                                                         pageSize));
+        return convertRestaurantDTOsListToRestaurantsList(
+                RestaurantMapper.getInstance().findAll("", (pageNum - 1) * pageSize, pageSize));
     }
 
     private ArrayList<Restaurant> getAllRestaurants() {
-        return convertRestaurantDTOsListToRestaurantsList(RestaurantMapper.getInstance().findAll("",null, null));
+        return convertRestaurantDTOsListToRestaurantsList(
+                RestaurantMapper.getInstance().findAll("", null, null));
     }
 
     public ArrayList<Restaurant> getFoodPartyRestaurants() {
         ArrayList<Restaurant> foodPartyRestaurants = new ArrayList<>();
-        for(Restaurant restaurant : getAllRestaurants()) {
+        for (Restaurant restaurant : getAllRestaurants()) {
             if (!restaurant.getFoodPartyMenu().isEmpty()) {
                 foodPartyRestaurants.add(restaurant);
             }
@@ -87,7 +93,8 @@ public class RestaurantsManager {
     private void insertRestaurantFoodPartyMenu(Restaurant restaurant) {
         if (!restaurant.getFoodPartyMenu().isEmpty()) {
             for (FoodPartyFood foodPartyFood : restaurant.getFoodPartyMenu()) {
-                FoodPartyFoodMapper.getInstance().insert(new FoodPartyFoodDTO(foodPartyFood, restaurant));
+                FoodPartyFoodMapper.getInstance()
+                        .insert(new FoodPartyFoodDTO(foodPartyFood, restaurant));
             }
         }
     }
@@ -112,26 +119,28 @@ public class RestaurantsManager {
                 foods.add(foodDTO.getFoodForm());
             }
             return foods;
-        }
-        else {
+        } else {
             return null;
         }
     }
 
-    public ArrayList<Restaurant> search(String foodName, String restaurantName, int pageSize, int pageNum) {
-        return convertRestaurantDTOsListToRestaurantsList(RestaurantMapper.getInstance().findByNameAndMenu(foodName, restaurantName,
-                                                                                   (pageNum - 1) * pageSize, pageSize));
+    public ArrayList<Restaurant> search(
+            String foodName, String restaurantName, int pageSize, int pageNum) {
+        return convertRestaurantDTOsListToRestaurantsList(
+                RestaurantMapper.getInstance()
+                        .findByNameAndMenu(
+                                foodName, restaurantName, (pageNum - 1) * pageSize, pageSize));
     }
 
-    private ArrayList<FoodPartyFood> convertFoodPartyFoodDTOListToFoodPartyFoodList(ArrayList<FoodPartyFoodDTO> foodPartyFoodDTOs) {
+    private ArrayList<FoodPartyFood> convertFoodPartyFoodDTOListToFoodPartyFoodList(
+            ArrayList<FoodPartyFoodDTO> foodPartyFoodDTOs) {
         if (foodPartyFoodDTOs != null) {
             ArrayList<FoodPartyFood> foodPartyFoods = new ArrayList<>();
             for (FoodPartyFoodDTO foodPartyFoodDTO : foodPartyFoodDTOs) {
                 foodPartyFoods.add(foodPartyFoodDTO.getFoodPartyFoodForm());
             }
             return foodPartyFoods;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -140,11 +149,13 @@ public class RestaurantsManager {
         RestaurantDTO restaurantDTO = RestaurantMapper.getInstance().find(id);
         if (restaurantDTO != null) {
             Restaurant restaurant = restaurantDTO.getRestaurantForm();
-            restaurant.setMenu(convertFoodDTOListToFoodList(FoodMapper.getInstance().findAll(id, null, null)));
-            restaurant.setFoodPartyMenu(convertFoodPartyFoodDTOListToFoodPartyFoodList(FoodPartyFoodMapper.getInstance().findAll(id, null, null)));
+            restaurant.setMenu(
+                    convertFoodDTOListToFoodList(FoodMapper.getInstance().findAll(id, null, null)));
+            restaurant.setFoodPartyMenu(
+                    convertFoodPartyFoodDTOListToFoodPartyFoodList(
+                            FoodPartyFoodMapper.getInstance().findAll(id, null, null)));
             return restaurant;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -152,11 +163,10 @@ public class RestaurantsManager {
     public Food getFoodById(String id) {
         FoodDTO foodDTO = FoodMapper.getInstance().find(id);
         Food food;
-        if(foodDTO == null) {
+        if (foodDTO == null) {
             FoodPartyFoodDTO foodPartyFoodDTO = FoodPartyFoodMapper.getInstance().find(id);
             food = foodPartyFoodDTO.getFoodPartyFoodForm();
-        }
-        else {
+        } else {
             food = foodDTO.getFoodForm();
         }
         return food;

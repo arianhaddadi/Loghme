@@ -1,5 +1,6 @@
 import Domain.Managers.FoodPartyManager;
 import Domain.Managers.RestaurantsManager;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;

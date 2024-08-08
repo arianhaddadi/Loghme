@@ -4,19 +4,24 @@ import Utilities.ConnectionPool;
 import java.sql.*;
 import java.util.ArrayList;
 
-public abstract class Mapper<T, I> implements IMapper<T, I>{
+public abstract class Mapper<T, I> implements IMapper<T, I> {
 
-    abstract protected PreparedStatement getFindStatement(I id, Connection connection) throws SQLException;
+    protected abstract PreparedStatement getFindStatement(I id, Connection connection)
+            throws SQLException;
 
-    abstract protected PreparedStatement getInsertStatement(T obj, Connection connection) throws SQLException;
+    protected abstract PreparedStatement getInsertStatement(T obj, Connection connection)
+            throws SQLException;
 
-    abstract protected PreparedStatement getDeleteStatement(I id, Connection connection) throws SQLException;
+    protected abstract PreparedStatement getDeleteStatement(I id, Connection connection)
+            throws SQLException;
 
-    abstract protected PreparedStatement getUpdateStatement(T obj, Connection connection) throws SQLException;
+    protected abstract PreparedStatement getUpdateStatement(T obj, Connection connection)
+            throws SQLException;
 
-    abstract protected PreparedStatement getFindAllStatement(I id, Connection connection, Integer limitStart, Integer limitSize) throws SQLException;
+    protected abstract PreparedStatement getFindAllStatement(
+            I id, Connection connection, Integer limitStart, Integer limitSize) throws SQLException;
 
-    abstract protected T convertResultSetToObject(ResultSet rs) throws SQLException;
+    protected abstract T convertResultSetToObject(ResultSet rs) throws SQLException;
 
     public T find(I id) {
         try {
@@ -26,8 +31,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I>{
             T obj;
             if (resultSet.next()) {
                 obj = convertResultSetToObject(resultSet);
-            }
-            else {
+            } else {
                 obj = null;
             }
             resultSet.close();
@@ -40,6 +44,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I>{
             return null;
         }
     }
+
     @Override
     public void insert(T obj) {
         try {
@@ -69,10 +74,11 @@ public abstract class Mapper<T, I> implements IMapper<T, I>{
     }
 
     @Override
-    public ArrayList<T> findAll(I id, Integer limitStart,Integer limitSize) {
+    public ArrayList<T> findAll(I id, Integer limitStart, Integer limitSize) {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = getFindAllStatement(id, connection, limitStart, limitSize);
+            PreparedStatement preparedStatement =
+                    getFindAllStatement(id, connection, limitStart, limitSize);
             ResultSet resultSet = preparedStatement.executeQuery();
             ArrayList<T> allItems = new ArrayList<>();
             while (resultSet.next()) {

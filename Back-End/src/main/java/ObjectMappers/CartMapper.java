@@ -8,25 +8,18 @@ import java.sql.*;
 public class CartMapper extends Mapper<CartDTO, String> {
     private static CartMapper instance;
 
-    public static CartMapper getInstance() {
-        if (instance == null) {
-            instance = new CartMapper();
-        }
-        return instance;
-    }
-
     private CartMapper() {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-            "CREATE TABLE IF NOT EXISTS Carts" +
-                "(" +
-                    "userId VARCHAR(300), " +
-                    "restaurantId VARCHAR(300), " +
-                    "PRIMARY KEY (userId), " +
-                    "FOREIGN KEY (userId) REFERENCES Users(email) ON UPDATE CASCADE ON DELETE CASCADE" +
-                ");"
-            );
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(
+                            "CREATE TABLE IF NOT EXISTS Carts"
+                                    + "("
+                                    + "userId VARCHAR(300), "
+                                    + "restaurantId VARCHAR(300), "
+                                    + "PRIMARY KEY (userId), "
+                                    + "FOREIGN KEY (userId) REFERENCES Users(email) ON UPDATE CASCADE ON DELETE CASCADE"
+                                    + ");");
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
@@ -35,41 +28,56 @@ public class CartMapper extends Mapper<CartDTO, String> {
         }
     }
 
+    public static CartMapper getInstance() {
+        if (instance == null) {
+            instance = new CartMapper();
+        }
+        return instance;
+    }
+
     @Override
-    protected PreparedStatement getFindStatement(String id, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Carts WHERE userId = ?;");
+    protected PreparedStatement getFindStatement(String id, Connection connection)
+            throws SQLException {
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("SELECT * FROM Carts WHERE userId = ?;");
         preparedStatement.setString(1, id);
         return preparedStatement;
     }
 
     @Override
-    protected PreparedStatement getInsertStatement(CartDTO cartDTO, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT IGNORE INTO Carts VALUES (?, ?);");
+    protected PreparedStatement getInsertStatement(CartDTO cartDTO, Connection connection)
+            throws SQLException {
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("INSERT IGNORE INTO Carts VALUES (?, ?);");
         preparedStatement.setString(1, cartDTO.getUserId());
         preparedStatement.setString(2, cartDTO.getRestaurantId());
         return preparedStatement;
     }
 
     @Override
-    protected PreparedStatement getDeleteStatement(String id, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Carts WHERE userId = ?;");
+    protected PreparedStatement getDeleteStatement(String id, Connection connection)
+            throws SQLException {
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("DELETE FROM Carts WHERE userId = ?;");
         preparedStatement.setString(1, id);
         return preparedStatement;
     }
 
     @Override
-    protected PreparedStatement getUpdateStatement(CartDTO cartDTO, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(  "UPDATE Carts " +
-                                                                                "SET restaurantId = ? " +
-                                                                                "WHERE userId = ?;");
+    protected PreparedStatement getUpdateStatement(CartDTO cartDTO, Connection connection)
+            throws SQLException {
+        PreparedStatement preparedStatement =
+                connection.prepareStatement(
+                        "UPDATE Carts " + "SET restaurantId = ? " + "WHERE userId = ?;");
         preparedStatement.setString(1, cartDTO.getRestaurantId());
         preparedStatement.setString(2, cartDTO.getUserId());
         return preparedStatement;
     }
 
     @Override
-    protected PreparedStatement getFindAllStatement(String id, Connection connection,
-                                                    Integer limitStart, Integer limitSize) throws SQLException {
+    protected PreparedStatement getFindAllStatement(
+            String id, Connection connection, Integer limitStart, Integer limitSize)
+            throws SQLException {
         return null;
     }
 

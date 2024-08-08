@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SignupService {
 
-    @RequestMapping(value = "/signup", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            value = "/signup",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public Response<Void> signup(
             @RequestParam(value = "firstName") String firstName,
             @RequestParam(value = "lastName") String lastName,
@@ -21,5 +24,4 @@ public class SignupService {
 
         return UsersManager.getInstance().signup(firstName, lastName, email, password, phoneNumber);
     }
-
 }

@@ -3,18 +3,18 @@ package Domain.Entities;
 import java.util.ArrayList;
 
 public class Cart {
-    private final ArrayList<CartItem> cartItems = new ArrayList<>();;
+    private final ArrayList<CartItem> cartItems = new ArrayList<>();
     private Restaurant restaurant;
+
     public Cart() {}
+
     public Boolean isEmpty() {
         return cartItems.isEmpty();
     }
 
     public String getRestaurantId() {
-        if(!cartItems.isEmpty())
-            return restaurant.getId();
-        else
-            return "";
+        if (!cartItems.isEmpty()) return restaurant.getId();
+        else return "";
     }
 
     public void addItem(CartItem cartItem) {
@@ -40,5 +40,4 @@ public class Cart {
     public ArrayList<CartItem> getCartItems() {
         return cartItems;
     }
-
 }

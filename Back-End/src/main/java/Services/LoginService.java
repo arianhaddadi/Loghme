@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class LoginService {
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            value = "/login",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public Response<Void> login(
             @RequestParam(value = "email") String email,
             @RequestParam(value = "password") String password,
@@ -17,5 +20,4 @@ public class LoginService {
 
         return UsersManager.getInstance().login(email, password, isGoogleAuth, idToken);
     }
-
 }

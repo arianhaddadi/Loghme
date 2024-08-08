@@ -10,26 +10,19 @@ public class RestaurantMapper extends Mapper<RestaurantDTO, String> {
 
     private static RestaurantMapper instance;
 
-    public static RestaurantMapper getInstance() {
-        if (instance == null) {
-            instance = new RestaurantMapper();
-        }
-        return instance;
-    }
-
     private RestaurantMapper() {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-            "CREATE TABLE IF NOT EXISTS Restaurants" +
-                "(" +
-                    "id VARCHAR(300) PRIMARY KEY, " +
-                    "name VARCHAR(300)," +
-                    "logo VARCHAR(300)," +
-                    "locationX FLOAT," +
-                    "locationY FLOAT" +
-                ");"
-            );
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(
+                            "CREATE TABLE IF NOT EXISTS Restaurants"
+                                    + "("
+                                    + "id VARCHAR(300) PRIMARY KEY, "
+                                    + "name VARCHAR(300),"
+                                    + "logo VARCHAR(300),"
+                                    + "locationX FLOAT,"
+                                    + "locationY FLOAT"
+                                    + ");");
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
@@ -38,17 +31,29 @@ public class RestaurantMapper extends Mapper<RestaurantDTO, String> {
         }
     }
 
-    private PreparedStatement getFindByNameAndMenuStatement(String foodName, String restaurantName,
-                                                            Connection connection, Integer limitStart, Integer limitSize) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(
-                            "SELECT id, name, logo, locationX, locationY " +
-                                "FROM Restaurants, Foods " +
-                                "WHERE id = restaurantId " +
-                                "AND ((locationX * locationX) + (locationY * locationY)) <= 170 * 170 " +
-                                "AND name LIKE ? AND foodName LIKE ? " +
-                                "GROUP BY id " +
-                                "LIMIT ?,?;");
+    public static RestaurantMapper getInstance() {
+        if (instance == null) {
+            instance = new RestaurantMapper();
+        }
+        return instance;
+    }
 
+    private PreparedStatement getFindByNameAndMenuStatement(
+            String foodName,
+            String restaurantName,
+            Connection connection,
+            Integer limitStart,
+            Integer limitSize)
+            throws SQLException {
+        PreparedStatement preparedStatement =
+                connection.prepareStatement(
+                        "SELECT id, name, logo, locationX, locationY "
+                                + "FROM Restaurants, Foods "
+                                + "WHERE id = restaurantId "
+                                + "AND ((locationX * locationX) + (locationY * locationY)) <= 170 * 170 "
+                                + "AND name LIKE ? AND foodName LIKE ? "
+                                + "GROUP BY id "
+                                + "LIMIT ?,?;");
 
         preparedStatement.setString(1, "%" + restaurantName + "%");
         preparedStatement.setString(2, "%" + foodName + "%");
@@ -57,12 +62,13 @@ public class RestaurantMapper extends Mapper<RestaurantDTO, String> {
         return preparedStatement;
     }
 
-    public ArrayList<RestaurantDTO> findByNameAndMenu(String foodName, String restaurantName,
-                                                      Integer limitStart, Integer limitSize) {
+    public ArrayList<RestaurantDTO> findByNameAndMenu(
+            String foodName, String restaurantName, Integer limitStart, Integer limitSize) {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = getFindByNameAndMenuStatement(foodName, restaurantName, connection,
-                                                                                limitStart, limitSize);
+            PreparedStatement preparedStatement =
+                    getFindByNameAndMenuStatement(
+                            foodName, restaurantName, connection, limitStart, limitSize);
             ResultSet resultSet = preparedStatement.executeQuery();
             ArrayList<RestaurantDTO> restaurantDTOs = new ArrayList<>();
             while (resultSet.next()) {
@@ -72,23 +78,27 @@ public class RestaurantMapper extends Mapper<RestaurantDTO, String> {
             preparedStatement.close();
             connection.close();
             return restaurantDTOs;
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
     @Override
-    protected PreparedStatement getFindStatement(String id, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Restaurants WHERE id = ?;");
+    protected PreparedStatement getFindStatement(String id, Connection connection)
+            throws SQLException {
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("SELECT * FROM Restaurants WHERE id = ?;");
         preparedStatement.setString(1, id);
         return preparedStatement;
     }
 
     @Override
-    protected PreparedStatement getInsertStatement(RestaurantDTO restaurant, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(  "INSERT IGNORE INTO Restaurants " +
-                                                                                "VALUES (?, ?, ?, ?, ?);");
+    protected PreparedStatement getInsertStatement(RestaurantDTO restaurant, Connection connection)
+            throws SQLException {
+        PreparedStatement preparedStatement =
+                connection.prepareStatement(
+                        "INSERT IGNORE INTO Restaurants " + "VALUES (?, ?, ?, ?, ?);");
         preparedStatement.setString(1, restaurant.getId());
         preparedStatement.setString(2, restaurant.getName());
         preparedStatement.setString(3, restaurant.getLogo());
@@ -98,7 +108,8 @@ public class RestaurantMapper extends Mapper<RestaurantDTO, String> {
     }
 
     @Override
-    protected PreparedStatement getUpdateStatement(RestaurantDTO restaurantDTO, Connection connection) {
+    protected PreparedStatement getUpdateStatement(
+            RestaurantDTO restaurantDTO, Connection connection) {
         return null;
     }
 
@@ -113,27 +124,28 @@ public class RestaurantMapper extends Mapper<RestaurantDTO, String> {
         restaurant.setId(resultSet.getString("id"));
         restaurant.setName(resultSet.getString("name"));
         restaurant.setLogo(resultSet.getString("logo"));
-        restaurant.setLocation(new Location(resultSet.getFloat("locationX"), resultSet.getFloat("locationY")));
+        restaurant.setLocation(
+                new Location(resultSet.getFloat("locationX"), resultSet.getFloat("locationY")));
         return restaurant;
     }
 
     @Override
-    protected PreparedStatement getFindAllStatement(String id, Connection connection,
-                                                    Integer limitStart, Integer limitSize) throws SQLException {
+    protected PreparedStatement getFindAllStatement(
+            String id, Connection connection, Integer limitStart, Integer limitSize)
+            throws SQLException {
         if (limitSize != null) {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                            "SELECT * FROM Restaurants " +
-                                "WHERE ((locationX * locationX) + (locationY * locationY)) <= 170 * 170 " +
-                                "LIMIT ?,?;");
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(
+                            "SELECT * FROM Restaurants "
+                                    + "WHERE ((locationX * locationX) + (locationY * locationY)) <= 170 * 170 "
+                                    + "LIMIT ?,?;");
             preparedStatement.setInt(1, limitStart);
             preparedStatement.setInt(2, limitSize);
             return preparedStatement;
-        }
-        else {
+        } else {
             return connection.prepareStatement(
-                "SELECT * FROM Restaurants " +
-                    "WHERE ((locationX * locationX) + (locationY * locationY)) <= 170 * 170;");
+                    "SELECT * FROM Restaurants "
+                            + "WHERE ((locationX * locationX) + (locationY * locationY)) <= 170 * 170;");
         }
     }
-
 }

@@ -3,8 +3,15 @@ package Domain.Entities;
 public class FoodPartyFood extends Food {
     private int count;
     private float oldPrice;
-    public FoodPartyFood(String name, String description, String image,
-                        float price, float popularity, int count, float oldPrice) {
+
+    public FoodPartyFood(
+            String name,
+            String description,
+            String image,
+            float price,
+            float popularity,
+            int count,
+            float oldPrice) {
         super(name, description, image, price, popularity);
         this.count = count;
         this.oldPrice = oldPrice;
@@ -22,12 +29,12 @@ public class FoodPartyFood extends Food {
         return count;
     }
 
-    public float getOldPrice() {
-        return oldPrice;
-    }
-
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public float getOldPrice() {
+        return oldPrice;
     }
 
     public void setOldPrice(float oldPrice) {

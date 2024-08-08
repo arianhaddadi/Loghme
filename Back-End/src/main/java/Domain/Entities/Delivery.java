@@ -1,10 +1,11 @@
 package Domain.Entities;
 
 public class Delivery {
+    boolean isBusy = false;
     private String id;
     private long velocity;
     private Location location;
-    boolean isBusy = false;
+
     public Delivery(String id, long velocity, Location location) {
         this.id = id;
         this.velocity = velocity;

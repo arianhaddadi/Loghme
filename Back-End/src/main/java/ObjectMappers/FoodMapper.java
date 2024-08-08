@@ -1,19 +1,13 @@
 package ObjectMappers;
 
 import Domain.DatabaseDTOs.FoodDTO;
+
 import Utilities.ConnectionPool;
 
 import java.sql.*;
 
 public class FoodMapper extends Mapper<FoodDTO, String> {
     private static FoodMapper instance;
-
-    public static FoodMapper getInstance() {
-        if (instance == null) {
-            instance = new FoodMapper();
-        }
-        return instance;
-    }
 
     private FoodMapper() {
         try {
@@ -37,6 +31,13 @@ public class FoodMapper extends Mapper<FoodDTO, String> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static FoodMapper getInstance() {
+        if (instance == null) {
+            instance = new FoodMapper();
+        }
+        return instance;
     }
 
     @Override

@@ -1,9 +1,9 @@
 package Utilities;
 
 public class Response<T> {
-    private String message;
-    T payload;
     private final boolean successful;
+    T payload;
+    private String message;
 
     public Response(String message, boolean successful) {
         this.message = message;
@@ -19,7 +19,9 @@ public class Response<T> {
         return message;
     }
 
-    public boolean getSuccessful() {return successful;}
+    public boolean getSuccessful() {
+        return successful;
+    }
 
     public T getPayload() {
         return payload;

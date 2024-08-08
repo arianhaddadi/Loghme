@@ -3,6 +3,7 @@ package Domain.Entities;
 public class CartItem {
     private final Food food;
     private int quantity;
+
     public CartItem(Food food, int quantity) {
         this.food = food;
         this.quantity = quantity;
@@ -19,5 +20,4 @@ public class CartItem {
     public void increaseQuantity(int number) {
         quantity += number;
     }
-
 }

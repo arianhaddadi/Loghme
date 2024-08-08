@@ -5,6 +5,7 @@ public class CartItemDTO {
     private String cartId;
     private String foodName;
     private String restaurantId;
+
     public CartItemDTO() {}
 
     public CartItemDTO(int quantity, String cartId, String foodName, String restaurantId) {

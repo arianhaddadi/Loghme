@@ -15,9 +15,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class FoodPartyUpdater implements Runnable, Callable<Void> {
+    private final int period;
     private int minutes;
     private int seconds;
-    private final int period;
     private ScheduledExecutorService scheduler;
 
     public FoodPartyUpdater(int period) {
@@ -48,7 +48,7 @@ public class FoodPartyUpdater implements Runnable, Callable<Void> {
     }
 
     private void resetScheduler() {
-        if(scheduler != null) {
+        if (scheduler != null) {
             scheduler.shutdownNow();
         }
         scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -62,7 +62,11 @@ public class FoodPartyUpdater implements Runnable, Callable<Void> {
     private ArrayList<Restaurant> fetchInfo() {
         String responseBody = GetRequest.sendGetRequest(Configs.FOODPARTY_INFO_URL);
         try {
-            Restaurant[] restaurants = new ObjectMapper().readValue(responseBody.replaceAll("menu", "foodPartyMenu"), Restaurant[].class);
+            Restaurant[] restaurants =
+                    new ObjectMapper()
+                            .readValue(
+                                    responseBody.replaceAll("menu", "foodPartyMenu"),
+                                    Restaurant[].class);
             return new ArrayList<>(Arrays.asList(restaurants));
         } catch (IOException e) {
             e.printStackTrace();
@@ -81,15 +85,14 @@ public class FoodPartyUpdater implements Runnable, Callable<Void> {
     @Override
     public Void call() {
         if (seconds != 0 || minutes != 0) {
-            if(seconds == 0) {
+            if (seconds == 0) {
                 seconds = 59;
                 minutes -= 1;
-            }
-            else {
+            } else {
                 seconds -= 1;
             }
-            if(seconds != 0 || minutes != 0) {
-                scheduler.schedule(this::call, 1 , TimeUnit.SECONDS);
+            if (seconds != 0 || minutes != 0) {
+                scheduler.schedule(this::call, 1, TimeUnit.SECONDS);
             }
         }
         return null;

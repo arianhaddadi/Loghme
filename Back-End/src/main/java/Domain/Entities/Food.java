@@ -6,8 +6,8 @@ public class Food {
     protected String image;
     protected float price;
     protected float popularity;
-    public Food(String name, String description, String image,
-                float price, float popularity) {
+
+    public Food(String name, String description, String image, float price, float popularity) {
         this.name = name;
         this.description = description;
         this.image = image;
@@ -54,5 +54,4 @@ public class Food {
     public void setPopularity(float popularity) {
         this.popularity = popularity;
     }
-
 }

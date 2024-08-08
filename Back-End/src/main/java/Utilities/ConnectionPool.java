@@ -1,6 +1,7 @@
 package Utilities;
 
 import org.apache.commons.dbcp.BasicDataSource;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -14,7 +15,11 @@ public class ConnectionPool {
         createDatabase();
         dataSource = new BasicDataSource();
         dataSource.setDriverClassName(Configs.JDBC_DRIVER_CLASSNAME);
-        dataSource.setUrl(Configs.DATABASE_URL + "/" + Configs.DATABASE_NAME + "?useSSL=false&allowPublicKeyRetrieval=true");
+        dataSource.setUrl(
+                Configs.DATABASE_URL
+                        + "/"
+                        + Configs.DATABASE_NAME
+                        + "?useSSL=false&allowPublicKeyRetrieval=true");
         dataSource.setUsername(Configs.DATABASE_USERNAME);
         dataSource.setPassword(Configs.DATABASE_PASSWORD);
         dataSource.setMinIdle(20);
@@ -39,9 +44,9 @@ public class ConnectionPool {
             dataSource.setPassword(Configs.DATABASE_PASSWORD);
 
             Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-            "CREATE DATABASE IF NOT EXISTS " + Configs.DATABASE_NAME + ";"
-            );
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(
+                            "CREATE DATABASE IF NOT EXISTS " + Configs.DATABASE_NAME + ";");
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
@@ -49,7 +54,6 @@ public class ConnectionPool {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     public static ConnectionPool getInstance() {
