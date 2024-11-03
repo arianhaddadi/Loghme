@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
-import { RootState } from "../../app/store";
-import { GoogleAuthState } from "../../reducers/googleAuthenticationReducer";
+import {RootState} from "../../app/store";
+import {GoogleAuthState} from "../../reducers/googleAuthenticationReducer";
 
 interface GoogleOAuthProps {
     googleAuthentication: GoogleAuthState

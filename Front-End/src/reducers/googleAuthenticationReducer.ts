@@ -1,6 +1,6 @@
-import { Reducer } from "redux";
-import { ActionCreatorReturnType, GoogleAuthObject, Nullable } from "../utils/types";
-import { ActionTypes } from "../actions";
+import {Reducer} from "redux";
+import {ActionCreatorReturnType, GoogleAuthObject, Nullable} from "../utils/types";
+import {ActionTypes} from "../actions";
 
 export type GoogleAuthState = Nullable<GoogleAuthObject>;
 

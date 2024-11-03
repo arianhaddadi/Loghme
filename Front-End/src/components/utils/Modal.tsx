@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import {ReactNode, useEffect} from "react";
 
 interface ModalProps {
     close: () => void,
@@ -8,12 +8,12 @@ interface ModalProps {
 const Modal = (props: ModalProps) => {
 
     useEffect(() => {
-        document.body.style.overflow="hidden";
+        document.body.style.overflow = "hidden";
         document.body.style.paddingRight = "16px";
 
         return () => {
             document.body.style.paddingRight = "0";
-            document.body.style.overflow="visible";
+            document.body.style.overflow = "visible";
         }
     }, [])
 

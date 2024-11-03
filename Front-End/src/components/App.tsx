@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import {connect} from "react-redux";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import NavigationBar from './NavigationBar/NavigationBar.tsx';
@@ -10,10 +10,10 @@ import ProfilePage from "./ProfilePage/ProfilePage.tsx";
 import Modal from './utils/Modal.tsx';
 import Cart from './Cart/Cart.tsx';
 import configs from '../app/configs.ts';
-import { redirect } from '../utils/redirect.ts';
+import {redirect} from '../utils/redirect.ts';
 import {ToastContainer} from 'react-toastify';
-import { RootState } from '../app/store.ts';
-import { CartState } from '../reducers/CartReducer.ts';
+import {RootState} from '../app/store.ts';
+import {CartState} from '../reducers/CartReducer.ts';
 
 interface AppProps {
     cart: CartState
@@ -28,7 +28,7 @@ const App = (props: AppProps) => {
     }
 
     const getCartSize = () => {
-        if(props.cart) {
+        if (props.cart) {
             return props.cart.cartItems.length;
         } else return 0;
     }
@@ -49,15 +49,15 @@ const App = (props: AppProps) => {
     }
 
     const renderCart = () => {
-        if(showCart) {
-            return <Modal close={closeCartModal} render={() => renderCartContent()} />;
+        if (showCart) {
+            return <Modal close={closeCartModal} render={() => renderCartContent()}/>;
         }
     }
 
     const renderNavigationBar = () => {
         const outsidePathnames = ['/login', '/signup']
         if (!outsidePathnames.includes(window.location.pathname)) {
-            return <NavigationBar cartSize={getCartSize()} openCart={openCartModal} />
+            return <NavigationBar cartSize={getCartSize()} openCart={openCartModal}/>
         }
     }
 
@@ -73,14 +73,14 @@ const App = (props: AppProps) => {
         <>
             {renderCart()}
             {renderNavigationBar()}
-            <ToastContainer autoClose={configs.notification_length} />
+            <ToastContainer autoClose={configs.notification_length}/>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<HomePage/>} />
-                    <Route path="/signup" element={<SignupPage/>} />
-                    <Route path="/login" element={<LoginPage/>} />
-                    <Route path="/restaurants/:id" element={<RestaurantPage/>} />
-                    <Route path="/profile" element={<ProfilePage/>} />
+                    <Route path="/" element={<HomePage/>}/>
+                    <Route path="/signup" element={<SignupPage/>}/>
+                    <Route path="/login" element={<LoginPage/>}/>
+                    <Route path="/restaurants/:id" element={<RestaurantPage/>}/>
+                    <Route path="/profile" element={<ProfilePage/>}/>
                 </Routes>
             </BrowserRouter>
             {renderFooter()}

@@ -1,22 +1,24 @@
 .orders-spinner {
-    margin-top: 5vh;
-    width: 70vh;
+  margin-top: 5vh;
+  width: 70vh;
 }
 
 .everywhere-cart-spinner {
-    &.hide {
-        .spinner-border {
-            display: none;
-        }
-        margin-bottom: 0;
+  &.hide {
+    .spinner-border {
+      display: none;
     }
-    margin-bottom: 15px;
+
+    margin-bottom: 0;
+  }
+
+  margin-bottom: 15px;
 }
 
 .food-modal-spinner {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .loading-more-spinner {
-    margin-top: 0px;
+  margin-top: 0px;
 }

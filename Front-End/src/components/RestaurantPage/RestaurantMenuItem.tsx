@@ -1,4 +1,4 @@
-import { Restaurant, Food } from "../../utils/types";
+import {Food, Restaurant} from "../../utils/types";
 
 interface RestaurantMenuItemProps {
     item: Food,
@@ -10,10 +10,10 @@ const RestaurantMenuItem = (props: RestaurantMenuItemProps) => {
     const item = props.item;
     return (
         <div onClick={() => props.orderFood(item, props.restaurant)} className="menu-item">
-            <img src={item.image} className="menu-item-image" alt="" />
+            <img src={item.image} className="menu-item-image" alt=""/>
             <div className="menu-item-name">
                 <div className="menu-item-rating">
-                    <i className="fas fa-star menu-item-star"></i> 
+                    <i className="fas fa-star menu-item-star"></i>
                     <div>{item.popularity * 5}</div>
                 </div>
                 {item.name}

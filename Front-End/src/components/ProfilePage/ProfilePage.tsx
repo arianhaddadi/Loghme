@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Modal from '../utils/Modal.tsx';
 import Spinner from "../utils/Spinner.tsx";
 import {connect} from 'react-redux';
-import {fetchOrders, fetchUserInfo} from "../../actions/index.ts";
-import { sendRequest, RequestMethods } from '../../utils/request.ts';
+import {fetchOrders, fetchUserInfo} from "../../actions";
+import {RequestMethods, sendRequest} from '../../utils/request.ts';
 import {ActionCreator, CartItem, Notification, Nullable, Order, RequestArguments, User} from '../../utils/types';
-import { RootState } from '../../app/store.ts';
-import { OrdersState } from '../../reducers/OrdersReducer.ts';
-import { UserState } from '../../reducers/UserReducer.ts';
+import {RootState} from '../../app/store.ts';
+import {OrdersState} from '../../reducers/OrdersReducer.ts';
+import {UserState} from '../../reducers/UserReducer.ts';
 
 interface ProfilePageProps {
     fetchOrders: ActionCreator<Order[]>,
@@ -22,9 +22,9 @@ const ProfilePage = (props: ProfilePageProps) => {
     const [creditsNotification, setCreditsNotification] = useState<Nullable<Notification>>(null)
     const [creditsLoading, setCreditsLoading] = useState<boolean>(false)
     const [creditsInputValue, setCreditsInputValue] = useState<string>("")
-    
+
     const ordersUpdater = useRef<Nullable<NodeJS.Timeout>>(null)
-    
+
 
     useEffect(() => {
         document.title = "Profile";
@@ -52,23 +52,20 @@ const ProfilePage = (props: ProfilePageProps) => {
                 status: "error",
                 message: "Input is empty!",
             })
-        }
-        else if(isNaN(parseFloat(creditsInputValue))) {
+        } else if (isNaN(parseFloat(creditsInputValue))) {
             setCreditsInputValue("")
             setCreditsNotification({
                 status: "error",
                 message: "Input must be a number",
             })
-        }
-        else if(parseFloat(creditsInputValue) < 0) {
+        } else if (parseFloat(creditsInputValue) < 0) {
             setCreditsInputValue("")
             setCreditsNotification({
                 status: "error",
                 message: "Reducing balance is not allowed!"
             })
-        }
-        else {
-            const requestArgs: RequestArguments =  {
+        } else {
+            const requestArgs: RequestArguments = {
                 method: RequestMethods.PUT,
                 url: `/credits?amount=${creditsInputValue}`,
                 errorHandler: (error) => console.log("Adding Credit Failed.", error),
@@ -89,7 +86,7 @@ const ProfilePage = (props: ProfilePageProps) => {
     }
 
     const renderCreditsNotification = () => {
-        if(creditsNotification) {
+        if (creditsNotification) {
             return (
                 <div className={`credits-notification ${creditsNotification.status}`}>
                     {creditsNotification.message}
@@ -99,9 +96,9 @@ const ProfilePage = (props: ProfilePageProps) => {
     }
 
     const renderCreditsSpinner = () => {
-        if(creditsLoading) {
+        if (creditsLoading) {
             return (
-                <Spinner additionalClassName="credits-spinner col-12" />
+                <Spinner additionalClassName="credits-spinner col-12"/>
             )
         }
     }
@@ -109,7 +106,7 @@ const ProfilePage = (props: ProfilePageProps) => {
     const renderCreditsTab = () => {
         return (
             <div className="tab">
-                <input id="credit-tab" name="tabgroup" type="radio" />
+                <input id="credit-tab" name="tabgroup" type="radio"/>
                 <label htmlFor="credit-tab">
                     Add Balance
                 </label>
@@ -117,30 +114,29 @@ const ProfilePage = (props: ProfilePageProps) => {
                     <button onClick={addCredit} type="button" className="btn btn-primary add-credit-button col-3">
                         Add
                     </button>
-                    <input className="credit-input btn col-8" value={creditsInputValue} onChange={(event) => setCreditsInputValue(event.target.value)} placeholder="Balance to add" />
+                    <input className="credit-input btn col-8" value={creditsInputValue}
+                           onChange={(event) => setCreditsInputValue(event.target.value)} placeholder="Balance to add"/>
                     {renderCreditsNotification()}
                     {renderCreditsSpinner()}
                 </div>
             </div>
         )
-    } 
+    }
 
     const renderOrderStatusButton = (deliveryStatus: string) => {
         if (deliveryStatus === "DELIVERY_ON_ITS_WAY") {
             return (
-                <div className="btn-success on-the-way-button" >
+                <div className="btn-success on-the-way-button">
                     Delivery on its way
                 </div>
             )
-        }
-        else if (deliveryStatus === "SEARCHING_FOR_DELIVERY") {
+        } else if (deliveryStatus === "SEARCHING_FOR_DELIVERY") {
             return (
                 <div className="btn-info">
                     Searching for delivery
                 </div>
             )
-        }
-        else {
+        } else {
             return (
                 <div className="btn-warning">
                     View Bill
@@ -158,8 +154,7 @@ const ProfilePage = (props: ProfilePageProps) => {
             return (
                 <Spinner additionalClassName="orders-spinner"/>
             );
-        }
-        else {
+        } else {
             if (props.orders.length === 0) {
                 return (
                     <div className="no-orders">
@@ -170,7 +165,7 @@ const ProfilePage = (props: ProfilePageProps) => {
             return props.orders.map((elem, index) => {
                 return (
                     <div key={index} onClick={() => viewOrder(elem)} className="order">
-                        <div className="order-index">{index+1}</div>
+                        <div className="order-index">{index + 1}</div>
                         <div className="order-restaurant-name">
                             {elem.cart.restaurant.name}
                         </div>
@@ -188,10 +183,10 @@ const ProfilePage = (props: ProfilePageProps) => {
             return (
                 <div key={index} className="order-modal-item">
                     <div className="index">
-                        {index+1}
+                        {index + 1}
                     </div>
                     <div className="food-name">
-                       {elem.food.name}
+                        {elem.food.name}
                     </div>
                     <div className="quantity">
                         {elem.quantity}
@@ -218,7 +213,7 @@ const ProfilePage = (props: ProfilePageProps) => {
                 <div className="order-modal-restaurant-name">
                     {order.cart.restaurant.name}
                 </div>
-                <hr />
+                <hr/>
                 <div className="order-modal-items-table">
                     <div className="order-modal-items-table-head">
                         <div className="index">
@@ -237,7 +232,7 @@ const ProfilePage = (props: ProfilePageProps) => {
                     {renderOrderItems(order.cart.cartItems)}
                     <div className="order-modal-price">
                         <b>
-                        Total Price:{calculateOrderPrice(order.cart.cartItems)} Dollars
+                            Total Price:{calculateOrderPrice(order.cart.cartItems)} Dollars
                         </b>
                     </div>
                 </div>
@@ -247,12 +242,12 @@ const ProfilePage = (props: ProfilePageProps) => {
 
     const closeOrderModal = () => {
         setVisibleOrder(null)
-    } 
+    }
 
     const renderOrderModal = () => {
-        if(visibleOrder) {
+        if (visibleOrder) {
             return (
-                <Modal close={closeOrderModal} render={() => renderOrderInfo(visibleOrder)} />  
+                <Modal close={closeOrderModal} render={() => renderOrderInfo(visibleOrder)}/>
             )
         }
     }
@@ -277,7 +272,7 @@ const ProfilePage = (props: ProfilePageProps) => {
     }
 
     const renderProfileInfo = () => {
-        if(props.user) {
+        if (props.user) {
             const user = props.user;
             return (
                 <>
@@ -298,7 +293,7 @@ const ProfilePage = (props: ProfilePageProps) => {
     }
 
     return (
-        <>  
+        <>
             <div className="head-bar profile">
                 {renderProfileInfo()}
             </div>

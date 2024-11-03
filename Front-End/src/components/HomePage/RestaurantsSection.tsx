@@ -1,9 +1,9 @@
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import RestaurantItem from './RestaurantItem.tsx';
 import configs from '../../app/configs.ts';
 import Spinner from "../utils/Spinner.tsx";
-import { sendRequest, RequestMethods } from '../../utils/request.ts';
-import { redirect } from '../../utils/redirect.ts';
+import {RequestMethods, sendRequest} from '../../utils/request.ts';
+import {redirect} from '../../utils/redirect.ts';
 import {RequestArguments, Restaurant} from '../../utils/types';
 
 interface RestaurantsSectionProps {
@@ -25,7 +25,7 @@ const RestaurantsSection = (props: RestaurantsSectionProps) => {
     }, [])
 
     const fetchRestaurants = (pageNum: number) => {
-        const requestArgs: RequestArguments =  {
+        const requestArgs: RequestArguments = {
             method: RequestMethods.GET,
             url: `/restaurants?pageSize=${configs.home_page_size}&pageNum=${pageNum}`,
             errorHandler: (error) => console.log("Fetching Restaurants Failed", error),
@@ -46,7 +46,7 @@ const RestaurantsSection = (props: RestaurantsSectionProps) => {
     const renderLoadingMoreSpinner = () => {
         if (isLoadingMore || props.isSearching) {
             return (
-                <Spinner additionalClassName="loading-more-spinner" />
+                <Spinner additionalClassName="loading-more-spinner"/>
             )
         }
     }
@@ -55,8 +55,7 @@ const RestaurantsSection = (props: RestaurantsSectionProps) => {
         if (props.searchedRestaurants.length === 0) {
             fetchRestaurants(numOfPages + 1);
             setNumOfPages(numOfPages + 1);
-        }
-        else {
+        } else {
             props.searchMore()
         }
     }
@@ -81,21 +80,21 @@ const RestaurantsSection = (props: RestaurantsSectionProps) => {
             )
         }
         return restaurantsToRender.map((elem, index) => {
-            return (
-                <RestaurantItem key={index} item={elem} viewRestaurantPage={viewRestaurantPage} />
-            )}
+                return (
+                    <RestaurantItem key={index} item={elem} viewRestaurantPage={viewRestaurantPage}/>
+                )
+            }
         )
     }
 
     const renderRestaurants = () => {
         if (restaurants.length === 0 ||
             (props.isSearching && props.searchedRestaurants.length === 0)) {
-            
+
             return (
-                <Spinner additionalClassName="" />
+                <Spinner additionalClassName=""/>
             )
-        }
-        else {
+        } else {
             return (
                 <>
                     <div className="restaurants-home-items">

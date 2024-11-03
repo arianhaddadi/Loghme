@@ -1,9 +1,9 @@
 import logo from '../../styles/images/Logo.png';
 import {connect} from 'react-redux';
 import configs from '../../app/configs.ts';
-import { redirect } from '../../utils/redirect.ts';
-import { RootState } from '../../app/store.ts';
-import { GoogleAuthState } from '../../reducers/googleAuthenticationReducer.ts';
+import {redirect} from '../../utils/redirect.ts';
+import {RootState} from '../../app/store.ts';
+import {GoogleAuthState} from '../../reducers/googleAuthenticationReducer.ts';
 
 interface NavigationBarProps {
     googleAuthentication: GoogleAuthState,
@@ -35,7 +35,7 @@ const NavigationBar = (props: NavigationBarProps) => {
             <div onClick={props.openCart} className={`cart-quantity ${props.cartSize > 0 ? "isNotEmpty" : ""}`}>
                 {props.cartSize > 0 ? props.cartSize : ""}
             </div>
-            <img onClick={() => redirect("/")} src={logo} className="loghme-logo" alt="" />
+            <img onClick={() => redirect("/")} src={logo} className="loghme-logo" alt=""/>
         </div>
     );
 }

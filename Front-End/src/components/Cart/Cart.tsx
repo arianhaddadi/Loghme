@@ -1,11 +1,20 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import Spinner from "../utils/Spinner.tsx";
 import {connect} from 'react-redux';
-import {fetchCart, fetchUserInfo, fetchOrders} from "../../actions/index.ts";
-import { sendRequest, RequestMethods } from '../../utils/request.ts';
-import { ActionCreator, Cart as CartType, CartItem, Notification, Nullable, RequestArguments, User, Order } from '../../utils/types';
-import { RootState } from '../../app/store.ts';
-import { CartState } from '../../reducers/CartReducer.ts';
+import {fetchCart, fetchOrders, fetchUserInfo} from "../../actions";
+import {RequestMethods, sendRequest} from '../../utils/request.ts';
+import {
+    ActionCreator,
+    Cart as CartType,
+    CartItem,
+    Notification,
+    Nullable,
+    Order,
+    RequestArguments,
+    User
+} from '../../utils/types';
+import {RootState} from '../../app/store.ts';
+import {CartState} from '../../reducers/CartReducer.ts';
 
 interface CartProps {
     fetchCart: ActionCreator<CartType>,
@@ -23,7 +32,7 @@ const Cart = (props: CartProps) => {
         if (props.cart === null || !props.cart.empty) {
             return null;
         }
-      
+
         return {
             status: "none",
             message: "Cart is empty.",
@@ -31,7 +40,7 @@ const Cart = (props: CartProps) => {
     });
 
     useEffect(() => {
-        if(props.cart === null) props.fetchCart();
+        if (props.cart === null) props.fetchCart();
     }, [])
 
     useEffect(() => {
@@ -45,48 +54,47 @@ const Cart = (props: CartProps) => {
     }, [props.cart])
 
     const addItem = (foodName: string, restaurantId: string, isFoodPartyFood: boolean) => {
-        const requestArgs: RequestArguments =  {
+        const requestArgs: RequestArguments = {
             method: RequestMethods.PUT,
             url: `/carts?foodName=${foodName}&restaurantId=${restaurantId}&quantity=${1}&isFoodPartyFood=${isFoodPartyFood}`,
             errorHandler: (error) => console.log("Adding Item to Cart Failed.", error),
             successHandler: (response) => {
-                if(response.data.successful) {
+                if (response.data.successful) {
                     props.fetchCart();
-                }
-                else {
+                } else {
                     setNotification({
                         status: "error",
                         message: response.data.message
                     })
                 }
                 setIsProcessing(false)
-            }    
+            }
         }
         sendRequest(requestArgs)
         setIsProcessing(true)
     }
 
     const deleteItem = (foodName: string, restaurantId: string, isFoodPartyFood: boolean) => {
-        const requestArgs: RequestArguments =  {
+        const requestArgs: RequestArguments = {
             method: RequestMethods.DELETE,
             url: `/carts?foodName=${foodName}&restaurantId=${restaurantId}&isFoodPartyFood=${isFoodPartyFood}`,
             errorHandler: (error) => console.log("Deleting Item from Cart Failed.", error),
             successHandler: () => {
                 props.fetchCart();
                 setIsProcessing(false)
-            }    
+            }
         }
         sendRequest(requestArgs)
         setIsProcessing(true)
     }
 
     const finalizeOrder = () => {
-        const requestArgs: RequestArguments =  {
+        const requestArgs: RequestArguments = {
             method: RequestMethods.POST,
             url: `/carts`,
             errorHandler: (error) => console.log("Finalizing Order Failed.", error),
             successHandler: (response) => {
-                if(response.data.successful) {
+                if (response.data.successful) {
                     props.fetchCart();
                     props.fetchUserInfo();
                     props.fetchOrders();
@@ -94,15 +102,14 @@ const Cart = (props: CartProps) => {
                         status: "success",
                         message: "Your order was successfully placed."
                     })
-                }
-                else {
+                } else {
                     setNotification({
                         status: "error",
                         message: "Your balance is not enough!"
                     })
                 }
                 setIsProcessing(false)
-            }    
+            }
         }
         sendRequest(requestArgs)
         setIsProcessing(true)
@@ -127,13 +134,15 @@ const Cart = (props: CartProps) => {
                     <div className="cart-item-name-quantity">
                         <div className="cart-item-name">{food.name}</div>
                         <div className="cart-item-quantity">
-                            <i onClick={() => addItem(food.name, restaurantId, food.count !== undefined)} className="flaticon-plus plus-logo"></i>
+                            <i onClick={() => addItem(food.name, restaurantId, food.count !== undefined)}
+                               className="flaticon-plus plus-logo"></i>
                             <div>{elem.quantity}</div>
-                            <i onClick={() => deleteItem(food.name, restaurantId, food.count !== undefined)} className="flaticon-minus minus-logo"></i>
+                            <i onClick={() => deleteItem(food.name, restaurantId, food.count !== undefined)}
+                               className="flaticon-minus minus-logo"></i>
                         </div>
                     </div>
                     <div className="cart-item-price">{food.price} Dollars</div>
-                    <hr />
+                    <hr/>
                 </div>
             )
         })
@@ -142,11 +151,10 @@ const Cart = (props: CartProps) => {
     const renderCartContent = () => {
         const cart = props.cart;
 
-        if(cart === null || cart.empty) {
+        if (cart === null || cart.empty) {
             return;
-        }
-        else {
-            return (    
+        } else {
+            return (
                 <>
                     <div className="cart-items">
                         {renderCartItems()}
@@ -161,7 +169,7 @@ const Cart = (props: CartProps) => {
     }
 
     const renderSpinner = () => {
-        if(isProcessing) {
+        if (isProcessing) {
             return (
                 <Spinner additionalClassName="everywhere-cart-spinner"/>
             )
@@ -169,7 +177,7 @@ const Cart = (props: CartProps) => {
     }
 
     const renderNotification = () => {
-        if(notification) {
+        if (notification) {
             return (
                 <div className={`cart-notification ${notification.status}`}>
                     {notification.message}
@@ -179,11 +187,12 @@ const Cart = (props: CartProps) => {
     }
 
     return (
-        <div onClick={(event) => event.stopPropagation()} className={`cart-container ${props.type !== undefined ? `${props.type}` : ""}`}>
+        <div onClick={(event) => event.stopPropagation()}
+             className={`cart-container ${props.type !== undefined ? `${props.type}` : ""}`}>
             <div className="cart">
                 <div className="cart-title">
                     Cart
-                    <hr />
+                    <hr/>
                 </div>
                 {renderCartContent()}
                 {renderSpinner()}

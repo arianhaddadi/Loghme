@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import Spinner from '../utils/Spinner.tsx';
-import { sendRequest, RequestMethods } from '../../utils/request.ts';
-import { Notification, Nullable, RequestArguments, Restaurant, Food, Optional, ActionCreator, Cart } from '../../utils/types';
+import {RequestMethods, sendRequest} from '../../utils/request.ts';
+import {
+    ActionCreator,
+    Cart,
+    Food,
+    Notification,
+    Nullable,
+    Optional,
+    RequestArguments,
+    Restaurant
+} from '../../utils/types';
 import {connect} from 'react-redux';
-import {fetchCart} from '../../actions/index.ts';
+import {fetchCart} from '../../actions';
 
 export interface FoodModalFood {
     restaurant: Restaurant,
@@ -24,7 +33,7 @@ const FoodModal = (props: FoodModalProps) => {
     const [notification, setNotification] = useState<Nullable<Notification>>(null)
 
     const renderOldPrice = (food: Food) => {
-        if(props.item.food.oldPrice) {
+        if (props.item.food.oldPrice) {
             return (
                 <div className="food-modal-old-price">
                     {food.oldPrice}
@@ -34,7 +43,7 @@ const FoodModal = (props: FoodModalProps) => {
     }
 
     const renderNumOfAvailableFood = () => {
-        if(props.item.food.count) {
+        if (props.item.food.count) {
             return (
                 <div className="food-modal-available-quantity">
                     {numOfAvailableFood === 0 ? "Not Available" : `Number of Remaining Items: ${numOfAvailableFood}`}
@@ -44,56 +53,54 @@ const FoodModal = (props: FoodModalProps) => {
     }
 
     const increaseFoodQuantity = () => {
-        if(numOfAvailableFood !== undefined && numOfFoodToOrder >= numOfAvailableFood) {
+        if (numOfAvailableFood !== undefined && numOfFoodToOrder >= numOfAvailableFood) {
             setNotification({
                 status: "error",
                 message: "Not available!"
             })
-        }
-        else {
+        } else {
             setNotification(null)
             setNumOfFoodToOrder(numOfFoodToOrder + 1)
         }
     }
 
     const decreaseFoodQuantity = () => {
-        if(numOfFoodToOrder > 1) {
+        if (numOfFoodToOrder > 1) {
             setNotification(null)
             setNumOfFoodToOrder(numOfFoodToOrder - 1)
-        } 
+        }
     }
 
     const addToCart = () => {
-        const requestArgs: RequestArguments =  {
+        const requestArgs: RequestArguments = {
             method: RequestMethods.PUT,
             url: `/carts?foodName=${props.item.food.name}&restaurantId=${props.item.restaurant.id}&quantity=${numOfFoodToOrder}&isFoodPartyFood=${props.item.food.count !== undefined}`,
             errorHandler: (error) => console.log("Adding Items to Cart Failed.", error),
             successHandler: (response) => {
-                if(response.data.successful) {
+                if (response.data.successful) {
                     props.fetchCart();
                     setNotification({
                         status: "success",
                         message: "Added To Cart!"
                     })
                     if (numOfAvailableFood !== undefined) setNumOfAvailableFood(numOfAvailableFood - numOfFoodToOrder)
-                }
-                else {
+                } else {
                     setNotification({
                         status: "error",
                         message: response.data.message
                     })
                 }
                 setIsLoading(false)
-            }    
+            }
         }
         sendRequest(requestArgs)
         setIsLoading(true)
     }
 
     const renderSpinner = () => {
-        if(isLoading) {
+        if (isLoading) {
             return (
-                <Spinner additionalClassName="food-modal-spinner" />
+                <Spinner additionalClassName="food-modal-spinner"/>
             )
         }
     }
@@ -115,8 +122,8 @@ const FoodModal = (props: FoodModalProps) => {
                             <div className="food-modal-star-popularity">
                                 <i className="fas fa-star food-modal-star"></i>
                                 <div className="food-modal-popularity">
-                                    {food.popularity * 5}       
-                                </div>    
+                                    {food.popularity * 5}
+                                </div>
                             </div>
                         </div>
                         <div className="food-modal-food-description">
@@ -138,7 +145,9 @@ const FoodModal = (props: FoodModalProps) => {
                             <div className="food-modal-order-quantity-num">{numOfFoodToOrder}</div>
                             <i onClick={decreaseFoodQuantity} className="flaticon-minus minus-logo"></i>
                         </div>
-                        <button onClick={addToCart} type="button" className="btn btn-primary submit-button">Add To Cart</button>
+                        <button onClick={addToCart} type="button" className="btn btn-primary submit-button">Add To
+                            Cart
+                        </button>
                     </div>
                 </div>
                 {renderSpinner()}
@@ -147,7 +156,7 @@ const FoodModal = (props: FoodModalProps) => {
     }
 
     const renderNotification = () => {
-        if(notification) {
+        if (notification) {
             return (
                 <div className={`food-modal-notification ${notification.status}`}>
                     {notification.message}
@@ -158,7 +167,7 @@ const FoodModal = (props: FoodModalProps) => {
 
 
     return (
-        <div onClick={(event) => event.stopPropagation()}  className="food-modal-container">
+        <div onClick={(event) => event.stopPropagation()} className="food-modal-container">
             {renderContent()}
             {renderNotification()}
         </div>

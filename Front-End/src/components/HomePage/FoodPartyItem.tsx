@@ -1,4 +1,4 @@
-import { Food, Restaurant } from "../../utils/types";
+import {Food, Restaurant} from "../../utils/types";
 
 interface FoodPartyItemProps {
     item: Food,
@@ -18,9 +18,9 @@ const FoodPartyItem = (props: FoodPartyItemProps) => {
                     </div>
                     <i className="fas fa-star food-party-item-star">
                         <p className="food-party-item-popularity">
-                            {item.popularity * 5}       
+                            {item.popularity * 5}
                         </p>
-                    </i> 
+                    </i>
                 </div>
             </div>
             <div className="food-party-item-prices">
@@ -34,8 +34,10 @@ const FoodPartyItem = (props: FoodPartyItemProps) => {
             <div className="food-party-item-buttons">
                 <div className="food-party-item-remaining">
                     {item.count === 0 ? "Not Available" : `Only ${item.count} Available`}
-                    </div>
-                <div onClick={() => props.orderFood(props.restaurant, item)} className="food-party-item-buy-button">Purchase</div>
+                </div>
+                <div onClick={() => props.orderFood(props.restaurant, item)}
+                     className="food-party-item-buy-button">Purchase
+                </div>
             </div>
             <div className="food-party-restaurant-name">
                 {props.restaurant.name}

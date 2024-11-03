@@ -1,6 +1,6 @@
-import { Dispatch } from 'redux';
-import { sendRequest, RequestMethods } from '../utils/request.ts';
-import { GoogleAuthObject, RequestArguments } from '../utils/types';
+import {Dispatch} from 'redux';
+import {RequestMethods, sendRequest} from '../utils/request.ts';
+import {GoogleAuthObject, RequestArguments} from '../utils/types';
 
 export const ActionTypes = {
     USER: "user",

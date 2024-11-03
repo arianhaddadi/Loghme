@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import FoodPartyItem from './FoodPartyItem.tsx';
 import Modal from '../utils/Modal.tsx';
-import FoodModal, { FoodModalFood } from '../FoodModal/FoodModal.tsx';
+import FoodModal, {FoodModalFood} from '../FoodModal/FoodModal.tsx';
 import Spinner from "../utils/Spinner.tsx";
-import { sendRequest, RequestMethods } from '../../utils/request.ts';
-import { Nullable, RequestArguments, Restaurant, Food } from '../../utils/types';
+import {RequestMethods, sendRequest} from '../../utils/request.ts';
+import {Food, Nullable, RequestArguments, Restaurant} from '../../utils/types';
 
 
 const FoodParty = () => {
@@ -23,21 +23,19 @@ const FoodParty = () => {
     }, [foodPartySecondsRemaining, foodPartyMinutesRemaining])
 
     const styleTime = (time: number) => {
-        if(time.toString().length === 1) return  "0" + time.toString();
+        if (time.toString().length === 1) return "0" + time.toString();
         else return time.toString();
     }
 
     const downCountTimer = () => {
-        if(foodPartyMinutesRemaining !== 0 || foodPartySecondsRemaining !== 0) {
-            if(foodPartySecondsRemaining === 0) {
+        if (foodPartyMinutesRemaining !== 0 || foodPartySecondsRemaining !== 0) {
+            if (foodPartySecondsRemaining === 0) {
                 setFoodPartySecondsRemaining(59)
                 setFoodPartyMinutesRemaining(foodPartyMinutesRemaining - 1)
-            }
-            else {
+            } else {
                 setFoodPartySecondsRemaining(foodPartySecondsRemaining - 1)
             }
-        }
-        else {
+        } else {
             fetchFoodPartyInformation();
         }
     }
@@ -50,7 +48,7 @@ const FoodParty = () => {
     }
 
     const fetchFoodPartyInformation = () => {
-        const requestArgs: RequestArguments =  {
+        const requestArgs: RequestArguments = {
             method: RequestMethods.GET,
             url: "/foodparties",
             errorHandler: (error) => console.log("Fetching Food Party Information Failed", error),
@@ -70,41 +68,40 @@ const FoodParty = () => {
 
     const showFoodPartyModal = () => {
         return (
-            <FoodModal item={visibleFoodItem!} />
+            <FoodModal item={visibleFoodItem!}/>
         )
     }
 
     const renderFoodPartyFoodModal = () => {
-        if(visibleFoodItem) {
+        if (visibleFoodItem) {
             return (
-                <Modal close={closeFoodPartyModal} render={showFoodPartyModal} />
+                <Modal close={closeFoodPartyModal} render={showFoodPartyModal}/>
             )
         }
     }
 
     const renderFoodPartyItems = () => {
-        if(foodPartyRestaurants) {
-            if(foodPartyRestaurants.length === 0) {
+        if (foodPartyRestaurants) {
+            if (foodPartyRestaurants.length === 0) {
                 return (
                     <div className="no-food-party-restaurants-notification">
                         No restaurants are currently in food party.
                     </div>
                 );
-            }
-            else {
+            } else {
                 let foodpartyItems: React.JSX.Element[] = [];
                 for (let i = 0; i < foodPartyRestaurants.length; i++) {
                     foodpartyItems = foodpartyItems.concat(foodPartyRestaurants[i].foodPartyMenu.map(
-                    (elem, index) => {
-                        return (
-                            <FoodPartyItem key={`${i}` + index} orderFood={orderFoodPartyFood} restaurant={foodPartyRestaurants[i]} item={elem} />
-                        )
-                    }))
+                        (elem, index) => {
+                            return (
+                                <FoodPartyItem key={`${i}` + index} orderFood={orderFoodPartyFood}
+                                               restaurant={foodPartyRestaurants[i]} item={elem}/>
+                            )
+                        }))
                 }
                 return foodpartyItems;
             }
-        }
-        else {
+        } else {
             return (
                 <Spinner additionalClassName="food-party-spinner"/>
             )
@@ -112,7 +109,7 @@ const FoodParty = () => {
     }
 
     const renderFoodPartyTimer = () => {
-        if(foodPartyRestaurants) {
+        if (foodPartyRestaurants) {
             const minutesRemainingStyled = styleTime(foodPartyMinutesRemaining);
             const secondsRemainingStyled = styleTime(foodPartySecondsRemaining);
             return (

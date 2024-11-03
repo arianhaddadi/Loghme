@@ -1,14 +1,14 @@
 import {useEffect, useState} from 'react';
-import { useParams } from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Cart from '../Cart/Cart.tsx';
 import Modal from '../utils/Modal.tsx';
-import FoodModal, { FoodModalFood } from '../FoodModal/FoodModal.tsx';
+import FoodModal, {FoodModalFood} from '../FoodModal/FoodModal.tsx';
 import RestaurantMenuItem from './RestaurantMenuItem.tsx';
-import {fetchCart} from '../../actions/index.ts';
-import { sendRequest, RequestMethods } from '../../utils/request.ts';
-import { redirect } from '../../utils/redirect.ts';
-import { Nullable, RequestArguments, Restaurant, Food, ActionCreator, Cart as CartType} from '../../utils/types';
+import {fetchCart} from '../../actions';
+import {RequestMethods, sendRequest} from '../../utils/request.ts';
+import {redirect} from '../../utils/redirect.ts';
+import {ActionCreator, Cart as CartType, Food, Nullable, RequestArguments, Restaurant} from '../../utils/types';
 
 interface RestaurantPageProps {
     fetchCart: ActionCreator<CartType>
@@ -28,7 +28,7 @@ const RestaurantPage = (props: RestaurantPageProps) => {
     }, [])
 
     const fetchRestaurant = (restaurantId: string) => {
-        const requestArgs: RequestArguments =  {
+        const requestArgs: RequestArguments = {
             method: RequestMethods.GET,
             url: `/restaurants/${restaurantId}`,
             errorHandler: (error) => console.error('Error fetching restaurant:', error),
@@ -54,23 +54,22 @@ const RestaurantPage = (props: RestaurantPageProps) => {
                     Menu is Empty!
                 </div>
             )
-        }
-        else {
+        } else {
             return menu.map((elem, index) => {
                 return (
-                    <RestaurantMenuItem key={index} item={elem} orderFood={orderFood} restaurant={restaurant!} />
+                    <RestaurantMenuItem key={index} item={elem} orderFood={orderFood} restaurant={restaurant!}/>
                 )
             })
         }
     }
 
     const renderContent = () => {
-        if(restaurant === null || restaurant.id !== id) return;
+        if (restaurant === null || restaurant.id !== id) return;
         return (
             <>
                 <div className="rest-title-logo">
-                    <img src={restaurant.logo} className="rest-logo" alt="" />
-                    <div className="rest-title"> <b>{restaurant.name}</b> </div>
+                    <img src={restaurant.logo} className="rest-logo" alt=""/>
+                    <div className="rest-title"><b>{restaurant.name}</b></div>
                 </div>
                 <div className="menu-title-container">
                     <div className="menu-title">
@@ -78,7 +77,7 @@ const RestaurantPage = (props: RestaurantPageProps) => {
                             Menu
                         </b>
                     </div>
-                    <hr />
+                    <hr/>
                 </div>
                 <div className="menu-cart">
                     <div className="menu-list">
@@ -87,7 +86,7 @@ const RestaurantPage = (props: RestaurantPageProps) => {
                     <div className="dashed-border">
                         <div></div>
                     </div>
-                    <Cart />
+                    <Cart/>
                 </div>
             </>
         );
@@ -100,14 +99,14 @@ const RestaurantPage = (props: RestaurantPageProps) => {
 
     const showFoodModal = () => {
         return (
-            <FoodModal item={foodToShow!} />
+            <FoodModal item={foodToShow!}/>
         );
     }
 
     const renderFoodModal = () => {
-        if(foodToShow) {
+        if (foodToShow) {
             return (
-                <Modal close={closeFoodModal} render={showFoodModal} />
+                <Modal close={closeFoodModal} render={showFoodModal}/>
             );
         }
     }
@@ -121,7 +120,7 @@ const RestaurantPage = (props: RestaurantPageProps) => {
             {renderFoodModal()}
         </>
     )
-    
+
 }
 
 
