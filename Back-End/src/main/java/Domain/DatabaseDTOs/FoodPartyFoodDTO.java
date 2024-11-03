@@ -7,7 +7,8 @@ public class FoodPartyFoodDTO extends FoodDTO {
     private float oldPrice;
     private int count;
 
-    public FoodPartyFoodDTO() {}
+    public FoodPartyFoodDTO() {
+    }
 
     public FoodPartyFoodDTO(FoodPartyFood foodPartyFood, Restaurant restaurant) {
         super(foodPartyFood, restaurant);

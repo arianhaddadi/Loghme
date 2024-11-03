@@ -3,7 +3,10 @@ package ObjectMappers;
 import Domain.DatabaseDTOs.CartItemDTO;
 import Utilities.ConnectionPool;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class CartItemMapper extends Mapper<CartItemDTO, String> {
     private static CartItemMapper instance;

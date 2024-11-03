@@ -3,7 +3,11 @@ package ObjectMappers;
 import Domain.DatabaseDTOs.RestaurantDTO;
 import Domain.Entities.Location;
 import Utilities.ConnectionPool;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RestaurantMapper extends Mapper<RestaurantDTO, String> {

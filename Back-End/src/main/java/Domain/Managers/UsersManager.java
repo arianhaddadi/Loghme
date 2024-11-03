@@ -2,7 +2,7 @@ package Domain.Managers;
 
 import Domain.DatabaseDTOs.CartDTO;
 import Domain.DatabaseDTOs.UserDTO;
-import Domain.Entities.*;
+import Domain.Entities.User;
 import ObjectMappers.CartMapper;
 import ObjectMappers.UserMapper;
 import Utilities.Response;
@@ -11,7 +11,8 @@ import Utilities.TokenProvider;
 public class UsersManager {
     private static UsersManager instance;
 
-    private UsersManager() {}
+    private UsersManager() {
+    }
 
     public static UsersManager getInstance() {
         if (instance == null) {

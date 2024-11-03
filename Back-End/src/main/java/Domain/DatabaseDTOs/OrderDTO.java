@@ -5,7 +5,8 @@ public class OrderDTO {
     private String status;
     private String userId;
 
-    public OrderDTO() {}
+    public OrderDTO() {
+    }
 
     public OrderDTO(String id, String status, String userId) {
         this.id = id;

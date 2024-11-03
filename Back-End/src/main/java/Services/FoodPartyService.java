@@ -1,12 +1,15 @@
 package Services;
 
+import Domain.Entities.Restaurant;
 import Domain.Managers.FoodPartyManager;
 import Domain.Managers.RestaurantsManager;
-import Domain.Entities.*;
 import Services.DTOs.FoodPartyResponseDTO;
 import Utilities.Response;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.ArrayList;
 
 @RestController

@@ -2,16 +2,20 @@ package Domain.Managers;
 
 import Domain.DatabaseDTOs.OrderDTO;
 import Domain.DatabaseDTOs.OrderItemDTO;
-import Domain.Entities.*;
-import ObjectMappers.OrderMapper;
+import Domain.Entities.Cart;
+import Domain.Entities.CartItem;
+import Domain.Entities.Food;
+import Domain.Entities.Order;
 import ObjectMappers.OrderItemMapper;
+import ObjectMappers.OrderMapper;
 
 import java.util.ArrayList;
 
 public class OrdersManager {
     private static OrdersManager instance;
 
-    private OrdersManager() {}
+    private OrdersManager() {
+    }
 
     public static OrdersManager getInstance() {
         if (instance == null) {

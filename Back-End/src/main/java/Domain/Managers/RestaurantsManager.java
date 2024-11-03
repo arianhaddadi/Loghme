@@ -16,7 +16,8 @@ import java.util.ArrayList;
 public class RestaurantsManager {
     private static RestaurantsManager instance;
 
-    private RestaurantsManager() {}
+    private RestaurantsManager() {
+    }
 
     public static RestaurantsManager getInstance() {
         if (instance == null) {

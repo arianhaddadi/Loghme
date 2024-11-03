@@ -3,8 +3,8 @@ package Domain.Managers;
 import Domain.DatabaseDTOs.CartDTO;
 import Domain.DatabaseDTOs.CartItemDTO;
 import Domain.Entities.*;
-import ObjectMappers.CartMapper;
 import ObjectMappers.CartItemMapper;
+import ObjectMappers.CartMapper;
 import ObjectMappers.RestaurantMapper;
 import Utilities.Response;
 
@@ -13,7 +13,8 @@ import java.util.ArrayList;
 public class CartsManager {
     private static CartsManager instance;
 
-    private CartsManager() {}
+    private CartsManager() {
+    }
 
     public static CartsManager getInstance() {
         if (instance == null) {

@@ -11,7 +11,8 @@ public class FoodPartyManager {
     private final FoodPartyUpdater foodPartyUpdater = new FoodPartyUpdater(30);
     private ScheduledExecutorService scheduler;
 
-    private FoodPartyManager() {}
+    private FoodPartyManager() {
+    }
 
     public static FoodPartyManager getInstance() {
         if (instance == null) {

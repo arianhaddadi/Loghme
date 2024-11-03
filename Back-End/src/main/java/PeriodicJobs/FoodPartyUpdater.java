@@ -1,11 +1,12 @@
 package PeriodicJobs;
 
-import Domain.Managers.RestaurantsManager;
 import Domain.Entities.Restaurant;
+import Domain.Managers.RestaurantsManager;
 import ObjectMappers.FoodPartyFoodMapper;
 import Utilities.Configs;
 import Utilities.GetRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;

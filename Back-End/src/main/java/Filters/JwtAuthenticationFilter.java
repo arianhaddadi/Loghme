@@ -3,6 +3,7 @@ package Filters;
 import Utilities.Configs;
 import Utilities.TokenProvider;
 import org.springframework.util.StringUtils;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,7 +11,8 @@ import java.io.IOException;
 
 public class JwtAuthenticationFilter implements Filter {
 
-    public JwtAuthenticationFilter() {}
+    public JwtAuthenticationFilter() {
+    }
 
     @Override
     public void doFilter(

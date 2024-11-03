@@ -1,10 +1,12 @@
 package ObjectMappers;
 
 import Domain.DatabaseDTOs.FoodDTO;
-
 import Utilities.ConnectionPool;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class FoodMapper extends Mapper<FoodDTO, String> {
     private static FoodMapper instance;
@@ -13,17 +15,17 @@ public class FoodMapper extends Mapper<FoodDTO, String> {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
-                "CREATE TABLE IF NOT EXISTS Foods" +
-                "(" +
-                    "foodName VARCHAR(300), " +
-                    "description VARCHAR(300)," +
-                    "image VARCHAR(300)," +
-                    "price FLOAT," +
-                    "popularity FLOAT," +
-                    "restaurantId VARCHAR(300), " +
-                    "FOREIGN KEY (restaurantId) REFERENCES Restaurants(id) ON UPDATE CASCADE ON DELETE CASCADE, " +
-                    "PRIMARY KEY (foodName, restaurantId)" +
-                ");"
+                    "CREATE TABLE IF NOT EXISTS Foods" +
+                            "(" +
+                            "foodName VARCHAR(300), " +
+                            "description VARCHAR(300)," +
+                            "image VARCHAR(300)," +
+                            "price FLOAT," +
+                            "popularity FLOAT," +
+                            "restaurantId VARCHAR(300), " +
+                            "FOREIGN KEY (restaurantId) REFERENCES Restaurants(id) ON UPDATE CASCADE ON DELETE CASCADE, " +
+                            "PRIMARY KEY (foodName, restaurantId)" +
+                            ");"
             );
             preparedStatement.executeUpdate();
             preparedStatement.close();
@@ -44,8 +46,8 @@ public class FoodMapper extends Mapper<FoodDTO, String> {
     protected PreparedStatement getFindStatement(String id, Connection connection) throws SQLException {
         String[] idSegments = id.split(",");
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Foods " +
-                                                                             "WHERE foodName = ? " +
-                                                                             "AND restaurantId = ?;");
+                "WHERE foodName = ? " +
+                "AND restaurantId = ?;");
 
         preparedStatement.setString(1, idSegments[0]);
         preparedStatement.setString(2, idSegments[1]);
@@ -53,7 +55,7 @@ public class FoodMapper extends Mapper<FoodDTO, String> {
     }
 
     @Override
-    protected PreparedStatement getInsertStatement(FoodDTO food, Connection connection) throws SQLException{
+    protected PreparedStatement getInsertStatement(FoodDTO food, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT IGNORE INTO Foods VALUES (?, ?, ?, ?, ?, ?);");
         preparedStatement.setString(1, food.getName());
         preparedStatement.setString(2, food.getDescription());
@@ -79,7 +81,7 @@ public class FoodMapper extends Mapper<FoodDTO, String> {
                                                     Integer limitStart, Integer limitSize) throws SQLException {
 
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Foods " +
-                                                                             "WHERE restaurantId = ?;");
+                "WHERE restaurantId = ?;");
         preparedStatement.setString(1, id);
         return preparedStatement;
     }

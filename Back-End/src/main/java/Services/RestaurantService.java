@@ -2,9 +2,7 @@ package Services;
 
 import Domain.Entities.Restaurant;
 import Domain.Managers.RestaurantsManager;
-
 import Utilities.Response;
-
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 

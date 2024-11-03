@@ -1,7 +1,7 @@
 package Services;
 
-import Domain.Managers.UsersManager;
 import Domain.Entities.User;
+import Domain.Managers.UsersManager;
 import Utilities.Configs;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestAttribute;

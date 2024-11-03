@@ -1,7 +1,6 @@
 package Domain.Entities;
 
 import Domain.Managers.OrdersManager;
-import Utilities.Configs;
 import Utilities.DataProvider;
 
 import java.util.ArrayList;
@@ -16,6 +15,7 @@ public class Order implements Runnable {
     private final Cart cart;
     private Status status;
     private ScheduledExecutorService scheduler;
+
     public Order(Cart cart, String id, String userId) {
         this.id = id;
         this.userId = userId;
@@ -27,7 +27,7 @@ public class Order implements Runnable {
         double distance =
                 delivery.getLocation().calculateDistance(new Location(0, 0))
                         + delivery.getLocation()
-                                .calculateDistance(cart.getRestaurant().getLocation());
+                        .calculateDistance(cart.getRestaurant().getLocation());
         return (long) distance / delivery.getVelocity();
     }
 
@@ -88,6 +88,10 @@ public class Order implements Runnable {
         return status;
     }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public Cart getCart() {
         return cart;
     }
@@ -104,9 +108,5 @@ public class Order implements Runnable {
         SEARCHING_FOR_DELIVERY,
         DELIVERY_ON_ITS_WAY,
         DELIVERED
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 }

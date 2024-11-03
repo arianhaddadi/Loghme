@@ -1,7 +1,7 @@
 package Services;
 
+import Domain.Entities.Cart;
 import Domain.Managers.CartsManager;
-import Domain.Entities.*;
 import Utilities.Configs;
 import Utilities.Response;
 import org.springframework.http.MediaType;

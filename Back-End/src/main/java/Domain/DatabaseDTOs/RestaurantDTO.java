@@ -7,7 +7,8 @@ public class RestaurantDTO {
     private String id, name, logo;
     private Location location;
 
-    public RestaurantDTO() {}
+    public RestaurantDTO() {
+    }
 
     public RestaurantDTO(Restaurant restaurant) {
         this.id = restaurant.getId();

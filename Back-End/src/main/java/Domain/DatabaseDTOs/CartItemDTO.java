@@ -6,7 +6,8 @@ public class CartItemDTO {
     private String foodName;
     private String restaurantId;
 
-    public CartItemDTO() {}
+    public CartItemDTO() {
+    }
 
     public CartItemDTO(int quantity, String cartId, String foodName, String restaurantId) {
         this.quantity = quantity;

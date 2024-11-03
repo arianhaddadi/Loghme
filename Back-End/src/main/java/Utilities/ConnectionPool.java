@@ -27,6 +27,13 @@ public class ConnectionPool {
         dataSource.setMaxOpenPreparedStatements(100);
     }
 
+    public static ConnectionPool getInstance() {
+        if (instance == null) {
+            instance = new ConnectionPool();
+        }
+        return instance;
+    }
+
     private void loadDatabaseDriver() {
         try {
             Class.forName(Configs.JDBC_DRIVER_CLASSNAME);
@@ -54,13 +61,6 @@ public class ConnectionPool {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public static ConnectionPool getInstance() {
-        if (instance == null) {
-            instance = new ConnectionPool();
-        }
-        return instance;
     }
 
     public Connection getConnection() throws SQLException {

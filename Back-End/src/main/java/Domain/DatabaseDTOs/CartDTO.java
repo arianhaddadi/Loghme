@@ -4,7 +4,8 @@ public class CartDTO {
     private String userId;
     private String restaurantId;
 
-    public CartDTO() {}
+    public CartDTO() {
+    }
 
     public CartDTO(String userId, String restaurantId) {
         this.userId = userId;

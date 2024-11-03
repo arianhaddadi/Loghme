@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -18,7 +19,8 @@ public class TokenProvider {
     private static final int LOGIN_TOKEN_EXPIRATION_DAYS = 10;
     private static TokenProvider instance;
 
-    private TokenProvider() {}
+    private TokenProvider() {
+    }
 
     public static TokenProvider getInstance() {
         if (instance == null) {
